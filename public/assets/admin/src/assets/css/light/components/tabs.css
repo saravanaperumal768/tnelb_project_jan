@@ -1,0 +1,105 @@
+/*
+	===============================
+			@Import	Function
+	===============================
+*/
+/*
+	===============================
+			@Import	Mixins
+	===============================
+*/
+.nav.nav-tabs {
+  border: 1px solid #80808036;
+}
+.nav.nav-tabs li.nav-item button.nav-link {
+  padding: 8px 14px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  background: #414142;
+  border-radius: 0px;
+  border-right: 1px solid #fff;
+
+  
+}
+.nav.nav-tabs li.nav-item button.nav-link svg {
+  vertical-align: text-bottom;
+  stroke-width: 1.6;
+  width: 20px;
+  height: 20px;
+}
+.nav.nav-tabs li.nav-item button.nav-link.active {
+  border-bottom: 1.6px solid #4361ee;
+  color: #ffffff;
+  background: #00ab55;
+  font-weight: 600;
+}
+.nav.nav-tabs li.nav-item button.nav-link.active svg {
+  color: #4361ee;
+}
+.nav.nav-tabs li.nav-item button.nav-link:disabled {
+  opacity: 0.5;
+}
+.nav.nav-pills {
+  border: none;
+
+  padding: 2px;
+  background: #ebedf2;
+  border-radius: 8px;
+}
+.nav.nav-pills li.nav-item button.nav-link {
+  border: none;
+  font-weight: 500;
+  padding: 8px 14px;
+  letter-spacing: 1px;
+  color: #4361ee;
+}
+.nav.nav-pills li.nav-item button.nav-link svg {
+  vertical-align: text-bottom;
+  stroke-width: 1.6;
+  color: #4361ee;
+  width: 20px;
+  height: 20px;
+}
+.nav.nav-pills li.nav-item button.nav-link.active {
+  border-bottom: none;
+  background-color: #fff;
+  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+}
+.nav.nav-pills li.nav-item button.nav-link:disabled {
+  opacity: 0.5;
+}
+.nav.nav-pills[aria-orientation=vertical] button.nav-link {
+  border: none;
+  font-weight: 500;
+  padding: 8px 14px;
+  letter-spacing: 1px;
+  color: #4361ee;
+}
+.nav.nav-pills[aria-orientation=vertical] button.nav-link svg {
+  vertical-align: bottom;
+  stroke-width: 1.6;
+  color: #4361ee;
+  width: 20px;
+  height: 20px;
+}
+
+.tab-content {
+  padding-top: 5px;
+    width: 100%;
+}
+
+.nav.nav-pills[aria-orientation=vertical] button.nav-link.active {
+  border-bottom: none;
+  background-color: #035ab3;
+  color:#fff;
+  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.2);
+}
+.nav.nav-pills[aria-orientation=vertical] button.nav-link:disabled {
+  opacity: 0.5;
+}
+
+
+.inputForm-modal .modal-content .modal-body .form-group input {
+    border-left: 1px solid #b9b9b9!important;
+}
