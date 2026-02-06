@@ -826,6 +826,32 @@ public function checkCertificateValidity_b(Request $request)
 
 public function checkBankValidity(Request $request)
 {
+    try {
+        $result = DB::selectOne(
+            "SELECT * FROM check_bank_validity_cl(:bankValidity)",
+            [
+                'bankValidity' => $request->bank_validity, 
+            ]
+        );
+
+        return response()->json([
+            'status' => $result->status,
+            'msg'    => $result->message
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'invalid_bank',
+            'msg'    => 'Error validating Bank Validity date.'
+        ]);
+    }
+}
+
+
+// ----------------------------------------
+
+public function checkBankValidity_laravelfunction(Request $request)
+{
     $bankValidity = $request->bank_validity;
 
     // ---------------------------

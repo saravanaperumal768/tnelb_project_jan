@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Auth;
     <link href="{{ asset('assets/css/color-2.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/page_top.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/font-awesome2.css') }}" rel="stylesheet">
+    
     <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
    
     <link href="{{ asset('assets/admin/src/plugins/src/flatpickr/flatpickr.css') }}" rel="stylesheet">
@@ -25,12 +28,12 @@ use Illuminate\Support\Facades\Auth;
 
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Merriweather:ital@0;1&display=swap" rel="stylesheet">
+    
 
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">

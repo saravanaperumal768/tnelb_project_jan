@@ -196,13 +196,17 @@
 
 <script src="{{ url('assets/js/formb.js') }}"></script>
 
+<script src="{{ url('assets/js/mixitup.min.js') }}"></script>
+
+<script src="{{ url('assets/js/sweetalert2.all.min.js') }}"></script>
+
 
 <script src="{{ asset('assets/admin/src/plugins/src/editors/quill/QuillDeltaToHtmlConverter.bundle.js') }}"></script>
 <!-- --------------------------------------------------------------- -->
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.2.2/mixitup.min.js'></script>
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.2.2/mixitup.min.js'></script> -->
 <!-- fancybox -->
-{{-- <script src='https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.js'></script> --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
+<!-- {{-- <script src='https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.js'></script> --}} -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script> -->
 
 <script>
     $(document).ready(function() {
@@ -218,7 +222,7 @@
         });
     });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+<script src="{{ url('assets/js/cleave.min.js') }}"></script>
 
 <!--
 <script>
@@ -238,32 +242,83 @@
 
 <script>
     // contractor licence age calculation---------------------
-    $(document).on("change", ".dob", function() {
+  $(document).on("change", ".dob", function() {
 
-        let dobVal = $(this).val();
-        if (!dobVal) return;
+    let dobVal = $(this).val();
+    if (!dobVal) return;
 
-        let dob = new Date(dobVal);
-        let today = new Date();
+    let dob = new Date(dobVal);
+    let today = new Date();
 
-        let age = today.getFullYear() - dob.getFullYear();
-        let m = today.getMonth() - dob.getMonth();
+    let age = today.getFullYear() - dob.getFullYear();
+    let m = today.getMonth() - dob.getMonth();
 
-        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-            age--;
-        }
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
 
-        let section = $("#proprietor-sectionfresh");
+    // ✅ Target the nearest row instead of global section
+    let row = $(this).closest(".row");
 
-        if (age < 25) {
-            section.find(".age_error").text("Minimum age is 25");
-            section.find(".age").val('');
-            return;
-        }
+    if (age < 25) {
+        row.find(".age_error").text("Minimum age is 25");
+        row.find(".age").val('');
+        return;
+    }
 
-        section.find(".age_error").text('');
-        section.find(".age").val(age);
-    });
+    row.find(".age_error").text('');
+    row.find(".age").val(age);
+});
+
+
+$(document).on("change", ".qualification", function () {
+    let $section = $(this).closest('.row');
+    let qualification = $(this).val();
+
+    if (qualification && qualification !== '8 To 12') {
+        $("#qualTextWrapper").slideDown();
+    } else {
+        $("#qualTextWrapper").slideUp();
+        $section.find("input[name='qual_text[]']").val('');
+        $section.find(".qual_text_error").text('');
+    }
+});
+
+
+   $(document).on("change", "#ownership_type_select", function () {
+
+    let type = $(this).val();
+
+    // 🔹 Reset ALL file inputs inside both sections
+    $("#partnershipdeed input[type='file'], #directormom input[type='file']").val("");
+
+    // 🔹 Clear file preview / link div
+    $("#partnershipdeed .file-link, #directormom .file-link .ownershipdoc_upload_error")
+        .html("")
+        .addClass("d-none");
+        // <span class="text-danger ownershipdoc_upload_error"></span>
+
+
+    // 🔹 Clear hidden fields if any (file name / path)
+    // $("#partnershipdeed input[type='hidden'], #directormom input[type='hidden']").val("");
+
+    // 🔹 Hide both sections first
+    $("#partnershipdeed, #directormom").slideUp();
+
+    // 🔹 Show based on selection
+    if (type === 'pt') {
+        $("#partnershipdeed").slideDown();
+    } 
+    else if (type === 'pvt' || type === 'ltd') {
+        $("#directormom").slideDown();
+    }
+});
+
+
+
+
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
 

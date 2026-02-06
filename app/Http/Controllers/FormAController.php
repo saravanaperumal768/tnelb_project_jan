@@ -983,6 +983,98 @@ if ($request->hasFile('gst_doc')) {
 
         $payment = $isDraft ? 'draft' : 'success';
 
+        // ------------Temp Table move------------------------------------------
+        DB::transaction(function () use ($applicationId, $isDraft, $recordId, $request) {
+            // dd($request->all());
+            // dd($request->login_id_store);
+            // exit;
+// dd($request->input('form_action'));
+// exit;
+
+            
+
+            // Fetch temp uploaded docs for this application
+            $tempDocs = DB::table('tnelb_temp_uploaded_documents')
+                ->where('login_id', $request->login_id_store)
+                ->where('form_name', $request->form_name)
+                ->where('license_name', $request->license_name)
+                // ->where('license_name', $request->license_name)
+
+                ->where('is_final', '0')
+                ->orderBy('uploaded_at', 'DESC')
+                ->first();
+                // dd($tempDocs);
+                // exit;
+
+                if($tempDocs){
+                     $updateColumn = null;
+
+                if ($tempDocs->document_category) {
+                    $updateColumn = 'ownership_doc';
+                }
+
+                // if ($doc->document_category === 'DIRECTOR_MOM') {
+                //     $updateColumn = 'director_mom_doc';
+                // }
+
+                if ($updateColumn) {
+
+                    // 🔹 Update main application table
+                    DB::table('tnelb_ea_applications')
+                        ->where('application_id', $applicationId)
+                        ->update([
+                            $updateColumn => $tempDocs->file_name,
+                            'updated_at'  => DB::raw('NOW()')
+                        ]);
+
+                    // 🔹 Mark temp document as final
+                    DB::table('tnelb_temp_uploaded_documents')
+                        ->where('id', $tempDocs->id)
+                        ->update([
+                            'is_final'   => '1',
+                            'moved_as' => $request->input('form_action'),
+                            'updated_at'=> DB::raw('NOW()')
+                        ]);
+                }
+                }
+
+                
+// var_dump($tempDocs);
+// exit;
+            // foreach ($tempDocs as $doc) {
+
+            //     // Decide which column to update in main table
+            //     $updateColumn = null;
+
+            //     if ($doc->document_category) {
+            //         $updateColumn = 'ownership_doc';
+            //     }
+
+            //     // if ($doc->document_category === 'DIRECTOR_MOM') {
+            //     //     $updateColumn = 'director_mom_doc';
+            //     // }
+
+            //     if ($updateColumn) {
+
+            //         // 🔹 Update main application table
+            //         DB::table('tnelb_ea_applications')
+            //             ->where('application_id', $applicationId)
+            //             ->update([
+            //                 $updateColumn => $doc->file_name,
+            //                 'updated_at'  => DB::raw('NOW()')
+            //             ]);
+
+            //         // 🔹 Mark temp document as final
+            //         DB::table('tnelb_temp_uploaded_documents')
+            //             ->where('id', $doc->id)
+            //             ->update([
+            //                 'is_final'   => '1',
+            //                 'updated_at'=> DB::raw('NOW()')
+            //             ]);
+            //     }
+            // }
+        });
+
 
         if (!$isDraft) {
 

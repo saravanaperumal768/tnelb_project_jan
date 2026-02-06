@@ -160,7 +160,9 @@
     <script>
         $(document).ready(function() {
             $("#login-form").submit(function(event) {
-                event.preventDefault(); // Prevent form submission
+                event.preventDefault();
+
+                $(".phone-error").remove();
 
                 let phone = $("#phone").val().trim();
                 let captcha = $("input[name='captcha']").val().trim();
@@ -178,7 +180,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('login.check') }}", 
+                    url: "{{ route('login.check') }}",
                     data: {
                         _token: "{{ csrf_token() }}",
                         phone: phone,
@@ -192,10 +194,17 @@
                         }
                     },
                     error: function(xhr) {
-                        // alert('failed');
+
+                        $(".phone-error").remove(); // extra safety
+
                         let response = JSON.parse(xhr.responseText);
+
                         if (response.message) {
-                            $("#phone").after('<span class="text-danger">' + response.message + '</span>'); // Show error below input
+                            $("#phone").after(
+                                '<span class="text-danger phone-error">' +
+                                response.message +
+                                '</span>'
+                            );
                         } else {
                             alert("An error occurred. Please try again.");
                         }
@@ -204,7 +213,7 @@
             });
         });
 
-         document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
             function OTPInput() {
                 const inputs = document.querySelectorAll('.otp-inputs > input');
                 for (let i = 0; i < inputs.length; i++) {
@@ -262,7 +271,4 @@
                 });
             });
         });
-
     </script>
-
-

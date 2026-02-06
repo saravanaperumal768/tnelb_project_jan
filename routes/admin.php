@@ -48,6 +48,7 @@ use App\Http\Controllers\MediaController;
 
     Route::get('/document/{type}/{filename}', [FormController::class, 'showEncryptedDocument'])->name('document.show');
     Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
+     
 
            // ----------licensepdf-----------------
         Route::get('/generateForma-pdf/{application_id}', [LicensepdfController::class, 'generateFormaPDF'])->name('generateForma.pdf');

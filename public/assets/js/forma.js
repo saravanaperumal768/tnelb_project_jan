@@ -1,3 +1,67 @@
+
+$(document).on("click", ".ownershipdoc_upload-btn", function () {
+
+    let row = $(this).closest(".row");
+
+    let fileInput = row.find("input[type='file']")[0];
+    let errorBox  = row.find(".ownershipdoc_upload_error");
+    let fileLink  = row.find(".file-link");
+
+    errorBox.text("");
+
+    if (!fileInput || !fileInput.files.length) {
+        errorBox.text("Please select a PDF file");
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append(fileInput.name, fileInput.files[0]);
+    formData.append("form_name", row.find("input[name='upload_form_name']").val());
+    formData.append("license_name", row.find("input[name='upload_license_name']").val());
+    formData.append("module", row.find("input[name='module']").val());
+    formData.append("document_category", row.find("input[name='document_category']").val());
+    formData.append("document_sub_category", row.find("input[name='document_sub_category']").val());
+    formData.append("ownership_type", row.find("input[name='ownership_type']").val());
+
+    $.ajax({
+        url: BASE_URL + "/uploadownershipdeed",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+
+        success: function (res) {
+            errorBox.text("");
+
+            fileLink
+                .removeClass("d-none")
+                .html(`
+                    <a href="${res.file_url}" target="_blank" class="text-success">
+                        <i class="fa fa-file-pdf-o"></i> ${res.file_name}
+                    </a>
+                `);
+        },
+
+        error: function (xhr) {
+            let msg = "Upload failed";
+
+            if (xhr.responseJSON?.errors) {
+                msg = Object.values(xhr.responseJSON.errors)[0][0];
+            } else if (xhr.responseJSON?.message) {
+                msg = xhr.responseJSON.message;
+            }
+
+            errorBox.text(msg);
+        }
+    });
+});
+
+
+// ------------------------Submit form---------------------------------------
+
 $("#competency_form_a").on("submit", function (e) {
    
     e.preventDefault();
@@ -815,13 +879,12 @@ if (!tableValid) {
     //     isValid = false;
     // }
 function checkBankValidity(bankValidityValue) {
-    // let bankValidityInput = bankValidity.val().trim();
     let isValid = true;
 
     $.ajax({
         url: BASE_URL + "/checkBankValidity",
         type: "POST",
-        async: false,  // optional but ensures sequential validation
+        async: false,
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),
             bank_validity: bankValidityValue
@@ -838,6 +901,7 @@ function checkBankValidity(bankValidityValue) {
 
     return isValid;
 }
+
 
     if (bankValidity === "" | bankAmount === "" | bankAddress === "" ) {
         if(bankValidity === "" ){
@@ -993,31 +1057,31 @@ function checkBankValidity(bankValidityValue) {
 
     // Aadhaar number validation
 // ------------------ Collect Inputs ------------------
-let aadhaar = $("#aadhaar").val().replace(/\s+/g, "");
-let pancard = $("#pancard").val().trim().toUpperCase();
+// let aadhaar = $("#aadhaar").val().replace(/\s+/g, "");
+// let pancard = $("#pancard").val().trim().toUpperCase();
 let gst_number = $("#gst_number").val().trim().toUpperCase();
 
 // ------------------ Clear Previous Errors ------------------
-$("#aadhaar_error, #pancard_error, #gst_number_error, #aadhaar_doc_error, #pancard_doc_error, #gst_doc_error").text("");
+// $("#aadhaar_error, #pancard_error, #gst_number_error, #aadhaar_doc_error, #pancard_doc_error, #gst_doc_error").text("");
 
-// ------------------ Aadhaar Validation ------------------
-if (aadhaar === "") {
-    $("#aadhaar_error").text("Aadhaar number is required.");
-    isValid = false;
-} else if (!/^\d{12}$/.test(aadhaar)) {
-    $("#aadhaar_error").text("Enter a valid 12-digit Aadhaar number.");
-    isValid = false;
-}
+// // ------------------ Aadhaar Validation ------------------
+// if (aadhaar === "") {
+//     $("#aadhaar_error").text("Aadhaar number is required.");
+//     isValid = false;
+// } else if (!/^\d{12}$/.test(aadhaar)) {
+//     $("#aadhaar_error").text("Enter a valid 12-digit Aadhaar number.");
+//     isValid = false;
+// }
 
-// ------------------ PAN Validation ------------------
-const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
-if (pancard === "") {
-    $("#pancard_error").text("PAN card number is required.");
-    isValid = false;
-} else if (!panPattern.test(pancard)) {
-    $("#pancard_error").text("Invalid PAN format (e.g., ABCDE1234F)");
-    isValid = false;
-}
+// // ------------------ PAN Validation ------------------
+// const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+// if (pancard === "") {
+//     $("#pancard_error").text("PAN card number is required.");
+//     isValid = false;
+// } else if (!panPattern.test(pancard)) {
+//     $("#pancard_error").text("Invalid PAN format (e.g., ABCDE1234F)");
+//     isValid = false;
+// }
 
 // ------------------ GST Validation ------------------
 if (gst_number === "") {
@@ -1537,27 +1601,25 @@ $('.staff-fields').each(function(index) {
     // let bankValidity = $("input[name='bank_validity']").val().trim();
 if (!checkBankValidity(bankValidity)) {
 
-    // Highlight the tab
     $(".nav-item").each(function () {
         if ($(this).text().trim() === "Staff & Bank Details") {
             $(this).addClass("tab-error-bg");
-            $(this).trigger("click"); // switch to Staff & Bank Details tab
+            $(this).trigger("click");
         }
     });
 
-    // Clear previous errors if any
-    $("#bank_validity_error").text("Minimum 1 year is required for Bank Solvency Validity Period.");
+    $("#bank_validity_error")
+        .text("Minimum 3 year is required for Bank Solvency Validity Period.");
 
-    // Smooth scroll directly to the bank validity input
-    const bankValidityInput = $("input[name='bank_validity']")[0]; // get DOM element
+    const bankValidityInput = $("input[name='bank_validity']")[0];
     if (bankValidityInput) {
         bankValidityInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        bankValidityInput.focus(); // optional: focus on the input
+        bankValidityInput.focus();
     }
 
-    // Stop submission
     return false;
 }
+
 
     
 

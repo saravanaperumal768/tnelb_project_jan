@@ -35,10 +35,11 @@ use App\Http\Controllers\CertificatedatechangeController;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\DocumentUploadController;
 
 // ------------------------ Public Pages ------------------------
 
-
+ 
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::get('/home', [IndexController::class, 'index'])->name('index');
@@ -177,6 +178,13 @@ Route::middleware(['auth'])->group(function () {
 
     // -----------------------------staff checking formA---------------------------------------------
     Route::post('/checkStaffExists', [StaffController::class, 'checkStaffExists'])->name('checkStaffExists');
+
+
+
+
+    Route::post('/uploadownershipdeed', [DocumentUploadController::class, 'uploadownershipdeed'])
+    ->name('uploadownershipdeed');
+
 });
 
 // ------------------------ Form Submit & PDF Routes ------------------------

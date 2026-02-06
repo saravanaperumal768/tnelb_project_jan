@@ -321,7 +321,90 @@ exit; -->
                             <span class="error text-danger" id="ownership_type_error"></span>
 
                         </div>
+
+                        
                     </div>
+
+                    @if ($application->application_ownershiptype == 'pt')
+
+                    
+                      <div class="row mt-3" id="partnershipdeed" >
+                            <div class="offset-md-0 col-lg-3 mt-2 text-right">
+                                <h6 class="fw-bold">
+                                    Upload Partnership Deed <span class="text-danger">*</span>
+                                </h6>
+                            </div>
+
+                            <div class="col-md-3 col-12" id="partnershipUploadBox">
+                                <input type="file"
+                                    class="form-control"
+                                    id="partnership_deed"
+                                    name="partnership_deed"
+                                    accept="application/pdf">
+                                     <input type="hidden" name="upload_form_name" value="A">
+
+
+                                    <input type="hidden"  name="upload_license_name" value="EA">
+                                    <input type="hidden" name="module" id="module" value="ownership_type_doc">
+                                    
+                                    <input type="hidden" name="ownership_type" id="ownership_type" value="pt">
+                                    <input type="hidden" name="document_sub_category" id="document_sub_category" value="deed_doc">
+                                    <input type="hidden" name="document_category" id="document_category" value="partnership_deed">
+
+
+
+
+                                <span class="file-limit text-center">File type: PDF (Max 250 KB)</span>
+                                <span class="text-danger ownershipdoc_upload_error"></span>
+
+                            </div>
+
+                            <div class="col-md-2 col-12">
+                               <button class="btn btn-info ownershipdoc_upload-btn" type="button">
+                                    <i class="fa fa-upload"></i> Upload
+                                </button>
+                            </div>
+
+                            <!-- File link will appear here -->
+                            <div class="col-md-4 col-12 d-none file-link"></div>
+
+                        </div>
+                        @elseif ($application->application_ownershiptype == 'pvt' || $application->application_ownershiptype == 'ltd')
+
+
+                        <div class="row mt-3" id="directormom" >
+                            <div class="offset-md-0 col-lg-3 mt-2 text-right ">
+                                 <h6 class="fw-bold">Upload Director MOM <span class="text-danger">*</span></h5>
+                            </div>
+
+                            <div class="col-md-3 col-12">
+                                <input type="file" class="form-control" name="director_mom" id ="director_mom" accept="application/pdf">                             
+                                 <input type="hidden" name="upload_form_name" value="A">
+
+
+                                <input type="hidden"  name="upload_license_name" value="EA">
+                                <input type="hidden" name="module" id="module" value="ownership_type_doc">
+                                <input type="hidden" name="ownership_type" id="ownership_type" value="dr">
+                                
+                                <input type="hidden" name="document_category" id="document_category" value="director_mom">
+                                <input type="hidden" name="document_sub_category" id="document_sub_category" value="dir_mom">
+                                <span class="file-limit text-center">File type: PDF (Max 250 KB)</span>
+                                <span class="text-danger ownershipdoc_upload_error"></span>
+
+                            </div>
+
+                            <div class="col-md-2 col-12">
+                                 <button class="btn btn-info ownershipdoc_upload-btn" type="button">
+                                    <i class="fa fa-upload"></i> Upload
+                                </button>
+                            </div>
+
+                                <div class="col-md-4 col-12 d-none file-link"></div>
+
+
+                            
+                        </div>
+                    @endif
 
 
                     <!-- ----------------enter type ------------------ -->
@@ -535,24 +618,31 @@ exit; -->
                                         <div class="col-12 col-md-3 ">
                                             <label>Qualification <span class="text-red">*</span></label>
                                         </div>
-                                        <!-- <input type="text" class="form-control" id="qualification" name="qualification[]" placeholder="Qualification" value=""> -->
-                                        <div class="col-12 col-md-6">
+
+                                        <div class="col-12 col-md-4">
                                             <select class="form-control qualification" name="qualification[]">
                                                 <option value="">Select Qualification</option>
                                                 <option value="8 To 12">8 To 12</option>
-                                                <option value="Diploma">Diploma</option>
                                                 <option value="Degree">Degree</option>
                                                 <option value="Master Degree">Master Degree</option>
                                             </select>
-
-                                            <!-- MUST BE HERE -->
                                             <span class="error text-danger qualification_error"></span>
                                         </div>
 
-
-
-
+                                        
+                                        <div class="col-12 col-md-5" id="qualTextWrapper" style="display:none;">
+                                            <div class="row">
+                                                <div class="col-12 col-md-5">
+                                                    <label>Enter Qualification <span class="text-red">*</span></label>
+                                                </div>
+                                                <div class="col-12 col-md-7">
+                                                    <input type="text" class="form-control" id="qual_text" name="qual_text[]">
+                                                    <span class="error text-danger qual_text_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
 
                                     <div class="row mt-2">
 
@@ -562,21 +652,18 @@ exit; -->
                                         <div class="col-12 col-md-7">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" id="qual_proof" name="qual_proof[]" value="">
+                                                    <input type="file" class="form-control" name="qual_proof[]">
+                                                    <span class="error text-danger qual_proof_error"></span>
                                                 </div>
 
                                                 <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button"> <i class="fa fa-upload"></i> Upload </button>
+                                                    <button class="btn btn-info" type="button">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
                                                 </div>
-
                                             </div>
-
-
-                                            <!-- <span class="choose-btn btn btn-info" id="chooseBtn"><i class="fa fa-upload"></i> Upload Proof</span>
-                                            <input type="file" id="hiddenBtn" id="qual_proof" name="qual_proof[]" style="display:none;"> -->
-
-                                            <span class="error text-danger" id="qual_proof_error"></span>
                                         </div>
+
 
                                         <!-- <div class="col-12 col-md-3">
                                             <button class="btn btn-info"> <i class="fa fa-upload"></i> Upload </button>
@@ -893,9 +980,9 @@ exit; -->
                                             <th>Father/s
                                                 Husband/s
                                                 Name</th>
-                                            <th>Age</th>
+                                            <th>D.O.B and Age</th>
                                             <th>Address </th>
-                                            <th>Qualifications</th>
+                                            <th>Qualifications and Proof</th>
 
 
                                             <th>Present business of
@@ -969,7 +1056,12 @@ exit; -->
 
                                     </tbody>
                                 </table>
+
+                               
                             </div>
+                                
+
+                                
                             <!-- <div class="col-12 col-md-5  text-md-right">
                                 <h5>Number of Partners? (Min 2, Max 6)</h5>
                             </div>
@@ -980,6 +1072,8 @@ exit; -->
 
 
                         </div>
+                        
+
 
                         <div class="border box-shadow-blue card p-3 mt-2" id="partnersfill-section" style="display:none;">
 
@@ -993,16 +1087,29 @@ exit; -->
                                             <div class="col-12 col-md-12">
                                                 <label for="Name">(i) Full name and house address of partners <span style="color: red;">*</span><br><span class="text-label" style="color: #023466;">(If it is partnership concern, partnership deed should be enclosed)</span></label>
                                             </div>
+
+                                            <div class="col-12 col-md-4">
+                                                <!-- <textarea rows="3" class="form-control" name="proprietor_name"></textarea> -->
+                                                <label>Partner's Name <span class="text-red">*</span></label>
+
+                                            </div>
+
+
                                             <div class="col-12 col-md-6">
                                                 <input type="hidden" class="form-control mb-2 ownership_type" maxlength="20" id="ownership_type" name="ownership_type[]" value="pt">
                                                 <!-- <textarea rows="3" class="form-control" name="proprietor_name"></textarea> -->
-                                                <label>Partner's Name <span class="text-red">*</span></label>
+
                                                 <input type="text" class="form-control mb-2 proprietor_name" maxlength="50" id="proprietor_name" name="proprietor_name[]" placeholder="Partner's Name">
 
                                                 <span class="error text-danger" id="proprietor_name_error"></span>
                                             </div>
-                                            <div class="col-12 col-md-6">
+
+                                            <div class="col-12 col-md-4">
                                                 <label>Partner's Address <span class="text-red">*</span></label>
+
+                                            </div>
+                                            <div class="col-12 col-md-6">
+
                                                 <textarea rows="3" class="form-control" name="proprietor_address[]" placeholder="Partner's Address"></textarea>
                                                 <span class="error text-danger" id="proprietor_address_error"></span>
                                             </div>
@@ -1010,29 +1117,94 @@ exit; -->
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="row align-items-center">
-                                            <div class="col-12 col-md-12">
-                                                <label for="Name">(ii) Partner's Age and qualification along with
-                                                    evidence <span style="color: red;">*</span></label>
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label>Partner's Age <span class="text-red">*</span></label>
-                                                <input type="number" class="form-control" min="12" max="80" id="age" name="age[]" placeholder="Partner's Age" value="">
-                                                <span class="error text-danger" id="age_error"></span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label>Partner's Qualification <span class="text-red">*</span></label>
-                                                <input type="text" class="form-control" id="qualification" name="qualification[]" placeholder="Partner's Qualification" value="">
-                                                <!-- <input type="text"
-                                        class="form-control" id="validity" name="validity"
-                                        placeholder="Validity"
-                                        onfocus="(this.type='date')"
-                                        onblur="(this.type='text')"> -->
-                                                <span class="error text-danger" id="qualification_error"></span>
+                                    <div class="row">
+                                        <div class="col-12 col-md-12">
+                                            <label for="Name">(ii) Age and qualification along with
+                                                evidence <span style="color: red;">*</span></label>
+                                        </div>
 
-                                            </div>
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-12 col-md-3">
+                                            <label>Date Of Birth <span class="text-red">*</span></label>
+                                        </div>
+
+                                        <div class="col-12 col-md-4">
+                                            <input type="date" class="form-control dob" name="dob[]">
+                                            <span class="error text-danger dob_error"></span>
+                                        </div>
+
+                                        <div class="col-12 col-md-2">
+                                            <label>Age <span class="text-red">*</span></label>
+                                        </div>
+
+                                        <div class="col-12 col-md-3">
+                                            <input type="number" class="form-control age" name="age[]" readonly>
+                                            <span class="error text-danger age_error"></span>
                                         </div>
                                     </div>
+
+
+                                    <div class="row mt-2">
+                                        <div class="col-12 col-md-3 ">
+                                            <label>Qualification <span class="text-red">*</span></label>
+                                        </div>
+                                        <!-- <input type="text" class="form-control" id="qualification" name="qualification[]" placeholder="Qualification" value=""> -->
+                                        <div class="col-12 col-md-6">
+                                            <select class="form-control qualification" name="qualification[]">
+                                                <option value="">Select Qualification</option>
+                                                <option value="8 To 12">8 To 12</option>
+                                                <option value="Diploma">Diploma</option>
+                                                <option value="Degree">Degree</option>
+                                                <option value="Master Degree">Master Degree</option>
+                                            </select>
+
+                                            <!-- MUST BE HERE -->
+                                            <span class="error text-danger qualification_error"></span>
+                                        </div>
+
+
+
+
+                                    </div>
+
+                                    <div class="row mt-2">
+
+                                        <div class="col-12 col-md-3">
+                                            <label>Qualification Proof <span class="text-red">*</span></label>
+                                        </div>
+                                        <div class="col-12 col-md-7">
+                                            <div class="row">
+                                                <div class="col-12 col-md-8">
+                                                    <input type="file" class="form-control" id="qual_proof" name="qual_proof[]" value="">
+                                                </div>
+
+                                                <div class="col-12 col-md-4">
+                                                    <button class="btn btn-info" type="button"> <i class="fa fa-upload"></i> Upload </button>
+                                                </div>
+
+                                            </div>
+
+
+                                            <!-- <span class="choose-btn btn btn-info" id="chooseBtn"><i class="fa fa-upload"></i> Upload Proof</span>
+                                            <input type="file" id="hiddenBtn" id="qual_proof" name="qual_proof[]" style="display:none;"> -->
+
+                                            <span class="error text-danger" id="qual_proof_error"></span>
+                                        </div>
+
+                                        <!-- <div class="col-12 col-md-3">
+                                            <button class="btn btn-info"> <i class="fa fa-upload"></i> Upload </button>
+                                        </div> -->
+
+                                    </div>
+
+
+
+
+                                </div>
 
                                 </div>
 
@@ -1040,10 +1212,10 @@ exit; -->
                                 <div class="row mt-2">
                                     <div class="col-md-6">
                                         <div class="row align-items-center">
-                                            <div class="col-12 col-md-12">
+                                            <div class="col-12 col-md-4">
                                                 <label for="Name">(iii) Partner's Father/Husband's name <span style="color: red;">*</span></label>
                                             </div>
-                                            <div class="col-12 col-md-12">
+                                            <div class="col-12 col-md-6">
                                                 <input type="text" class="form-control" id="fathers_name" maxlength="50" name="fathers_name[]" value="" placeholder="Partner's Father/Husband's name">
                                                 <span class="error text-danger" id="fathers_name_error"></span>
                                             </div>
@@ -1052,10 +1224,10 @@ exit; -->
 
                                     <div class="col-md-6">
                                         <div class="row align-items-center">
-                                            <div class="col-12 col-md-12">
+                                            <div class="col-12 col-md-6">
                                                 <label for="Name">(iv) Partner's Present business of the applicant <span style="color: red;">*</span></label>
                                             </div>
-                                            <div class="col-12 col-md-12">
+                                            <div class="col-12 col-md-6">
                                                 <input type="text" class="form-control" id="present_business" name="present_business[]" value="" maxlength="50" placeholder="Partner's Present business of the applicant">
                                                 <span class="error text-danger" id="present_business_error"></span>
                                             </div>
@@ -2092,7 +2264,7 @@ exit; -->
                                     @endif
 
                                 </table>
-                                <p class="text-red">Note : Minimum 4 Staff Details are Mandatory and one QC Detail is Mandatory</p>
+                                <p class="text-red">Note : Minimum 4 Staff Details are Mandatory - One QC Detail and Two B are Mandatory</p>
                                 <!-- <div class="row">
                                     <div class="col-12 col-md-12">
                                       
@@ -2710,7 +2882,7 @@ exit; -->
                                                             <i class="fa fa-trash-o"></i> Remove
                                                         </button>
                                                     </div>
-                                                    
+
                                                 </div>
 
                                                 <div class="row mt-2" id="gst-file-row" style="display: none;">
@@ -2726,8 +2898,8 @@ exit; -->
                                                         <span class="file-limit">File type: PDF (Max 250 KB)</span>
                                                     </div>
                                                     <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Upload</button>
-                                                </div>
+                                                        <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Upload</button>
+                                                    </div>
                                                 </div>
                                                 @endif
                                             </div>
@@ -3097,11 +3269,7 @@ exit; -->
     </script>
 
     <script>
-        const hasApplication = {
-            {
-                isset($application) ? 'true' : 'false'
-            }
-        };
+        const hasApplication = {{isset($application) ? 'true' : 'false'}};
     </script>
 
     <script>
@@ -4232,6 +4400,8 @@ let proprietorCount = initialDraftCount || 0;
             // let qualification = $section.find("input[name='qualification[]']").val().trim();
             let qualification = $section.find("select[name='qualification[]']").val();
 
+            let qual_text = $section.find("select[name='qual_text[]']").val();
+
             // qual_proof
             let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
 
@@ -4334,10 +4504,26 @@ let proprietorCount = initialDraftCount || 0;
 
             }
 
+            if (qualification && qualification !== '8 To 12') {
+                // alert('111');
+                if (!qual_text) {
+                    setError($section.find("input[name='qual_text[]']"),
+                    "Qualification is required");
+                    // setError(
+                    //     $section.find("input[name='qual_text[]']"),
+                    //     "Enter Qualification is required"
+                    // );
+                  
+                }
+            }
+
             // FILE (VERY IMPORTANT — DON'T USE .val())
             let fileInput = $section.find("input[name='qual_proof[]']")[0];
 
+            // alert(fileInput);
+
             if (!fileInput.files.length) {
+                // alert('nothing');
                 setError($section.find("input[name='qual_proof[]']"),
                     "Qualification proof is required");
             }
@@ -4383,7 +4569,13 @@ let proprietorCount = initialDraftCount || 0;
                 }
                 $row.find("td").eq(0).text(name);
                 $row.find("td").eq(1).text(fathersName);
-                $row.find("td").eq(2).text(age);
+                $row.find("td").eq(2)
+                    .attr({
+                        "data-dob": dob,
+                        "data-age": age
+                    })
+                    .text(`${dob}, ${age}`);
+
                 $row.find("td").eq(3).text(address);
                 $row.find("td").eq(4).text(qualification);
                 $row.find("td").eq(5).text(presentBusiness);
@@ -4446,7 +4638,10 @@ let proprietorCount = initialDraftCount || 0;
                     <tr>
                         <td>${name}</td>
                         <td>${fathersName}</td>
-                        <td>${age}</td>
+                        <td data-dob="${dob}" data-age="${age}">
+                            ${dob}, ${age}
+                        </td>
+
                         <td>${address}</td>
                         <td>${qualification}</td>
                         <td>${presentBusiness}</td>
@@ -4524,7 +4719,20 @@ let proprietorCount = initialDraftCount || 0;
             // Fill form with row data
             $section.find("input[name='proprietor_name[]']").val($row.find("td").eq(0).text());
             $section.find("input[name='fathers_name[]']").val($row.find("td").eq(1).text());
-            $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
+
+          let tdDobAge = $row.find("td").eq(2);
+
+            $section.find("input[name='dob[]']").val(tdDobAge.data("dob"));
+            $section.find("input[name='age[]']").val(tdDobAge.data("age"));
+
+            // alert($section.find("input[name='fathers_name[]']").val($row.find("td").eq(1).text()));
+            // $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
+            // let qualification = $section.find("input[name='qualification[]']").val().trim();
+            //  $section.find("select[name='qualification[]']").val();
+
+            // qual_proof
+            let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
+            // $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
             $section.find("textarea[name='proprietor_address[]']").val($row.find("td").eq(3).text());
             $section.find("input[name='qualification[]']").val($row.find("td").eq(4).text());
             $section.find("input[name='present_business[]']").val($row.find("td").eq(5).text());
@@ -4639,7 +4847,9 @@ let proprietorCount = initialDraftCount || 0;
             let $section = $("#proprietor-sectionfresh");
 
 
-            $section.find("input[type='text'], input[type='number'], input[type='date'], input[type='file'], textarea").val("");
+            // $section.find("input[type='text'], input[type='number'], input[type='date'], input[type='file'], textarea").val("");
+
+            $section.find("input[type='text'], input[type='file'], input[type='number'], input[type='date'], textarea, select").val("");
 
 
 
@@ -4686,6 +4896,8 @@ let proprietorCount = initialDraftCount || 0;
         // Show partner form
         $("#add-partner").on("click", function() {
             let rowCount = $("#partner-section table tbody tr").length;
+
+          
             if (rowCount >= 6) {
 
                 Swal.fire({
@@ -4729,8 +4941,15 @@ let proprietorCount = initialDraftCount || 0;
             // Basic text inputs
             let name = $section.find("input[name='proprietor_name[]']").val().trim();
             let address = $section.find("textarea[name='proprietor_address[]']").val().trim();
+              let dob = $section.find("input[name='dob[]']").val().trim();
             let age = $section.find("input[name='age[]']").val().trim();
-            let qualification = $section.find("input[name='qualification[]']").val().trim();
+            // let qualification = $section.find("input[name='qualification[]']").val().trim();
+            let qualification = $section.find("select[name='qualification[]']").val();
+
+            let qual_text = $section.find("select[name='qual_text[]']").val();
+
+
+            let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
             let fathersName = $section.find("input[name='fathers_name[]']").val().trim();
             let presentBusiness = $section.find("input[name='present_business[]']").val().trim();
 
@@ -4784,8 +5003,100 @@ let proprietorCount = initialDraftCount || 0;
             let ccValidityFormatted = formatDateToDDMMYYYY(ccValidity);
             let expValidityFormatted = formatDateToDDMMYYYY(expValidity);
             // ✅ Validation
-            if (!name || !address || !age || !qualification || !fathersName || !presentBusiness) {
-                alert("Please fill all proprietor required fields!");
+            // ✅ Validation
+            $section.find(".error").text(""); // clear old errors
+            let isValid = true;
+
+            function setError(element, message) {
+                element.closest('.col-12, .col-md-6, .col-md-5, .col-md-4, .col-md-3')
+                    .find('.error')
+                    .text(message);
+                isValid = false;
+            }
+            // NAME
+            if (!name) {
+                setError($section.find("input[name='proprietor_name[]']"),
+                    // let name = $section.find("input[name='proprietor_name[]']").val().trim();
+                    "Proprietor name is required");
+            }
+
+            // ADDRESS
+            if (!address) {
+                setError($section.find("textarea[name='proprietor_address[]']"),
+                    "Address is required");
+            }
+
+            // DOB
+            if (!dob) {
+                setError($section.find("input[name='dob[]']"),
+                    "Date of birth is required");
+            }
+
+            // AGE
+            if (!age) {
+                setError($section.find("input[name='age[]']"),
+                    "Age is required");
+            } else if (parseInt(age) < 25) {
+                setError($section.find("input[name='age[]']"),
+                    "Minimum age should be 25");
+            }
+
+
+
+          
+
+             if (!qualification) {
+                setError(
+                    $section.find("select[name='qualification[]']"),
+                    "Qualification is required"
+                );
+                isValid = false;
+            }
+
+    
+            if (qualification && qualification !== '8 To 12') {
+                
+                if (!qual_text) {
+                    setError(
+                        $section.find("input[name='qual_text[]']"),
+                        "Enter Qualification is required"
+                    );
+                  
+                }
+            }
+
+            // FILE (VERY IMPORTANT — DON'T USE .val())
+            let fileInput = $section.find("input[name='qual_proof[]']")[0];
+
+            if (!fileInput.files.length) {
+                setError($section.find("input[name='qual_proof[]']"),
+                    "Qualification proof is required");
+            }
+
+            // FATHER NAME
+            if (!fathersName) {
+                setError($section.find("input[name='fathers_name[]']"),
+                    "Father/Husband's name is required");
+            }
+
+            // BUSINESS
+            if (!presentBusiness) {
+                setError($section.find("input[name='present_business[]']"),
+                    "Present business is required");
+            }
+
+
+            // STOP if invalid
+            if (!isValid) {
+
+                Swal.fire({
+                    icon: 'warning',
+                    width: 450,
+                    title: 'Missing Fields',
+                    text: 'Fill all required fields.',
+                    confirmButtonText: 'OK'
+                });
+
                 return;
             }
 
@@ -4797,7 +5108,12 @@ let proprietorCount = initialDraftCount || 0;
                 let $row = $("#partner-section table tbody tr").eq(editIndex);
                 $row.find("td").eq(0).text(name);
                 $row.find("td").eq(1).text(fathersName);
-                $row.find("td").eq(2).text(age);
+                  $row.find("td").eq(2)
+                    .attr({
+                        "data-dob": dob,
+                        "data-age": age
+                    })
+                    .text(`${dob}, ${age}`);
                 $row.find("td").eq(3).text(address);
                 $row.find("td").eq(4).text(qualification);
                 $row.find("td").eq(5).text(presentBusiness);
@@ -4860,7 +5176,8 @@ let proprietorCount = initialDraftCount || 0;
                     <tr>
                         <td>${name}</td>
                         <td>${fathersName}</td>
-                        <td>${age}</td>
+                        <td data-dob="${dob}" data-age="${age}"> ${dob}, ${age}</td>
+
                         <td>${address}</td>
                         <td>${qualification}</td>
                         <td>${presentBusiness}</td>
@@ -4887,6 +5204,7 @@ let proprietorCount = initialDraftCount || 0;
                             <button type="button" class="btn btn-danger btn-sm remove-partner-row"><i class="fa fa-trash-o"></i></button>
                         </td>
                     </tr>
+                    
                 `);
 
                 resetPartnerForm(true);
@@ -4900,7 +5218,7 @@ let proprietorCount = initialDraftCount || 0;
             let $section = $("#partnersfill-section");
 
             // Clear all text/number/textarea inputs
-            $section.find("input[type='text'], input[type='number'], textarea").val("");
+            $section.find("input[type='text'], input[type='file'], input[type='number'], input[type='date'], textarea, select").val("");
 
             // Clear all radio buttons
             $section.find("input[type='radio']").prop("checked", false);
@@ -4937,6 +5255,9 @@ let proprietorCount = initialDraftCount || 0;
         // Remove partner row
         $(document).on("click", ".remove-partner-row", function() {
             $(this).closest("tr").remove();
+            let rowCount = $("#partner-section table tbody tr").length;
+
+ 
         });
 
         // Update partner row
@@ -4955,7 +5276,13 @@ let proprietorCount = initialDraftCount || 0;
             // Fill form with row data
             $section.find("input[name='proprietor_name[]']").val($row.find("td").eq(0).text());
             $section.find("input[name='fathers_name[]']").val($row.find("td").eq(1).text());
-            $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
+            // $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
+
+            let tdDobAge = $row.find("td").eq(2);
+
+            $section.find("input[name='dob[]']").val(tdDobAge.data("dob"));
+            $section.find("input[name='age[]']").val(tdDobAge.data("age"));
+
             $section.find("textarea[name='proprietor_address[]']").val($row.find("td").eq(3).text());
             $section.find("input[name='qualification[]']").val($row.find("td").eq(4).text());
             $section.find("input[name='present_business[]']").val($row.find("td").eq(5).text());

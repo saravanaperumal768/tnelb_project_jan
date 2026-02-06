@@ -377,69 +377,69 @@ class LoginController extends Controller
             ->where('ta.status', ['P', 'F']) // Select fields
             ->get();
 
-       $recieved_apps = DB::table('tnelb_application_tbl')
-    ->where('status', 'P')
-    ->select(
-        'application_id',
-        'status',
-        'applicant_name',
-        DB::raw('created_at as submitted_at'),
-        'form_name',
-        'processed_by'
-    )
-    ->unionAll(
-        DB::table('tnelb_ea_applications')
-            ->where('application_status', 'P')
+        $recieved_apps = DB::table('tnelb_application_tbl')
+            ->where('status', 'P')
             ->select(
                 'application_id',
-                DB::raw('application_status as status'),
+                'status',
                 'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
+                DB::raw('created_at as submitted_at'),
                 'form_name',
                 'processed_by'
             )
-    )
-    ->unionAll(
-        DB::table('tnelb_esa_applications')
-            ->where('application_status', 'P')
-            ->select(
-                'application_id',
-                DB::raw('application_status as status'),
-                'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
-                'form_name',
-                'processed_by'
+            ->unionAll(
+                DB::table('tnelb_ea_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'form_name',
+                        'processed_by'
+                    )
             )
-    )
-    ->unionAll(
-        DB::table('tnelb_eb_applications')
-            ->where('application_status', 'P')
-            ->select(
-                'application_id',
-                DB::raw('application_status as status'),
-                'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
-                'form_name',
-                'processed_by'
+            ->unionAll(
+                DB::table('tnelb_esa_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'form_name',
+                        'processed_by'
+                    )
             )
-    )
-    ->unionAll(
-        DB::table('tnelb_esb_applications')
-            ->where('application_status', 'P')
-            ->select(
-                'application_id',
-                DB::raw('application_status as status'),
-                'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
-                'form_name',
-                'processed_by'
+            ->unionAll(
+                DB::table('tnelb_eb_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'form_name',
+                        'processed_by'
+                    )
             )
-    )
-    ->get();
+            ->unionAll(
+                DB::table('tnelb_esb_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'form_name',
+                        'processed_by'
+                    )
+            )
+            ->get();
 
 
 
-       
+
 
 
 
@@ -449,70 +449,70 @@ class LoginController extends Controller
         //     ->get();
 
 
-      $inprogress = DB::table('tnelb_application_tbl')
-    ->where('status', 'F')
-    ->select(
-        'application_id',
-        'status',
-        'applicant_name',
-        DB::raw('created_at as submitted_at'),
-        'updated_at',
-        'form_name',
-        'processed_by'
-    )
-    ->unionAll(
-        DB::table('tnelb_ea_applications')
-            ->where('application_status', 'P')
+        $inprogress = DB::table('tnelb_application_tbl')
+            ->where('status', 'F')
             ->select(
                 'application_id',
-                DB::raw('application_status as status'),
+                'status',
                 'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
+                DB::raw('created_at as submitted_at'),
                 'updated_at',
                 'form_name',
                 'processed_by'
             )
-    )
-    ->unionAll(
-        DB::table('tnelb_esa_applications')
-            ->where('application_status', 'P')
-            ->select(
-                'application_id',
-                DB::raw('application_status as status'),
-                'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
-                'updated_at',
-                'form_name',
-                'processed_by'
+            ->unionAll(
+                DB::table('tnelb_ea_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'updated_at',
+                        'form_name',
+                        'processed_by'
+                    )
             )
-    )
-    ->unionAll(
-        DB::table('tnelb_eb_applications')
-            ->where('application_status', 'P')
-            ->select(
-                'application_id',
-                DB::raw('application_status as status'),
-                'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
-                'updated_at',
-                'form_name',
-                'processed_by'
+            ->unionAll(
+                DB::table('tnelb_esa_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'updated_at',
+                        'form_name',
+                        'processed_by'
+                    )
             )
-    )
-    ->unionAll(
-        DB::table('tnelb_esb_applications')
-            ->where('application_status', 'P')
-            ->select(
-                'application_id',
-                DB::raw('application_status as status'),
-                'applicant_name',
-                DB::raw('dt_submit as submitted_at'),
-                'updated_at',
-                'form_name',
-                'processed_by'
+            ->unionAll(
+                DB::table('tnelb_eb_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'updated_at',
+                        'form_name',
+                        'processed_by'
+                    )
             )
-    )
-    ->get();
+            ->unionAll(
+                DB::table('tnelb_esb_applications')
+                    ->where('application_status', 'P')
+                    ->select(
+                        'application_id',
+                        DB::raw('application_status as status'),
+                        'applicant_name',
+                        DB::raw('dt_submit as submitted_at'),
+                        'updated_at',
+                        'form_name',
+                        'processed_by'
+                    )
+            )
+            ->get();
 
 
         $userRole = Auth::user()->roles_id; // Supervisor Role ID
@@ -531,7 +531,7 @@ class LoginController extends Controller
             ->orderByDesc('ta.updated_at')
             ->get();
 
-  $commonColumns = [
+        $commonColumns = [
             'ta.application_id',
             'ta.form_name',
             'ta.login_id',
@@ -544,62 +544,62 @@ class LoginController extends Controller
 
         ];
 
-//             $show = DB::table('tnelb_ea_applications')->where('form_name', 'A') ->first();
-//             // $show = DB::table('mst_licences') ->where('form_code', 'A')->first();
-// dd($show);
-// exit;
-//    $cl_forms_ea = DB::table('tnelb_ea_applications as ta')
-//     ->leftJoin(
-//         'mst_licences as ml',
-//         'ml.cert_licence_code',
-//         '=',
-//         'ta.license_name'   // EA comes from application table
-//     )
-//     ->where('ta.license_name', 'EA')   // ✅ check EA records
-//     // ->where('ta.payment_status', 'paid')
-//     // ->whereIn('ta.application_status', ['P', 'RE'])
-//     ->select(
-//         $commonColumns,
-        
-//     )
-//     ->get();
+        //             $show = DB::table('tnelb_ea_applications')->where('form_name', 'A') ->first();
+        //             // $show = DB::table('mst_licences') ->where('form_code', 'A')->first();
+        // dd($show);
+        // exit;
+        //    $cl_forms_ea = DB::table('tnelb_ea_applications as ta')
+        //     ->leftJoin(
+        //         'mst_licences as ml',
+        //         'ml.cert_licence_code',
+        //         '=',
+        //         'ta.license_name'   // EA comes from application table
+        //     )
+        //     ->where('ta.license_name', 'EA')   // ✅ check EA records
+        //     // ->where('ta.payment_status', 'paid')
+        //     // ->whereIn('ta.application_status', ['P', 'RE'])
+        //     ->select(
+        //         $commonColumns,
 
-    
-$cl_forms_ea = DB::table('tnelb_ea_applications as ta')
-    ->leftJoin('mst_licences as ml', 'ml.cert_licence_code', '=', 'ta.license_name')
-    // ->where('ta.license_name', 'EA')
-    ->where('ta.payment_status', 'paid')
-    ->whereIn('ta.application_status', ['P', 'RE'])
-    ->select($commonColumns, 'ml.licence_name');
+        //     )
+        //     ->get();
 
 
-$cl_forms_esa = DB::table('tnelb_esa_applications as ta')
-    ->leftJoin('mst_licences as ml', 'ml.form_code', '=', 'ta.form_name')
-    // ->where('ta.license_name', 'EA')
-    ->where('ta.payment_status', 'paid')
-    ->whereIn('ta.application_status', ['P', 'RE'])
-    ->select($commonColumns, 'ml.licence_name');
+        $cl_forms_ea = DB::table('tnelb_ea_applications as ta')
+            ->leftJoin('mst_licences as ml', 'ml.cert_licence_code', '=', 'ta.license_name')
+            // ->where('ta.license_name', 'EA')
+            ->where('ta.payment_status', 'paid')
+            ->whereIn('ta.application_status', ['P', 'RE'])
+            ->select($commonColumns, 'ml.licence_name');
 
-$cl_forms_esb = DB::table('tnelb_esb_applications as ta')
-    ->leftJoin('mst_licences as ml', 'ml.form_code', '=', 'ta.form_name')
-    // ->where('ta.license_name', 'EA')
-    ->where('ta.payment_status', 'paid')
-    ->whereIn('ta.application_status', ['P', 'RE'])
-    ->select($commonColumns, 'ml.licence_name');
 
-$cl_forms_eb = DB::table('tnelb_eb_applications as ta')
-    ->leftJoin('mst_licences as ml', 'ml.form_code', '=', 'ta.form_name')
-    // ->where('ta.license_name', 'EA')
-    ->where('ta.payment_status', 'paid')
-    ->whereIn('ta.application_status', ['P', 'RE'])
-    ->select($commonColumns, 'ml.licence_name');
+        $cl_forms_esa = DB::table('tnelb_esa_applications as ta')
+            ->leftJoin('mst_licences as ml', 'ml.form_code', '=', 'ta.form_name')
+            // ->where('ta.license_name', 'EA')
+            ->where('ta.payment_status', 'paid')
+            ->whereIn('ta.application_status', ['P', 'RE'])
+            ->select($commonColumns, 'ml.licence_name');
 
-$cl_forms = $cl_forms_ea
-    ->unionAll($cl_forms_esa)
-    ->unionAll($cl_forms_esb)
-    ->unionAll($cl_forms_eb)
-    ->orderByDesc('updated_at') // optional
-    ->get();
+        $cl_forms_esb = DB::table('tnelb_esb_applications as ta')
+            ->leftJoin('mst_licences as ml', 'ml.form_code', '=', 'ta.form_name')
+            // ->where('ta.license_name', 'EA')
+            ->where('ta.payment_status', 'paid')
+            ->whereIn('ta.application_status', ['P', 'RE'])
+            ->select($commonColumns, 'ml.licence_name');
+
+        $cl_forms_eb = DB::table('tnelb_eb_applications as ta')
+            ->leftJoin('mst_licences as ml', 'ml.form_code', '=', 'ta.form_name')
+            // ->where('ta.license_name', 'EA')
+            ->where('ta.payment_status', 'paid')
+            ->whereIn('ta.application_status', ['P', 'RE'])
+            ->select($commonColumns, 'ml.licence_name');
+
+        $cl_forms = $cl_forms_ea
+            ->unionAll($cl_forms_esa)
+            ->unionAll($cl_forms_esb)
+            ->unionAll($cl_forms_eb)
+            ->orderByDesc('updated_at') // optional
+            ->get();
 
 
 
@@ -983,9 +983,11 @@ $cl_forms = $cl_forms_ea
 
 
     // -----------------form A -------------------
- public function applicants_detail_forma($applicant_id)
+    public function applicants_detail_forma($applicant_id)
     {
 
+        // dd($applicant_id);
+        // exit;
 
         $returnForwardUser = null;
 
@@ -1027,8 +1029,45 @@ $cl_forms = $cl_forms_ea
 
         $applicant = $applicantQuery1
             // ->unionAll($applicantQuery2)
-            ->orderByDesc('created_at')
+            ->orderByDesc('dt_submit')
             ->first();
+
+        // dd($applicant->appl_type);
+        // exit;
+
+        $appl_type = trim($applicant->appl_type);
+        // dd($appl_type);
+        // exit;
+
+
+        if ($appl_type === 'R') {
+            // dd($applicant->old_application);
+            // exit;
+            $old_issuedat = DB::table('tnelb_license')
+                ->select('issued_at', 'created_at', 'expires_at')
+                ->where('application_id', $applicant->old_application)
+
+                ->unionAll(
+
+                    DB::table('tnelb_renewal_license')
+                        ->select('issued_at', 'created_at', 'expires_at')
+                        ->where('application_id', $applicant->old_application)
+
+                )
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $old_issued_at_date = $old_issuedat->expires_at;
+
+
+            // dd($old_issuedat->issued_at);
+            // exit;
+        } else {
+
+        $old_issued_at_date = '0';
+
+        }
+
 
 
         $formname = $applicant->form_name;
@@ -1204,7 +1243,7 @@ $cl_forms = $cl_forms_ea
         $user_entry = DB::table('tnelb_ea_applications')
             ->where('application_id', $applicant_id)
             ->select('*')
-            
+
             ->first();
 
         $documents = DB::table('tnelb_applicant_doc_A')
@@ -1278,30 +1317,18 @@ $cl_forms = $cl_forms_ea
 
 
 
-        if ($formname == 'A') {
-
-            $view = match ($staff->name) {
-                'President'  => 'admin.dashboard.applicants_detail_forma',
-                'Secretary'  => 'admin.dashboard.applicants_detail_forma',
-                'Supervisor' => 'admin.dashboard.applicants_detail_forma',
-                // 'Supervisor2' => 'admin.dashboard.applicants_detail_supervisor',
-                'Accountant'    => 'admin.dashboard.applicants_detail_auditor_forma',
-
-                default      => abort(403, 'Unauthorized'),
-            };
-        } else {
 
 
-            $view = match ($staff->name) {
-                'President'  => 'admin.dashboard.formsa.applicants_detail_formsa',
-                'Secretary'  => 'admin.dashboard.formsa.applicants_detail_formsa',
-                'Supervisor' => 'admin.dashboard.formsa.applicants_detail_formsa',
-                // 'Supervisor2' => 'admin.dashboard.applicants_detail_supervisor',
-                'Accountant'    => 'admin.dashboard.applicants_detail_auditor_forma',
+        $view = match ($staff->name) {
+            'President'  => 'admin.dashboard.applicants_detail_forma',
+            'Secretary'  => 'admin.dashboard.applicants_detail_forma',
+            'Supervisor' => 'admin.dashboard.applicants_detail_forma',
+            // 'Supervisor2' => 'admin.dashboard.applicants_detail_supervisor',
+            'Accountant'    => 'admin.dashboard.applicants_detail_auditor_forma',
 
-                default      => abort(403, 'Unauthorized'),
-            };
-        }
+            default      => abort(403, 'Unauthorized'),
+        };
+
 
         return view($view, compact(
             'applicant',
@@ -1319,7 +1346,8 @@ $cl_forms = $cl_forms_ea
             'license_name',
             'equiplist',
             'equipmentlist',
-            'showbankWarning'
+            'showbankWarning',
+            'old_issued_at_date'
         ));
     }
 
@@ -1412,7 +1440,7 @@ $cl_forms = $cl_forms_ea
             }
 
 
-           
+
 
 
             // if ($applicant->application_status == 'RE') {
@@ -1482,7 +1510,7 @@ $cl_forms = $cl_forms_ea
         }
 
         // psql -U postgres -d arundb_dec01 -p 5432 -f "D:\laravel_program\tnelb-program-arun-dec01\TNelb-Staging\db\latest_v28112025.sql"
-    $proprietordetailsform_A = DB::table('proprietordetailsform_A')
+        $proprietordetailsform_A = DB::table('proprietordetailsform_A')
             ->where('application_id', $applicant_id)
             ->orderBy('id', 'Desc')
             ->where('proprietor_flag', '1')
@@ -1549,7 +1577,7 @@ $cl_forms = $cl_forms_ea
         $user_entry = DB::table('tnelb_ea_applications')
             ->where('application_id', $applicant_id)
             ->select('*')
-           
+
             ->first();
 
         $documents = DB::table('tnelb_applicant_doc_A')
@@ -1654,7 +1682,7 @@ $cl_forms = $cl_forms_ea
             ->select('qa.*')
             ->first() ?? null;
 
-     
+
 
 
         // $view = match ($staff->name) {

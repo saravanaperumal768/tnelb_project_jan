@@ -75,6 +75,7 @@ class EA_Application_model extends Model
         'old_application',
         'previous_contractor_license_verify',
         'application_ownershiptype',
-        'dd_submit'
+        'dd_submit',
+        'ownership_doc'
     ];
 }

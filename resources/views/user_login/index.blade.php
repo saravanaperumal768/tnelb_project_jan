@@ -112,7 +112,7 @@
 
                         <!-- Projects -->
                         <div class="projects-section-login active_license">
-                            <h5 class="mb-2"><strong>Active / Present License Details</strong></h5>
+                            <h5 class="mb-2"><strong>Active / Present Licence/Certificate Details</strong></h5>
                             <div class="project-list-login mt-2">
 
                                 <div class="project-card-login" data-status="en-cours">
@@ -127,7 +127,7 @@
                                     <table class="table table-bordered " width="100%">
                                         <thead class="text-center">
                                             <tr>
-                                                <th>License Name</th>
+                                                <th>Licence/Certificate Name</th>
                                                 <th>Category</th>
                                                 <th>License Number</th>
                                                 <th>Issued On</th>
@@ -277,6 +277,38 @@
                                                 <td colspan="6" class="text-center text-muted">No License Found</td>
                                             </tr>
                                             @endforelse
+                                        </tbody>
+                                    </table>
+
+
+                                    <h5 class="mb-2">C Certificate Details</h5>
+
+                                     <table class="table table-bordered " width="100%">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th>Certificate Number</th>
+                                                
+                                                <th>Issued On</th>
+                                                <th>Validity Upto</th>
+                                                <th>Allow to Apply</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+
+                                            <tr class="text-center">
+                                                <td> LC26000001</td>
+                                                <td> 02-02-2026</td>
+                                                <td> 02-02-2030</td>
+                                                <td>
+                                                     <button class="btn btn-success">QC</button>
+                                                     <button class="btn btn-success">QSC</button>
+                                                     <!-- <button class="btn btn-success">Extension</button> -->
+                                                </td>
+
+                                            </tr>
+                                              
                                         </tbody>
                                     </table>
 

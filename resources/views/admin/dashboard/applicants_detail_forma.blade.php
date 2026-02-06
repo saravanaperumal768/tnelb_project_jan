@@ -1496,6 +1496,10 @@
             var licensename      = @json($applicant->license_name);
             var applicationId    = @json($applicant->application_id);
             var processedBy      = @json(Auth::user()->name);
+
+            var old_issuedat      = @json($old_issued_at_date);
+
+            // alert(old_issuedat);
             var remarks          = $("#remarks").val().trim();
 
             var firstCertNo = @json($staffdetails->first()->cc_number);
@@ -1607,6 +1611,7 @@
                                     qc_validity_date: qc_validity_date,
                                     bank_validity: bank_validity,
                                     appl_type: appl_type,
+                                    old_issuedat : old_issuedat
                             },
                             success: function (response) {
 
