@@ -1,10 +1,10 @@
 
 $(document).on("click", ".ownershipdoc_upload-btn", function () {
-
+    // alert('111');
     let row = $(this).closest(".row");
 
     let fileInput = row.find("input[type='file']")[0];
-    let errorBox  = row.find(".ownershipdoc_upload_error");
+    let errorBox  = row.find(".Doc_upload_error");
     let fileLink  = row.find(".file-link");
 
     errorBox.text("");

@@ -25,8 +25,8 @@ class DocumentUploadController extends Controller
     public function uploadownershipdeed(Request $request)
     {
 
-    // dd($request->all());
-    // exit;
+        // dd($request->all());
+        // exit;
 
         $request->validate([
             $request->document_category === 'director_mom'
@@ -103,6 +103,9 @@ class DocumentUploadController extends Controller
                 DB::table('tnelb_temp_uploaded_documents')
                     ->where('id', $existing->id)
                     ->update([
+                        'ownership_type'        => $request->ownership_type,
+                        'document_category'     => $request->document_category,
+                        'document_sub_category' =>  $request->document_sub_category,
                         'file_path'   => $dbFilePath,
                         'uploaded_at' => DB::raw('NOW()'),
                         'updated_at'  => DB::raw('NOW()'),

@@ -303,108 +303,111 @@ exit; -->
 
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="offset-md-2 col-lg-3 mt-2 text-right ">
-                            <h6 class="fw-bold">Type of Ownership</h6>
-                        </div>
+                                    {{-- Detect draft --}}
+                <script>
+                    const IS_DRAFT = {{ isset($application) ? 'true' : 'false' }};
+                    const SAVED_OWNERSHIP = "{{ $application->application_ownershiptype ?? '' }}";
+                </script>
 
-
-                        <div class="col-lg-3 ">
-                            <select class="custom-select" name="application_ownershiptype" id="ownership_type_select">
-                                <option value="1">---Select Ownership Type---</option>
-                                <option value="pr" {{ isset($application) && $application->application_ownershiptype == 'pr' ? 'selected' : '' }}>Proprietorship</option>
-                                <option value="pt" {{ isset($application) && $application->application_ownershiptype == 'pt' ? 'selected' : '' }}>Partnership</option>
-                                <option value="pvt" {{ isset($application) && $application->application_ownershiptype == 'pvt' ? 'selected' : '' }}>Private Limited (PVT LTD)</option>
-
-                                <option value="ltd" {{ isset($application) && $application->application_ownershiptype == 'ltd' ? 'selected' : '' }}>Limited (LTD)</option>
-                            </select>
-                            <span class="error text-danger" id="ownership_type_error"></span>
-
-                        </div>
-
-                        
+                <div class="row mt-3">
+                    <div class="offset-md-2 col-lg-3 mt-2 text-right">
+                        <h6 class="fw-bold">Type of Ownership</h6>
                     </div>
 
-                    @if ($application->application_ownershiptype == 'pt')
-
-                    
-                      <div class="row mt-3" id="partnershipdeed" >
-                            <div class="offset-md-0 col-lg-3 mt-2 text-right">
-                                <h6 class="fw-bold">
-                                    Upload Partnership Deed <span class="text-danger">*</span>
-                                </h6>
-                            </div>
-
-                            <div class="col-md-3 col-12" id="partnershipUploadBox">
-                                <input type="file"
-                                    class="form-control"
-                                    id="partnership_deed"
-                                    name="partnership_deed"
-                                    accept="application/pdf">
-                                     <input type="hidden" name="upload_form_name" value="A">
-
-
-                                    <input type="hidden"  name="upload_license_name" value="EA">
-                                    <input type="hidden" name="module" id="module" value="ownership_type_doc">
-                                    
-                                    <input type="hidden" name="ownership_type" id="ownership_type" value="pt">
-                                    <input type="hidden" name="document_sub_category" id="document_sub_category" value="deed_doc">
-                                    <input type="hidden" name="document_category" id="document_category" value="partnership_deed">
-
-
-
-
-                                <span class="file-limit text-center">File type: PDF (Max 250 KB)</span>
-                                <span class="text-danger ownershipdoc_upload_error"></span>
-
-                            </div>
-
-                            <div class="col-md-2 col-12">
-                               <button class="btn btn-info ownershipdoc_upload-btn" type="button">
-                                    <i class="fa fa-upload"></i> Upload
-                                </button>
-                            </div>
-
-                            <!-- File link will appear here -->
-                            <div class="col-md-4 col-12 d-none file-link"></div>
-
-                        </div>
-                        @elseif ($application->application_ownershiptype == 'pvt' || $application->application_ownershiptype == 'ltd')
-
-
-                        <div class="row mt-3" id="directormom" >
-                            <div class="offset-md-0 col-lg-3 mt-2 text-right ">
-                                 <h6 class="fw-bold">Upload Director MOM <span class="text-danger">*</span></h5>
-                            </div>
-
-                            <div class="col-md-3 col-12">
-                                <input type="file" class="form-control" name="director_mom" id ="director_mom" accept="application/pdf">                             
-                                 <input type="hidden" name="upload_form_name" value="A">
-
-
-                                <input type="hidden"  name="upload_license_name" value="EA">
-                                <input type="hidden" name="module" id="module" value="ownership_type_doc">
-                                <input type="hidden" name="ownership_type" id="ownership_type" value="dr">
-                                
-                                <input type="hidden" name="document_category" id="document_category" value="director_mom">
-                                <input type="hidden" name="document_sub_category" id="document_sub_category" value="dir_mom">
-                                <span class="file-limit text-center">File type: PDF (Max 250 KB)</span>
-                                <span class="text-danger ownershipdoc_upload_error"></span>
-
-                            </div>
-
-                            <div class="col-md-2 col-12">
-                                 <button class="btn btn-info ownershipdoc_upload-btn" type="button">
-                                    <i class="fa fa-upload"></i> Upload
-                                </button>
-                            </div>
-
-                                <div class="col-md-4 col-12 d-none file-link"></div>
+                    <div class="col-lg-3">
+                        <select class="custom-select" name="application_ownershiptype" id="ownership_type_select">
+                            <option value="">---Select Ownership Type---</option>
+                            <option value="pr"  {{ isset($application) && $application->application_ownershiptype == 'pr' ? 'selected' : '' }}>Proprietorship</option>
+                            <option value="pt"  {{ isset($application) && $application->application_ownershiptype == 'pt' ? 'selected' : '' }}>Partnership</option>
+                            <option value="pvt" {{ isset($application) && $application->application_ownershiptype == 'pvt' ? 'selected' : '' }}>Private Limited (PVT LTD)</option>
+                            <option value="ltd" {{ isset($application) && $application->application_ownershiptype == 'ltd' ? 'selected' : '' }}>Limited (LTD)</option>
 
 
                             
+                        </select>
+                        <span class="error text-danger" id="ownership_type_error"></span>
+                    </div>
+                </div>
+
+
+                    
+
+                    
+                      <div class="row mt-3" id="partnershipdeed" style="display:none;">
+                            <div class="col-lg-3 mt-2 text-right">
+                                <h6 class="fw-bold">Upload Partnership Deed <span class="text-danger">*</span></h6>
+                            </div>
+
+                            <div class="col-md-3">
+                                <input type="file" class="form-control"
+                                    name="partnership_deed"
+                                    accept="application/pdf">
+
+                                <input type="hidden" name="upload_form_name" value="A">
+                                <input type="hidden" name="upload_license_name" value="EA">
+                                <input type="hidden" name="module" value="ownership_type_doc">
+                                <input type="hidden" name="ownership_type" value="pt">
+                                <input type="hidden" name="document_category" value="partnership_deed">
+                                <input type="hidden" name="document_sub_category" value="deed_doc">
+
+                                <span class="file-limit">PDF only (Max 250 KB)</span>
+                                <span class="text-danger Doc_upload_error"></span>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-info ownershipdoc_upload-btn">
+                                    <i class="fa fa-upload"></i> Upload
+                                </button>
+                            </div>
+
+                            {{-- FILE LINK (Draft) --}}
+                            <div class="col-md-4 col-12 {{ empty($application->ownership_doc) ? 'd-none' : '' }} file-link">
+                                @if(!empty($application->ownership_doc))
+                                 <a href="{{ asset( $application->ownership_doc) }}" target="_blank" class="text-info">
+                                        <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+                                    </a>
+                                @endif
+                            </div>
                         </div>
-                    @endif
+
+
+
+                        <div class="row mt-3" id="directormom" style="display:none;">
+                            <div class="col-lg-3 mt-2 text-right">
+                                <h6 class="fw-bold">Upload Director MOM <span class="text-danger">*</span></h6>
+                            </div>
+
+                            <div class="col-md-3">
+                                <input type="file" class="form-control"
+                                    name="director_mom"
+                                    accept="application/pdf">
+
+                                <input type="hidden" name="upload_form_name" value="A">
+                                <input type="hidden" name="upload_license_name" value="EA">
+                                <input type="hidden" name="module" value="ownership_type_doc">
+                                <input type="hidden" name="ownership_type" value="dr">
+                                <input type="hidden" name="document_category" value="director_mom">
+                                <input type="hidden" name="document_sub_category" value="dir_mom">
+
+                                <span class="file-limit">PDF only (Max 250 KB)</span>
+                                <span class="text-danger Doc_upload_error"></span>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-info ownershipdoc_upload-btn">
+                                    <i class="fa fa-upload"></i> Upload
+                                </button>
+                            </div>
+
+                            <div class="col-md-4 col-12 {{ empty($application->ownership_doc) ? 'd-none' : '' }} file-link">
+                                @if(!empty($application->ownership_doc))
+                                   <a href="{{ asset( $application->ownership_doc) }}" target="_blank" class="text-info">
+                                        <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+
 
 
                     <!-- ----------------enter type ------------------ -->
@@ -652,16 +655,39 @@ exit; -->
                                         <div class="col-12 col-md-7">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" name="qual_proof[]">
+                                                    <!-- <input type="file" class="form-control" name="qual_proof[]"> -->
+                                                     <input type="file" class="form-control"
+                                                            name="qual_proof[]"
+                                                            accept="application/pdf">
+
+                                                        <input type="hidden" name="upload_form_name" value="A">
+                                                        <input type="hidden" name="upload_license_name" value="EA">
+                                                        <input type="hidden" name="module" value="ownership_edu">
+                                                        <input type="hidden" name="ownership_type" value="pr">
+                                                        <input type="hidden" name="document_category" value="educ_qual_proof">
+                                                        <input type="hidden" name="document_sub_category" value="prop_edu">
+
+                                                        <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                        <span class="text-danger Doc_upload_error"></span>
                                                     <span class="error text-danger qual_proof_error"></span>
                                                 </div>
 
                                                 <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button">
+                                                     <button type="button" class="btn btn-info ownershipdoc_upload-btn">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
+
+                                                <!-- <span class="text-danger Doc_upload_error"></span> -->
                                             </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-12 {{ empty($application->ownership_doc) ? 'd-none' : '' }} file-link">
+                                            <!-- @if(!empty($application->ownership_doc))
+                                            <a href="{{ asset( $application->ownership_doc) }}" target="_blank" class="text-info">
+                                                    <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+                                                </a>
+                                            @endif -->
                                         </div>
 
 

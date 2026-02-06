@@ -1000,7 +1000,7 @@ if ($request->hasFile('gst_doc')) {
                 ->where('license_name', $request->license_name)
                 // ->where('license_name', $request->license_name)
 
-                ->where('is_final', '0')
+                // ->where('is_final', '0')
                 ->orderBy('uploaded_at', 'DESC')
                 ->first();
                 // dd($tempDocs);
@@ -1017,25 +1017,25 @@ if ($request->hasFile('gst_doc')) {
                 //     $updateColumn = 'director_mom_doc';
                 // }
 
-                if ($updateColumn) {
+                    if ($updateColumn) {
 
-                    // 🔹 Update main application table
-                    DB::table('tnelb_ea_applications')
-                        ->where('application_id', $applicationId)
-                        ->update([
-                            $updateColumn => $tempDocs->file_name,
-                            'updated_at'  => DB::raw('NOW()')
-                        ]);
+                        // 🔹 Update main application table
+                        DB::table('tnelb_ea_applications')
+                            ->where('application_id', $applicationId)
+                            ->update([
+                                $updateColumn => $tempDocs->file_path.$tempDocs->file_name,
+                                'updated_at'  => DB::raw('NOW()')
+                            ]);
 
-                    // 🔹 Mark temp document as final
-                    DB::table('tnelb_temp_uploaded_documents')
-                        ->where('id', $tempDocs->id)
-                        ->update([
-                            'is_final'   => '1',
-                            'moved_as' => $request->input('form_action'),
-                            'updated_at'=> DB::raw('NOW()')
-                        ]);
-                }
+                        // 🔹 Mark temp document as final
+                        DB::table('tnelb_temp_uploaded_documents')
+                            ->where('id', $tempDocs->id)
+                            ->update([
+                                'is_final'   => '1',
+                                'moved_as' => $request->input('form_action'),
+                                'updated_at'=> DB::raw('NOW()')
+                            ]);
+                    }
                 }
 
                 

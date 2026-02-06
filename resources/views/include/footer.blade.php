@@ -285,27 +285,63 @@ $(document).on("change", ".qualification", function () {
 });
 
 
-   $(document).on("change", "#ownership_type_select", function () {
+//    $(document).on("change", "#ownership_type_select", function () {
+
+//     let type = $(this).val();
+
+//     // 🔹 Reset ALL file inputs inside both sections
+//     $("#partnershipdeed input[type='file'], #directormom input[type='file']").val("");
+
+//     // 🔹 Clear file preview / link div
+//     $("#partnershipdeed .file-link, #directormom .file-link .ownershipdoc_upload_error")
+//         .html("")
+//         .addClass("d-none");
+//         // <span class="text-danger ownershipdoc_upload_error"></span>
+
+
+//     // 🔹 Clear hidden fields if any (file name / path)
+//     // $("#partnershipdeed input[type='hidden'], #directormom input[type='hidden']").val("");
+
+//     // 🔹 Hide both sections first
+//     $("#partnershipdeed, #directormom").slideUp();
+
+//     // 🔹 Show based on selection
+//     if (type === 'pt') {
+//         $("#partnershipdeed").slideDown();
+//     } 
+//     else if (type === 'pvt' || type === 'ltd') {
+//         $("#directormom").slideDown();
+//     }
+// });
+
+
+$(document).ready(function () {
+
+    // 🔹 Draft load behavior
+    if (IS_DRAFT) {
+        $("#partnershipdeed, #directormom").hide();
+
+        if (SAVED_OWNERSHIP === 'pt') {
+            $("#partnershipdeed").show();
+        } 
+        else if (SAVED_OWNERSHIP === 'pvt' || SAVED_OWNERSHIP === 'ltd') {
+            $("#directormom").show();
+        }
+    }
+});
+
+/* 🔁 Ownership change */
+$(document).on("change", "#ownership_type_select", function () {
 
     let type = $(this).val();
 
-    // 🔹 Reset ALL file inputs inside both sections
-    $("#partnershipdeed input[type='file'], #directormom input[type='file']").val("");
+    // clear files + errors
+    $("input[type='file']").val("");
+    $(".ownershipdoc_upload_error").text("");
+    $(".file-link").html("").addClass("d-none");
 
-    // 🔹 Clear file preview / link div
-    $("#partnershipdeed .file-link, #directormom .file-link .ownershipdoc_upload_error")
-        .html("")
-        .addClass("d-none");
-        // <span class="text-danger ownershipdoc_upload_error"></span>
-
-
-    // 🔹 Clear hidden fields if any (file name / path)
-    // $("#partnershipdeed input[type='hidden'], #directormom input[type='hidden']").val("");
-
-    // 🔹 Hide both sections first
     $("#partnershipdeed, #directormom").slideUp();
 
-    // 🔹 Show based on selection
     if (type === 'pt') {
         $("#partnershipdeed").slideDown();
     } 
