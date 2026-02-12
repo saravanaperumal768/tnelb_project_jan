@@ -272,17 +272,22 @@
 
 
 $(document).on("change", ".qualification", function () {
-    let $section = $(this).closest('.row');
+
+    let $section = $(this).closest(".row");
     let qualification = $(this).val();
 
+    let $wrapper = $section.find(".qualTextWrapper");
+    let $input   = $section.find("input[name='qual_text[]']");
+
     if (qualification && qualification !== '8 To 12') {
-        $("#qualTextWrapper").slideDown();
+        $wrapper.show();
     } else {
-        $("#qualTextWrapper").slideUp();
-        $section.find("input[name='qual_text[]']").val('');
-        $section.find(".qual_text_error").text('');
+        $wrapper.hide();
+        $input.val("");                 // clear value
+        $input.next(".qual_text_error").text(""); // clear error
     }
 });
+
 
 
 //    $(document).on("change", "#ownership_type_select", function () {
@@ -315,21 +320,24 @@ $(document).on("change", ".qualification", function () {
 // });
 
 
-$(document).ready(function () {
+   
+                 const IS_DRAFT = {{ isset($application) ? 'true' : 'false' }};
+                const SAVED_OWNERSHIP = "{{ $application->application_ownershiptype ?? '' }}";
+                $(document).ready(function () {
 
-    // 🔹 Draft load behavior
-    if (IS_DRAFT) {
-        $("#partnershipdeed, #directormom").hide();
+                    // 🔹 Draft load behavior
+                    if (IS_DRAFT) {
+                        $("#partnershipdeed, #directormom").hide();
 
-        if (SAVED_OWNERSHIP === 'pt') {
-            $("#partnershipdeed").show();
-        } 
-        else if (SAVED_OWNERSHIP === 'pvt' || SAVED_OWNERSHIP === 'ltd') {
-            $("#directormom").show();
-        }
-    }
-});
-
+                        if (SAVED_OWNERSHIP === 'pt') {
+                            $("#partnershipdeed").show();
+                        } 
+                        else if (SAVED_OWNERSHIP === 'pvt' || SAVED_OWNERSHIP === 'ltd') {
+                            $("#directormom").show();
+                        }
+                    }
+                });
+                
 /* 🔁 Ownership change */
 $(document).on("change", "#ownership_type_select", function () {
 

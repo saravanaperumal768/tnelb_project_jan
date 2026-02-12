@@ -304,10 +304,10 @@ exit; -->
                     </div>
 
                                     {{-- Detect draft --}}
-                <script>
+                <!-- <script>
                     const IS_DRAFT = {{ isset($application) ? 'true' : 'false' }};
                     const SAVED_OWNERSHIP = "{{ $application->application_ownershiptype ?? '' }}";
-                </script>
+                </script> -->
 
                 <div class="row mt-3">
                     <div class="offset-md-2 col-lg-3 mt-2 text-right">
@@ -345,10 +345,12 @@ exit; -->
 
                                 <input type="hidden" name="upload_form_name" value="A">
                                 <input type="hidden" name="upload_license_name" value="EA">
-                                <input type="hidden" name="module" value="ownership_type_doc">
+                                <input type="hidden" name="module" value="Ownership Document">
                                 <input type="hidden" name="ownership_type" value="pt">
+                                <input type="hidden" name="appl_type" value="N">
                                 <input type="hidden" name="document_category" value="partnership_deed">
-                                <input type="hidden" name="document_sub_category" value="deed_doc">
+                                <input type="hidden" name="document_sub_category" value="OT">
+                                <input type="hidden" name="document_sub_category" value="{{$form_code->id}}">
 
                                 <span class="file-limit">PDF only (Max 250 KB)</span>
                                 <span class="text-danger Doc_upload_error"></span>
@@ -384,10 +386,10 @@ exit; -->
 
                                 <input type="hidden" name="upload_form_name" value="A">
                                 <input type="hidden" name="upload_license_name" value="EA">
-                                <input type="hidden" name="module" value="ownership_type_doc">
+                                <input type="hidden" name="module" value="Ownership Document">
                                 <input type="hidden" name="ownership_type" value="dr">
                                 <input type="hidden" name="document_category" value="director_mom">
-                                <input type="hidden" name="document_sub_category" value="dir_mom">
+                                <input type="hidden" name="document_sub_category" value="OT">
 
                                 <span class="file-limit">PDF only (Max 250 KB)</span>
                                 <span class="text-danger Doc_upload_error"></span>
@@ -633,7 +635,7 @@ exit; -->
                                         </div>
 
                                         
-                                        <div class="col-12 col-md-5" id="qualTextWrapper" style="display:none;">
+                                        <div class="col-12 col-md-5 qualTextWrapper" id="qualTextWrapper" style="display:none;">
                                             <div class="row">
                                                 <div class="col-12 col-md-5">
                                                     <label>Enter Qualification <span class="text-red">*</span></label>
@@ -682,13 +684,14 @@ exit; -->
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4 col-12 {{ empty($application->ownership_doc) ? 'd-none' : '' }} file-link">
-                                            <!-- @if(!empty($application->ownership_doc))
-                                            <a href="{{ asset( $application->ownership_doc) }}" target="_blank" class="text-info">
+                                        <div class="col-md-12 col-12 {{ empty($application->educational_proof) ? 'd-none' : '' }} file-link">
+                                            <!-- @if(!empty($application->educational_proof))
+                                                <a href="{{ asset($application->educational_proof) }}" target="_blank" class="text-info">
                                                     <i class="fa fa-file-pdf-o"></i> Present Uploaded File
                                                 </a>
                                             @endif -->
                                         </div>
+
 
 
                                         <!-- <div class="col-12 col-md-3">
@@ -4426,7 +4429,8 @@ let proprietorCount = initialDraftCount || 0;
             // let qualification = $section.find("input[name='qualification[]']").val().trim();
             let qualification = $section.find("select[name='qualification[]']").val();
 
-            let qual_text = $section.find("select[name='qual_text[]']").val();
+            // let qual_text = $section.find("select[name='qual_text[]']").val();
+            let qual_text = $.trim($section.find("input[name='qual_text[]']").val());
 
             // qual_proof
             let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
@@ -4530,29 +4534,37 @@ let proprietorCount = initialDraftCount || 0;
 
             }
 
-            if (qualification && qualification !== '8 To 12') {
-                // alert('111');
+             if (qualification && qualification !== '8 To 12') {
+                // alert(qual_text);
+
                 if (!qual_text) {
-                    setError($section.find("input[name='qual_text[]']"),
-                    "Qualification is required");
-                    // setError(
-                    //     $section.find("input[name='qual_text[]']"),
-                    //     "Enter Qualification is required"
-                    // );
-                  
+                    setError(
+                        $section.find("input[name='qual_text[]']"),
+                        "Enter Qualification is required"
+                    );
+                    isValid = false;
                 }
             }
 
-            // FILE (VERY IMPORTANT — DON'T USE .val())
             let fileInput = $section.find("input[name='qual_proof[]']")[0];
 
-            // alert(fileInput);
+            // check if an existing uploaded file link is present
+            let hasExistingFile =
+                $section.find(".file-link a").length > 0;
 
-            if (!fileInput.files.length) {
-                // alert('nothing');
-                setError($section.find("input[name='qual_proof[]']"),
-                    "Qualification proof is required");
+            // check if new file selected
+            let hasNewFile =
+                fileInput && fileInput.files && fileInput.files.length > 0;
+
+            // VALIDATION
+            if (!hasNewFile && !hasExistingFile) {
+                setError(
+                    $section.find("input[name='qual_proof[]']"),
+                    "Qualification proof is required"
+                );
+                isValid = false;
             }
+
 
             // FATHER NAME
             if (!fathersName) {
@@ -4603,7 +4615,21 @@ let proprietorCount = initialDraftCount || 0;
                     .text(`${dob}, ${age}`);
 
                 $row.find("td").eq(3).text(address);
-                $row.find("td").eq(4).text(qualification);
+
+             $row.find("td").eq(4)
+                    .attr({
+                        "data-qualification": qualification,
+                        "data-qual_text": qual_text,
+                        "data-qual_proof": (hasNewFile || hasExistingFile) ? 1 : 0
+                    })
+                    .text(
+                        qualification === '8 To 12'
+                            ? qualification
+                            : `${qualification}, ${qual_text}`
+                    );
+
+                // $row.find("td").eq(4).text(qualification);
+                // $row.find("td").eq(4).text(qual_text);
                 $row.find("td").eq(5).text(presentBusiness);
                 let ccValidityYMD = formatDateToYMD(ccValidity); // for data-attributes
                 let ccValidityFormatted = formatDateToDDMMYYYY(ccValidity);
@@ -4669,7 +4695,10 @@ let proprietorCount = initialDraftCount || 0;
                         </td>
 
                         <td>${address}</td>
-                        <td>${qualification}</td>
+                         <td data-qualification="${qualification}" data-qual_text="${qual_text}">
+                            ${qualification}, ${qual_text}
+                        </td>
+                        
                         <td>${presentBusiness}</td>
                           <td 
                             data-competency="${competency}" 
@@ -4760,7 +4789,15 @@ let proprietorCount = initialDraftCount || 0;
             let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
             // $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
             $section.find("textarea[name='proprietor_address[]']").val($row.find("td").eq(3).text());
-            $section.find("input[name='qualification[]']").val($row.find("td").eq(4).text());
+
+             let tdqualification = $row.find("td").eq(4);
+
+            $section.find("input[name='qualification[]']").val(tdqualification.data("qualification"));
+            $section.find("input[name='qual_text[]']").val(tdqualification.data("qual_text"));
+
+
+            // $section.find("input[name='qualification[]']").val($row.find("td").eq(4).text());
+            // $section.find("input[name='qual_text[]']").val($row.find("td").eq(4).text());
             $section.find("input[name='present_business[]']").val($row.find("td").eq(5).text());
             $section.find("input[name='ownership_type[]']").val(ownershipValue);
 
@@ -4972,7 +5009,11 @@ let proprietorCount = initialDraftCount || 0;
             // let qualification = $section.find("input[name='qualification[]']").val().trim();
             let qualification = $section.find("select[name='qualification[]']").val();
 
-            let qual_text = $section.find("select[name='qual_text[]']").val();
+            // let qual_text = $section.find("select[name='qual_text[]']").val();
+
+            let qual_text = $.trim(
+                $section.find("input[name='qual_text[]']").val()
+            );
 
 
             let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
@@ -5068,10 +5109,8 @@ let proprietorCount = initialDraftCount || 0;
             }
 
 
-
-          
-
-             if (!qualification) {
+            // Qualification mandatory
+            if (!qualification) {
                 setError(
                     $section.find("select[name='qualification[]']"),
                     "Qualification is required"
@@ -5079,17 +5118,19 @@ let proprietorCount = initialDraftCount || 0;
                 isValid = false;
             }
 
-    
+            
             if (qualification && qualification !== '8 To 12') {
-                
+                // alert(qual_text);
+
                 if (!qual_text) {
                     setError(
                         $section.find("input[name='qual_text[]']"),
                         "Enter Qualification is required"
                     );
-                  
+                    isValid = false;
                 }
             }
+
 
             // FILE (VERY IMPORTANT — DON'T USE .val())
             let fileInput = $section.find("input[name='qual_proof[]']")[0];

@@ -1,6 +1,6 @@
 
 $(document).on("click", ".ownershipdoc_upload-btn", function () {
-    // alert('111');
+
     let row = $(this).closest(".row");
 
     let fileInput = row.find("input[type='file']")[0];
@@ -15,13 +15,15 @@ $(document).on("click", ".ownershipdoc_upload-btn", function () {
     }
 
     let formData = new FormData();
-    formData.append(fileInput.name, fileInput.files[0]);
+    formData.append(fileInput.name, fileInput.files[0]); // works for qual_proof[]
+
     formData.append("form_name", row.find("input[name='upload_form_name']").val());
     formData.append("license_name", row.find("input[name='upload_license_name']").val());
     formData.append("module", row.find("input[name='module']").val());
+    formData.append("ownership_type", row.find("input[name='ownership_type']").val());
     formData.append("document_category", row.find("input[name='document_category']").val());
     formData.append("document_sub_category", row.find("input[name='document_sub_category']").val());
-    formData.append("ownership_type", row.find("input[name='ownership_type']").val());
+    formData.append("appl_type", row.find("input[name='appl_type']").val());
 
     $.ajax({
         url: BASE_URL + "/uploadownershipdeed",
@@ -34,15 +36,32 @@ $(document).on("click", ".ownershipdoc_upload-btn", function () {
         },
 
         success: function (res) {
+
             errorBox.text("");
+
+            if (res.status !== 'success') {
+                errorBox.text("Upload failed");
+                return;
+            }
+
+            let file = res.files[0]; // 👈 IMPORTANT
+
+            if (!fileLink.length) {
+                row.append(`<div class="file-link mt-2"></div>`);
+                fileLink = row.find(".file-link");
+            }
 
             fileLink
                 .removeClass("d-none")
                 .html(`
-                    <a href="${res.file_url}" target="_blank" class="text-success">
-                        <i class="fa fa-file-pdf-o"></i> ${res.file_name}
-                    </a>
+                    <div>
+                        <a href="${file.file_url}" target="_blank" class="text-success">
+                            <i class="fa fa-file-pdf-o"></i> ${file.file_name}
+                        </a>
+                    </div>
                 `);
+
+            fileInput.value = ""; // reset
         },
 
         error: function (xhr) {
@@ -58,6 +77,7 @@ $(document).on("click", ".ownershipdoc_upload-btn", function () {
         }
     });
 });
+
 
 
 // ------------------------Submit form---------------------------------------

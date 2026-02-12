@@ -22,27 +22,37 @@ use Illuminate\Support\Facades\File;
 class DocumentUploadController extends Controller
 {
 
-    public function uploadownershipdeed(Request $request)
+    public function uploadownershipdeed_ch(Request $request)
     {
 
-        // dd($request->all());
-        // exit;
+        // -------------------------
+        // DYNAMIC FILE FIELD
+        // -------------------------
+        $fileField = $request->document_category;
 
+
+
+        // For array input like qual_proof[]
+        if (str_ends_with($fileField, '[]')) {
+            $fileField = rtrim($fileField, '[]');
+        }
+        //  dd($fileField);
+        //         exit;
+        // -------------------------
+        // VALIDATION
+        // -------------------------
         $request->validate([
-            $request->document_category === 'director_mom'
-                ? 'director_mom'
-                : 'partnership_deed'
-            => 'required|mimes:pdf|max:250',
-
-            'module'           => 'required',
+            // $fileField          => 'required|file|mimes:pdf|max:250',
+            'module'            => 'required',
             'document_category' => 'required',
-            'license_name'     => 'required',
-            'form_name'     => 'required',
+            'document_sub_category' => 'required',
+            'license_name'      => 'required',
+            'form_name'         => 'required',
+            'ownership_type'    => 'required',
         ]);
 
         try {
-            $file = $request->file($request->document_category);
-
+            $file = $request->file($fileField);
 
             // -------------------------
             // SESSION APPLICATION ID
@@ -57,90 +67,48 @@ class DocumentUploadController extends Controller
             $loginId = auth()->user()->login_id;
 
             // -------------------------
-            // FILE PATH & NAME
+            // PATH HANDLING
             // -------------------------
-            // $folderPath = public_path('upload_documents/EA/New_applications/ownership_doc/');
-            // $dbFilePath = 'upload_documents/EA/New_applications/ownership_doc/';
-
             $dbFilePath = DocPathController::getPath($request);
             $folderPath = public_path($dbFilePath);
-
 
             if (!File::exists($folderPath)) {
                 File::makeDirectory($folderPath, 0755, true);
             }
 
             // -------------------------
-            // CHECK EXISTING RECORD
+            // FILE NAME
             // -------------------------
-            $existing = DB::table('tnelb_temp_uploaded_documents')
-                ->where('login_id', $loginId)
-                ->where('application_id', $applicationId)
-                ->where('module', $request->module)
-                ->where('form_name', $request->form_name)
-                ->where('document_category', $request->document_category)
-                ->first();
+            $date = Carbon::now()->format('Y_m_d');
+            $random = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
 
+            $fileName = $date . '_' . $loginId . '_' . $random . '_' .
+                strtoupper($request->document_category) . '.pdf';
 
+            // dd( $folderPath);
+            // exit;
+
+            $file->move($folderPath, $fileName);
 
             // -------------------------
-            // FILE NAME LOGIC
+            // INSERT TEMP RECORD
             // -------------------------
-            if ($existing) {
-                // KEEP SAME FILE NAME
-                $fileName = $existing->file_name;
-
-                // DELETE OLD FILE IF EXISTS
-                $oldFile = public_path($existing->file_path . $fileName);
-                if (File::exists($oldFile)) {
-                    File::delete($oldFile);
-                }
-
-                // MOVE NEW FILE (REPLACE)
-                $file->move($folderPath, $fileName);
-
-                // UPDATE DB ONLY
-                DB::table('tnelb_temp_uploaded_documents')
-                    ->where('id', $existing->id)
-                    ->update([
-                        'ownership_type'        => $request->ownership_type,
-                        'document_category'     => $request->document_category,
-                        'document_sub_category' =>  $request->document_sub_category,
-                        'file_path'   => $dbFilePath,
-                        'uploaded_at' => DB::raw('NOW()'),
-                        'updated_at'  => DB::raw('NOW()'),
-                    ]);
-            } else {
-
-                // dd('new record');
-                // exit;
-                // CREATE NEW FILE NAME
-                $date = Carbon::now()->format('Y_m_d');
-                $random_num = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
-                $fileName = $date  . '_' . $loginId . '_' . $random_num . '_' . strtoupper($request->document_category) . '.pdf';
-                // dd($fileName);
-                // exit;
-
-                $file->move($folderPath, $fileName);
-
-                // INSERT NEW RECORD
-                DB::table('tnelb_temp_uploaded_documents')->insert([
-                    'login_id'              => $loginId,
-                    'application_id'        => $applicationId,
-                    'form_name'             => $request->form_name,
-                    'license_name'          => $request->license_name,
-                    'module'                => $request->module,
-                    'ownership_type'        => $request->ownership_type,
-                    'document_category'     => $request->document_category,
-                    'document_sub_category' =>  $request->document_sub_category,
-                    'file_name'             => $fileName,
-                    'file_path'             => $dbFilePath,
-                    'uploaded_at'           => DB::raw('NOW()'),
-                    'is_final'              => '0',
-                    'created_at'            => DB::raw('NOW()'),
-                    'updated_at'            => DB::raw('NOW()'),
-                ]);
-            }
+            DB::table('tnelb_temp_uploaded_documents')->insert([
+                'login_id'              => $loginId,
+                'application_id'        => $applicationId,
+                'form_name'             => $request->form_name,
+                'license_name'          => $request->license_name,
+                'module'                => $request->module,
+                'ownership_type'        => $request->ownership_type,
+                'document_category'     => $request->document_category,
+                'document_sub_category' => $request->document_sub_category,
+                'file_name'             => $fileName,
+                'file_path'             => $dbFilePath,
+                'uploaded_at'           => DB::raw('NOW()'),
+                'is_final'              => '0',
+                'created_at'            => DB::raw('NOW()'),
+                'updated_at'            => DB::raw('NOW()'),
+            ]);
 
             return response()->json([
                 'status'    => 'success',
@@ -150,10 +118,189 @@ class DocumentUploadController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
+                'message' => 'Upload failed. Please try again.'
+            ], 500);
+        }
+    }
+
+
+    public function uploadownershipdeed(Request $request)
+    {
+        try {
+
+            // --------------------------------------------------
+            // 1. CHECK FILE EXISTENCE
+            // --------------------------------------------------
+            if (count($request->files->all()) === 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'msg' => 'No file received'
+                ], 422);
+            }
+
+            $fileInputs = $request->files->all();
+            $fileField  = array_key_first($fileInputs);
+            $fileValue  = $fileInputs[$fileField];
+
+            // --------------------------------------------------
+            // 2. VALIDATION
+            // --------------------------------------------------
+            $rules = [
+                'module'            => 'required',
+                'document_category' => 'required',
+                'license_name'      => 'required',
+                'form_name'         => 'required',
+            ];
+
+            if (is_array($fileValue)) {
+                $rules[$fileField] = 'required|array';
+                $rules[$fileField . '.*'] = 'required|file|mimes:pdf|max:250';
+            } else {
+                $rules[$fileField] = 'required|file|mimes:pdf|max:250';
+            }
+
+            $request->validate($rules);
+
+            // --------------------------------------------------
+            // 3. NORMALIZE FILES
+            // --------------------------------------------------
+            $files = is_array($fileValue) ? $fileValue : [$fileValue];
+
+            // --------------------------------------------------
+            // 4. SESSION APPLICATION ID
+            // --------------------------------------------------
+            if (!session()->has('application_id')) {
+                $applicationId = 'APP_' . $request->license_name . date('dmY');
+                session(['application_id' => $applicationId]);
+            } else {
+                $applicationId = session('application_id');
+            }
+
+            $loginId = auth()->user()->login_id;
+
+            // --------------------------------------------------
+            // 5. FILE PATH
+            // --------------------------------------------------
+            $dbFilePath_all = DocPathController::getPath($request);
+
+            $dbFilePath = $dbFilePath_all->filepath_temp;
+
+            // dd($dbFilePath);exit;
+            $folderPath = public_path($dbFilePath);
+
+            if (!\File::exists($folderPath)) {
+                \File::makeDirectory($folderPath, 0755, true);
+            }
+
+            $uploadedFiles = [];
+
+            // --------------------------------------------------
+            // 6. LOOP FILES
+            // --------------------------------------------------
+            foreach ($files as $file) {
+
+                // ----------------------------------------------
+                // CHECK EXISTING RECORD
+                // ----------------------------------------------
+                $existing = DB::table('tnelb_temp_uploaded_documents')
+                    ->where('login_id', $loginId)
+                    ->where('application_id', $applicationId)
+                    ->where('module', $request->module)
+                    ->where('form_name', $request->form_name)
+                    ->where('document_category', $request->document_category)
+                    ->first();
+
+                if ($existing) {
+
+                    // ------------------------------------------
+                    // UPDATE FLOW
+                    // ------------------------------------------
+                    $fileName = $existing->file_name;
+
+                    // DELETE OLD FILE
+                    $oldFile = public_path($existing->file_path . $fileName);
+                    if (\File::exists($oldFile)) {
+                        \File::delete($oldFile);
+                    }
+
+                    // MOVE NEW FILE (SAME NAME)
+                    $file->move($folderPath, $fileName);
+
+                    DB::table('tnelb_temp_uploaded_documents')
+                        ->where('id', $existing->id)
+                        ->update([
+                            'ownership_type'        => $request->ownership_type,
+                            'document_sub_category' => $request->document_sub_category,
+                            'file_path'             => $dbFilePath,
+                            'uploaded_at'           => now(),
+                            'updated_at'            => now(),
+                        ]);
+                } else {
+
+                    // ------------------------------------------
+                    // INSERT FLOW
+                    // ------------------------------------------
+
+
+                    $date   = now()->format('Y_m_d');
+                    $random = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
+                    // ---------------------------------
+                    // Filename Format
+                    // yyyymmdd_time(11.30)login_id_L(license)_1_document_sub_category(OT).pdf
+                    // Array()
+                    // yyyymmdd_time(11.30)login_id_L(license)_1_document_sub_category(PT)1 .pdf
+                    // ---------------------------------
+                    $fileName = $date . '_' . $loginId . '_' . $random . '_' .
+                        strtoupper($request->document_category) . '.pdf';
+
+                    $file->move($folderPath, $fileName);
+
+                    DB::table('tnelb_temp_uploaded_documents')->insert([
+                        'login_id'              => $loginId,
+                        'application_id'        => $applicationId,
+                        'form_name'             => $request->form_name,
+                        'license_name'          => $request->license_name,
+                        'module'                => $request->module,
+                        'ownership_type'        => $request->ownership_type,
+                        'document_category'     => $request->document_category,
+                        'document_sub_category' => $request->document_sub_category,
+                        'file_name'             => $fileName,
+                        'file_path'             => $dbFilePath,
+                        'uploaded_at'           => now(),
+                        'is_final'              => '0',
+                        'created_at'            => now(),
+                        'updated_at'            => now(),
+                    ]);
+                }
+
+                $uploadedFiles[] = [
+                    'file_name' => $fileName,
+                    'file_url'  => asset($dbFilePath .'/'. $fileName),
+                ];
+            }
+
+            // --------------------------------------------------
+            // 7. RESPONSE
+            // --------------------------------------------------
+            return response()->json([
+                'status' => 'success',
+                'files'  => $uploadedFiles
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            return response()->json([
+                'status' => 'validation_error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
                 'msg'    => 'Upload failed. Please try again.',
             ], 500);
         }
     }
+
     public function uploadownershipdeed_bk(Request $request)
     {
         //   dd($request->all());

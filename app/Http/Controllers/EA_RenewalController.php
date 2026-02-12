@@ -6,6 +6,7 @@ use App\Models\Admin\Mst_equipment_tbl;
 use App\Models\EA_Application_model;
 use App\Models\Equipment_storetmp_A;
 use App\Models\mst_workflow;
+use App\Models\MstLicence;
 use App\Models\Payment;
 use App\Models\ProprietorformA;
 use App\Models\Tnelb_banksolvency_a;
@@ -194,10 +195,16 @@ class EA_RenewalController extends BaseController
             ->where('application_id', $application_id) // IMPORTANT
             ->get();
 
+            $cert_licence_code = 'EA';
+            $form_code = MstLicence::where('cert_licence_code', $cert_licence_code)
+            ->where('status', 1)
+            ->orderBy('id')
+            ->first();
+
             // var_dump()
         }
 
-        return view('user_login.apply-form-a', compact('application', 'proprietors', 'draftCount', 'staffs', 'document', 'banksolvency' , 'equipmentlist', 'equiplist'));
+        return view('user_login.apply-form-a', compact('application', 'proprietors', 'draftCount', 'staffs', 'document', 'banksolvency' , 'equipmentlist', 'equiplist', 'form_code'));
     }
 
 

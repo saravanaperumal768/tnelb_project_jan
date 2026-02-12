@@ -82,7 +82,7 @@ class RegisterController extends BaseController
         } else {
             $newRecord = 1120;
         }
-        $newLoginId = 'tnelb_' . $newRecord;
+        $newLoginId = 'R' . $newRecord;
 
         // Store Data in Database
         $register = Register::create([
@@ -350,10 +350,18 @@ class RegisterController extends BaseController
             return redirect()->route('logout');
         }
 
+        $cert_licence_code = 'EA';
+
           $equiplist = Mst_equipment_tbl::where('equip_licence_name', 8)
             ->where('status', 1)
             ->orderBy('id')
             ->get();
+
+
+             $form_code = MstLicence::where('cert_licence_code', $cert_licence_code)
+            ->where('status', 1)
+            ->orderBy('id')
+            ->first();
 
         // $equipmentlist = DB::table('equipmentforma_tbls')
         //     ->where('login_id', Auth::user()->login_id)
@@ -370,7 +378,7 @@ class RegisterController extends BaseController
         // }
 
 
-         return view('user_login.apply-form-a', compact('equiplist'));
+         return view('user_login.apply-form-a', compact('equiplist', 'form_code'));
     }
 
     public function loginpage()

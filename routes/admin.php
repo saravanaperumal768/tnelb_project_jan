@@ -26,6 +26,7 @@
 // CMS
     use App\Http\Controllers\Admin\AddFormController;
 use App\Http\Controllers\Admin\EquipmentController;
+use App\Http\Controllers\Admin\FilelocationController;
 use App\Http\Controllers\Admin\FormBprocessController;
 use App\Http\Controllers\Admin\FormsaprocessController;
 use App\Http\Controllers\Admin\FormSBprocessController;
@@ -523,7 +524,14 @@ use App\Http\Controllers\MediaController;
 
             Route::post('/equipment/operations', [EquipmentController::class, 'operations'])->name('equipment.operations');
 
-            // ------------------------------------------
+            // --------------------Filepath----------------------
+            Route::post('/formmodule/storemodule', [FilelocationController::class, 'storemodule'])->name('formmodule.storemodule');
+
+            Route::post('/formmodule/storepath', [FilelocationController::class, 'storepath'])->name('formmodule.storepath');
+
+
+            Route::post('/formmodule/updateStatus',[FilelocationController::class, 'updateStatus'])->name('formmodule.updateStatus');
+            // ---------------------------------------------
 
             Route::get('/fees_validity', [LicenceManagementController::class, 'index'])->name('fees_validity');
             Route::post('/licences/updateFees', [LicenceManagementController::class, 'updateFees'])->name('updateFees');
@@ -547,6 +555,11 @@ use App\Http\Controllers\MediaController;
             // -------checkallvalidity--------------
           Route::post('/checkallvalidity', [adminlicensecontroller::class, 'check_ealicence_validity'])
            ->name('checkallvalidity');
+
+
+
+        //    -------------fileloc------------------------
+        Route::get('/fileloc', [FilelocationController::class, 'index'])->name('fileloc');
 
 
         });
