@@ -45,6 +45,10 @@ class RegisterController extends BaseController
    public function store(Request $request)
     {
         // var_dump($request->Address);die;
+
+        // dd($request->all());die;
+
+        // dd($request->EmailAddress);die;
         // Validate Input
         $validator = Validator::make($request->all(), [
             'salutation' => 'required|in:Mr,Mrs,Ms,Dr',
@@ -56,7 +60,7 @@ class RegisterController extends BaseController
                 'digits:10',
                 Rule::unique('tnelb_registers', 'mobile'),
             ],
-            'email'      => [
+            'EmailAddress'      => [
                 'nullable',
                 'email',
                 Rule::unique('tnelb_registers', 'email'),
@@ -77,10 +81,10 @@ class RegisterController extends BaseController
 
         // Generate Login ID
         $latestRecord = Register::latest('id')->first();
-        if ($latestRecord && preg_match('/tnelb_(\d+)/', $latestRecord->login_id, $matches)) {
+        if ($latestRecord && preg_match('/R(\d+)/', $latestRecord->login_id, $matches)) {
             $newRecord = (int) $matches[1] + 1;
         } else {
-            $newRecord = 1120;
+            $newRecord = 001;
         }
         $newLoginId = 'R' . $newRecord;
 
@@ -91,7 +95,7 @@ class RegisterController extends BaseController
             'last_name'  => $request->input('last_name'),
             'gender'     => $request->input('gender'),
             'mobile'     => $request->input('mobile'),
-            'email'      => $request->input('email'),
+            'email'      => $request->input('EmailAddress'),
             'address'    => $request->input('Address'),
             'state'      => $request->input('state'),
             // 'district'   => $request->input('district'),
@@ -135,13 +139,13 @@ class RegisterController extends BaseController
         // Generate Login ID
         $latestRecord = Register::latest('id')->first();
 
-        if ($latestRecord && preg_match('/tnelb_(\d+)/', $latestRecord->login_id, $matches)) {
+        if ($latestRecord && preg_match('/R(\d+)/', $latestRecord->login_id, $matches)) {
             $newRecord = (int) $matches[1] + 1;
         } else {
             $newRecord = 1120; // Start from 1120 if no previous records exist
         }
 
-        $newLoginId = 'tnelb_' . $newRecord;
+        $newLoginId = 'R' . $newRecord;
 
         // Store Data in Database
         $register = Register::create([

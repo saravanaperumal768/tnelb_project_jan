@@ -10,7 +10,10 @@ class DocPathController extends Controller
         public static function getPath(Request $request)
     {
 
-   
+   //dd($request->all());
+//    dd($request->module);
+
+//    exit;
 
     $filepath = DB::table('mst_filepath_cl_tbl')
                 ->where('appl_type', $request->appl_type)

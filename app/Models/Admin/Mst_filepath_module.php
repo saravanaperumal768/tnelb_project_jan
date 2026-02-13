@@ -14,8 +14,9 @@ class Mst_filepath_module extends Model
     protected $fillable = [
         'cert_license_id',
         'module_name',
+        'module_code',
          
-         'status',
+        'status',
         'created_by',
         'updated_by',
         'ipaddress'

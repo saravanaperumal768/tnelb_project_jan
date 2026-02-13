@@ -19,7 +19,8 @@ return new class extends Migration
             ->nullable()
             ->constrained('mst_licences')
             ->cascadeOnDelete();
-            $table->string('module_name',100);
+            $table->string('module_name',100)->unique();
+            $table->string('module_code',20)->unique();
             $table->tinyInteger('status')->default(1)->comment('1=Active, 0=Inactive');
             $table->string('created_by', 20);
             $table->string('updated_by', 20);

@@ -24,6 +24,7 @@ $(document).on("click", ".ownershipdoc_upload-btn", function () {
     formData.append("document_category", row.find("input[name='document_category']").val());
     formData.append("document_sub_category", row.find("input[name='document_sub_category']").val());
     formData.append("appl_type", row.find("input[name='appl_type']").val());
+    formData.append("form_code", row.find("input[name='form_code']").val());
 
     $.ajax({
         url: BASE_URL + "/uploadownershipdeed",

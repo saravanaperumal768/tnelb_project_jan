@@ -24,7 +24,7 @@ class FilelocationController extends Controller
     public function __construct()
     {
 
-        
+
         $this->middleware(function ($request, $next) {
             if (!Auth::check()) {
                 // Not logged in
@@ -61,8 +61,8 @@ class FilelocationController extends Controller
             ->get();
 
 
-              $all_formmodule = Mst_filepath_module::where('status', 1)
-               ->get();
+        $all_formmodule = Mst_filepath_module::where('status', 1)
+            ->get();
 
 
 
@@ -78,59 +78,101 @@ class FilelocationController extends Controller
         return view('admincms.Fileloc.index', compact('activeForms', 'all_licences', 'fileloc', 'all_formmodule'));
     }
 
+    public function formmodule()
+    {
 
-    // ---------------storemodule-----------------------
+        $all_licences = MstLicence::where('status', 1)
+            ->where('category_id', '1')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $fileloc = DB::table('mst_filepath_cl_tbl as e')
+            ->leftJoin('mst_licences as ml', 'ml.id', '=', 'e.cert_license_id')
+            // ->where('e.status', 1)
+            ->orderByDesc('e.created_at')
+            ->select(
+                'e.*',
+                'ml.licence_name'
+            )
+            ->get();
+
+
+        $all_formmodule = Mst_filepath_module::all();
+
+
+
+        $activeForms = TnelbForms::leftJoin('mst_licences', 'tnelb_forms.licence_id', '=', 'mst_licences.id')
+            ->where('tnelb_forms.status', 1)
+            ->orderBy('tnelb_forms.created_at', 'desc')
+            ->select('mst_licences.licence_name', 'mst_licences.form_name', 'tnelb_forms.*')
+            ->get();
+
+
+
+        // return view('admincms.Fileloc.index', compact('all_licences'));
+        return view('admincms.Fileloc.formmodule', compact('activeForms', 'all_licences', 'fileloc', 'all_formmodule'));
+    }
+
+
+    // ---------------store form module-----------------------
 
     public function storemodule(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'cert_license_id' => 'required|integer',
-            'module_name'         => 'required|string|min:2|max:255',
-            
+
+            'module_name' => 'required|string|min:2|max:255|unique:mst_filepath_module_cl,module_name',
+
+            'module_code' => 'required|string|min:2|max:255|unique:mst_filepath_module_cl,module_code',
+
         ], [
-            'cert_license_id.required' => 'Choose the Licence Name',
-            'module_name.required'         => 'Fill the Module Name',
-            
+
+            'module_name.required' => 'Fill the Module Name',
+            'module_name.unique'   => 'Module Name already exists',
+
+            'module_code.required' => 'Fill the Module Code',
+            'module_code.unique'   => 'Module Code already exists',
+
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'error',
                 'errors' => $validator->errors()
             ], 422);
         }
 
-        $equipment = Mst_filepath_module::create([
-            'cert_license_id' => $request->cert_license_id,
-            'module_name'         => $request->module_name,
-            
-            'created_by'        => $this->userId,
-            'updated_by'        => $this->userId,
-            'status'            => 1,
-            'ipaddress'       => $request->ip(),
-        ]);
+        try {
 
-        // get licence name
-        $licence = DB::table('mst_licences')
-            ->where('id', $equipment->equip_licence_name)
-            ->first();
+            $form_module = Mst_filepath_module::create([
+                'cert_license_id' => $request->cert_license_id,
+                'module_name' => strtoupper(trim($request->module_name)),
+                'module_code' => strtoupper(trim($request->module_code)),
+                'created_by'  => $this->userId,
+                'updated_by'  => $this->userId,
+                'status'      => 1,
+                'ipaddress'   => $request->ip(),
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'errors' => [
+                    'module_name' => ['Module Name already exists']
+                ]
+            ], 422);
+        }
 
         return response()->json([
-            'message' => 'Form Module added successfully You Can add Filepath After this',
-            // 'data' => [
-            //     'id' => $equipment->id,
-            //     'equipment_type' => $equipment->equipment_type,
-            //     'equip_name' => $equipment->equip_name,
-            //     'licence_name' => $licence->licence_name ?? 'N/A',
-            //     'created_at' => $equipment->created_at->format('d-m-Y'),
-            //     'status' => $equipment->status,
-            // ]
+            'message' => 'Form Module added successfully',
+            'data' => [
+                'id' => $form_module->id,
+                'module_name' => $form_module->module_name,
+                'module_code' => $form_module->module_code,
+                'created_at' => $form_module->created_at->format('d-m-Y'),
+            ]
         ]);
     }
 
-
     // -------------------storefilepath----------------------------
-     public function storepath(Request $request)
+    public function storepath(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'cert_license_id' => 'required|integer',
@@ -139,15 +181,15 @@ class FilelocationController extends Controller
 
             'filepath_temp'         => 'required|string|min:2|max:255',
             'filepath_pro'         => 'required|string|min:2|max:255',
-            
-            
+
+
         ], [
             'cert_license_id.required' => 'Choose the Licence Name',
             'form_module.required'         => 'Choose the Module Name',
             'appl_type.required'         => 'Choose the Module Name',
             'filepath_temp.required'         => 'Fill the Module Name',
             'filepath_pro.required'         => 'Fill the Module Name',
-            
+
         ]);
 
         if ($validator->fails()) {
@@ -182,7 +224,7 @@ class FilelocationController extends Controller
                 'appl_type' => $filepath->appl_type,
                 'filepath_temp' => $filepath->filepath_temp,
                 'filepath_pro' => $filepath->filepath_pro,
-            
+
                 'licence_name' => $licence->licence_name ?? 'N/A',
                 'created_at' => $filepath->created_at->format('d-m-Y'),
                 'status' => $filepath->status,

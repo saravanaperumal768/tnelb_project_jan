@@ -2,86 +2,85 @@
 @include('admincms.include.header')
 @include('admincms.include.navbar')
 <style>
-    h4,
-    h5 {
-        color: #000;
-    }
+   h4, h5{
+    color:#000;
+   }
 
-    .modal-title {
-        color: #000;
-    }
+   .modal-title{
+    color: #000;
+   }
 
-    table th {
-        text-align: center;
-    }
+   table th{
+    text-align: center;
+   }
 
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-    }
+   .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
 
-    input:checked+.slider {
-        background-color: #2196F3;
-    }
+input:checked + .slider {
+  background-color: #2196F3;
+}
 
-    input:focus+.slider {
-        box-shadow: 0 0 1px #2196F3;
-    }
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
 
-    input:checked+.slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
-    }
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
 
-    /* Rounded sliders */
-    .slider.round {
-        border-radius: 34px;
-    }
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
 
-    .slider.round:before {
-        border-radius: 50%;
-    }
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <div id="content" class="main-content">
     <div class="layout-px-spacing">
         <div class="middle-content p-0">
             <div class="page-meta">
                 <h4>Master File Path Management Console</h4>
-
+                
             </div>
             <!--  BEGIN BREADCRUMBS  -->
             <div class="secondary-nav">
@@ -162,112 +161,103 @@
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header ">
-                                    <!-- <h5>Add New Equipment</h5> -->
-
-                                    <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addFormModal"><i class="fa fa-plus"></i> Add File Path</button>
+                                    <h5>Add Form Module</h5>
+                                    <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addmoduleFormModal"><i class="fa fa-plus"></i> Add Form Module</button>
+                                    
                                 </div>
+                             
+                                         <div class="row mt-3" style="display:none;">
+                                            <div class="col-md-2 offset-md-2 mt-3">
+                                                <label><strong>Filter by Licence</strong></label>
+                                            </div>
 
-                                <div class="row mt-3">
-                                    <div class="col-md-2 offset-md-2 mt-3">
-                                        <label><strong>Filter by Licence</strong></label>
-                                    </div>
+                                            <div class="col-md-4">
+                                                <select class="form-select licenseFilter" data-table="style-3">
+                                                    <option value="">All Licences</option>
+                                                </select>
+                                            </div>
+                                        </div>
 
-                                    <div class="col-md-4">
-                                        <select class="form-select licenseFilter" data-table="style-3">
-                                            <option value="">All Licences</option>
-                                        </select>
-                                    </div>
+                                    <table id="style-3" class="table style-2  dt-table-hover table-records">
+                                        <thead>
+                                            <tr>
+                                                
+                                                <th class=""> S.No </th>
+                                                
+                                                
+                                                <th>Module Name</th>
+
+                                                <th>Module Code</th>
+                                        
+                                                
+                                                 <th class="text-center">Created At</th>
+                                               
+                                                <!-- <th class="text-center">Status</th>
+                                                <th class="text-center">Action</th> -->
+                                               
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                           @forelse($all_formmodule as $index => $row)
+                                            <!-- {{ $index }} -->
+                                                <tr>
+                                                    <!-- S.No -->
+                                                    <td class="text-center">{{ $index +1 }}</td>
+
+                                                    <!-- Category Name -->
+                                                    
+                                                    
+                                                    <td>{{ $row->module_name }}</td>
+
+                                                    <td>{{ $row->module_code }}</td>
+
+                                                    
+                                              
+                                                  
+                                                   <td class="text-center">{{ \Carbon\Carbon::parse($row->created_at)->format('d-m-Y') }}</td>
+                                                    
+                                                   
+
+                                                    <!-- Status -->
+                                                    <!-- <td class="text-center">
+                                                        @if($row->status == 1)
+                                                            <span class="badge outline-badge-success">Active</span>
+                                                        @else
+                                                            <span class="badge outline-badge-danger">Inactive</span>
+                                                        @endif
+                                                    </td>
+
+                                                   <td class="text-center">
+                                                        <label class="switch">
+                                                            <input type="checkbox"
+                                                                class="formmodule-status-toggle"
+                                                                data-id="{{ $row->id }}"
+                                                                {{ $row->status == 1 ? 'checked' : '' }}>
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </td> -->
+
+
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="text-center text-muted">No records found</td>
+                                                </tr>
+                                            @endforelse
+                                            
+                                        </tbody>
+                                    </table>
                                 </div>
-
-                                <table id="style-3" class="table style-2  dt-table-hover table-records">
-                                    <thead>
-                                        <tr>
-
-                                            <th class=""> S.No </th>
-                                            <th>Certificate / Licence Name</th>
-                                            <th>Application <br> Type</th>
-
-                                            <th>Module Name</th>
-                                            <th>Temp Filepath</th>
-                                            <th>Production Filepath</th>
-
-                                            <th class="text-center">Created At</th>
-
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Action</th>
-
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @forelse($fileloc as $index => $row)
-                                        <!-- {{ $index }} -->
-                                        <tr>
-                                            <!-- S.No -->
-                                            <td class="text-center">{{ $index +1 }}</td>
-
-                                            <!-- Category Name -->
-                                            <td>{{ $row->licence_name }}</td>
-
-                                            <td>
-                                                @if($row->appl_type == 'N')
-                                                New
-                                                @else
-                                                Renewal
-                                                @endif
-
-                                            </td>
-
-                                            <td>{{ $row->form_module }}</td>
-
-                                            <td>{{ $row->filepath_temp }}</td>
-
-
-                                            <td>{{ $row->filepath_pro }}</td>
-
-                                            <td class="text-center">{{ \Carbon\Carbon::parse($row->created_at)->format('d-m-Y') }}</td>
-
-
-
-                                            <!-- Status -->
-                                            <td class="text-center">
-                                                @if($row->status == 1)
-                                                <span class="badge outline-badge-success">Active</span>
-                                                @else
-                                                <span class="badge outline-badge-danger">Inactive</span>
-                                                @endif
-                                            </td>
-
-                                            <td class="text-center">
-                                                <label class="switch">
-                                                    <input type="checkbox"
-                                                        class="filepath-status-toggle"
-                                                        data-id="{{ $row->id }}"
-                                                        {{ $row->status == 1 ? 'checked' : '' }}>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </td>
-
-
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center text-muted">No records found</td>
-                                        </tr>
-                                        @endforelse
-
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 </div>
 
 <!-- Instruction Modal -->
@@ -277,11 +267,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Instructions</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                    </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                 </button>
             </div>
             <div class="modal-body">
@@ -386,15 +372,24 @@
                             <input type="text" class="form-control" name="module_name" id="module_name">
 
                             <!-- <textarea class="form-control" rows="2" name ="equip_name"></textarea> -->
-                            <small class="text-danger d-none error-cer_val">Fill Form Module Name</small>
+                            <small class="text-danger d-none error-cer_val"></small>
                         </div>
 
 
+                         <div class="col-lg-12 mb-2">
+                            <label for="inputEmail4" class="form-label">Form Module Code <span class="text-danger">*</span> </label>
+                            <input type="text" class="form-control" name="module_code" id="module_code">
+
+                            <!-- <textarea class="form-control" rows="2" name ="equip_name"></textarea> -->
+                            <small class="text-danger d-none error-cer_code"></small>
+                        </div>
+                       
+                       
                         <div class="text-center mt-3">
                             <button type="submit" class="btn btn-primary">Add</button>
                             <button type="button" class="btn btn btn-light-dark" data-bs-dismiss="modal" onclick="$('#addForms').trigger('reset');"><i class="flaticon-cancel-12"></i> Cancel</button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </form>
         </div>
@@ -426,44 +421,43 @@
                             <label for="inputEmail4" class="form-label">Choose Licence Name<span class="text-danger">*</span> </label>
                             <select class="form-select" name="cert_license_id" id="cert_license_id">
                                 <option value="">Select Licence Name</option>
-                                @foreach ($all_licences as $item)
-                                <option value="{{ $item->id }}">{{ $item->licence_name }}</option>
-                                @endforeach
-
+                                  @foreach ($all_licences as $item)
+                                    <option value="{{ $item->id }}">{{ $item->licence_name }}</option>
+                                 @endforeach
+                               
                             </select>
                             <small class="text-danger d-none error-cert_license_id">Choose the Licence Name</small>
                         </div>
 
-                        <div class="col-lg-6 mb-3">
+                         <div class="col-lg-6 mb-3">
                             <label for="inputEmail4" class="form-label">Choose Application Type<span class="text-danger">*</span> </label>
                             <select class="form-select" name="appl_type" id="appl_type">
                                 <option value="">Select Application Type</option>
-
+                                  
                                 <option value="N">New Applications</option>
                                 <option value="R">Renewal Applications</option>
-
-
+                                 
+                               
                             </select>
                             <small class="text-danger d-none error-appl_type">Choose the Licence Name</small>
                         </div>
 
                         <div class="col-lg-6 mb-3">
                             <label for="inputEmail4" class="form-label">Module Type<span class="text-danger">*</span> </label>
-                          <select class="form-select" name="form_module" id="form_module">
-                            <option value="" data-code="">Select Module Name</option>
-
-                            @foreach ($all_formmodule as $item)
-                                <option 
-                                    value="{{ $item->module_name }}"
-                                    data-code="{{ $item->module_code }}">
-                                    {{ $item->module_name }}
-                                </option>
-                            @endforeach
+                           <select class="form-select" name="form_module" id="form_module">
+                            <!-- <option value="">Select Module Name</option> -->
+                             <option value="">Select Module Name</option>
+                                  @foreach ($all_formmodule as $item)
+                                    <option value="{{ $item->module_name }}">{{ $item->module_name }}</option>
+                                 @endforeach
+                            <!-- <option value="Ownership Document">Ownership Document</option>
+                            <option value="Ownership Educational Document">Ownership Educational Document</option>
+                            <option value="BanK Solvency Document">BanK Solvency Document</option>
+                            <option value="GST /Rental Document">GST /Rental Document</option>
+                            <option value="Equipment Document">Equipment Document</option> -->
                         </select>
 
-                            <input type="hidden" value="" id="module_code" name="module_code">
-
-                            <small class="text-danger d-none error-form_module">Choose the Equipment Type</small>
+                        <small class="text-danger d-none error-form_module">Choose the Equipment Type</small>
                         </div>
                     </div>
                     <div class="row">
@@ -476,20 +470,20 @@
                         </div>
 
 
-                        <div class="col-lg-12 mb-2">
+                         <div class="col-lg-12 mb-2">
                             <label for="inputEmail4" class="form-label">Production Filepath <span class="text-danger">*</span> </label>
                             <input type="text" class="form-control" name="filepath_pro" id="filepath_pro">
 
                             <!-- <textarea class="form-control" rows="2" name ="equip_name"></textarea> -->
                             <small class="text-danger d-none error-filepath_pro">Fill Production Filepath</small>
                         </div>
-
-
+                       
+                       
                         <div class="text-center mt-3">
                             <button type="submit" class="btn btn-primary">Add</button>
                             <button type="button" class="btn btn btn-light-dark" data-bs-dismiss="modal" onclick="$('#addForms').trigger('reset');"><i class="flaticon-cancel-12"></i> Cancel</button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </form>
         </div>
@@ -520,7 +514,7 @@
                             <label for="inputEmail4" class="form-label">Category<span class="text-danger">*</span> </label>
                             <select class="form-select" name="edit_form_cate" id="edit_form_cate">
                                 <option value="">Please select category</option>
-
+                            
                             </select>
                             <small class="text-danger d-none error-edit_form_cate">Please choose the category</small>
                         </div>
@@ -571,13 +565,10 @@
 <script>
     $('.zero-config').DataTable({
         "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
-            "<'table-responsive'tr>" +
-            "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+    "<'table-responsive'tr>" +
+    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
         "oLanguage": {
-            "oPaginate": {
-                "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>',
-                "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>'
-            },
+            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
             "sInfo": "Showing page _PAGE_ of _PAGES_",
             "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
             "sSearchPlaceholder": "Search...",
@@ -585,41 +576,45 @@
         },
         "stripeClasses": [],
         "lengthMenu": [7, 10, 20, 50],
-        "pageLength": 7
+        "pageLength": 7 
     });
 
-
-    //   var quill = new Quill('#editor-container', {
-    //     modules: {
-    //         toolbar: [
-    //         [{ header: [1, 2, false] }],
-    //         ['bold', 'italic', 'underline'],
-    //         ['image', 'code-block']
-    //         ]
-    //     },
-    //     placeholder: '',
-    //     theme: 'snow'  // or 'bubble'
-    //     });
-
-
-    const options = {
-        debug: 'info',
-        modules: {
-            syntax: true,
-            toolbar: '#toolbar-container',
-        },
-        placeholder: 'Type here...',
-        theme: 'snow'
-    };
-    const quill = new Quill('#editor-container', options);
+   
+//   var quill = new Quill('#editor-container', {
+//     modules: {
+//         toolbar: [
+//         [{ header: [1, 2, false] }],
+//         ['bold', 'italic', 'underline'],
+//         ['image', 'code-block']
+//         ]
+//     },
+//     placeholder: '',
+//     theme: 'snow'  // or 'bubble'
+//     });
 
 
-    //  const quill = new Quill('#editor', {
-    //     modules: {
-    //       syntax: true,
-    //       toolbar: '#toolbar-container',
-    //     },
-    //     placeholder: 'Compose an epic...',
-    //     theme: 'snow',
-    //   });
+const options = {
+  debug: 'info',
+  modules: {
+    syntax: true,
+    toolbar: '#toolbar-container',
+  },
+  placeholder: 'Type here...',
+  theme: 'snow'
+};
+const quill = new Quill('#editor-container', options);
+
+
+//  const quill = new Quill('#editor', {
+//     modules: {
+//       syntax: true,
+//       toolbar: '#toolbar-container',
+//     },
+//     placeholder: 'Compose an epic...',
+//     theme: 'snow',
+//   });
+
+
+
 </script>
+

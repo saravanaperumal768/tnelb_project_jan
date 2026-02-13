@@ -89,6 +89,25 @@ $(document).on("submit", "#addequipment", function (e) {
 });
 
 // ----------------Formmodule--------------------------------
+// ----------short code---------------
+$(document).on("keyup", "#module_name", function () {
+    let text = $(this).val().trim();
+
+    if (text === "") {
+        $("#module_code").val("");
+        return;
+    }
+
+    let words = text.split(/\s+/);
+    let code = "";
+
+    words.forEach((word) => {
+        code += word.charAt(0).toUpperCase();
+    });
+
+    $("#module_code").val(code);
+});
+
 $(document).on("submit", "#addformmodule", function (e) {
     e.preventDefault();
 
@@ -117,29 +136,53 @@ $(document).on("submit", "#addformmodule", function (e) {
                 text: res.message,
             });
 
-            location.reload();
+            // location.reload();
 
             // Close modal
             $("#addmoduleFormModal").modal("hide");
 
             // Reset form
             $("#addformmodule")[0].reset();
+
+            // Remove "No records found" row if exists
+            $("#style-3 tbody tr.text-muted").remove();
+
+            let rowCount = $("#style-3 tbody tr").length + 1;
+
+            let statusBadge =
+                res.data.status == 1
+                    ? `<span class="badge outline-badge-success">Active</span>`
+                    : `<span class="badge outline-badge-danger">Inactive</span>`;
+
+            let newRow = `
+                    <tr>
+                        <td class="text-center">${rowCount}</td>
+                        
+                        <td>${res.data.module_name}</td>
+                        <td>${res.data.module_code}</td>
+
+                        <td class="text-center">${res.data.created_at}</td>
+                        
+                    </tr>
+                `;
+
+            $("#style-3 tbody").append(newRow);
         },
 
         error: function (xhr) {
             if (xhr.status === 422) {
                 let errors = xhr.responseJSON.errors;
 
-                if (errors.cert_license_id) {
-                    $(".error-form_cate")
-                        .removeClass("d-none")
-                        .text(errors.cert_license_id[0]);
-                }
-
                 if (errors.module_name) {
                     $(".error-cer_val")
                         .removeClass("d-none")
                         .text(errors.module_name[0]);
+                }
+
+                if (errors.module_code) {
+                    $(".error-cer_code")
+                        .removeClass("d-none")
+                        .text(errors.module_code[0]);
                 }
             } else {
                 Swal.fire("Error", "Something went wrong", "error");
@@ -147,6 +190,53 @@ $(document).on("submit", "#addformmodule", function (e) {
         },
     });
 });
+
+
+// --------------generate route-------------
+
+$(document).ready(function(){
+
+    function generateFilePath(){
+
+        let licenceText = $("#cert_license_id option:selected").text();
+        let applType = $("#appl_type").val();
+
+        // Get module_code from selected option
+        let moduleCode = $("#form_module option:selected").data("code");
+
+        // 🔥 Store into hidden input
+        $("#module_code").val(moduleCode ?? "");
+
+        if(!licenceText || !applType || !moduleCode) return;
+
+        // Licence short code mapping
+        let licenceMap = {
+            "Electrical Contractor Licence Grade A": "EA",
+            "Electrical Contractor Licence Grade B": "EB",
+            "Electrical Contractor Licence Grade Super A": "ESA",
+            "Electrical Contractor Licence Grade Super B": "ESB"
+        };
+
+        let licenceShort = licenceMap[licenceText] ?? "";
+
+        if(!licenceShort) return;
+
+        let applText = applType === "N" 
+            ? "New_applications" 
+            : "Renewal_applications";
+
+        let tempPath = `uploads/temp/${licenceShort}/${applText}/${moduleCode}/`;
+        let proPath  = `uploads/pro/${licenceShort}/${applText}/${moduleCode}/`;
+
+        $("#filepath_temp").val(tempPath);
+        $("#filepath_pro").val(proPath);
+    }
+
+    $("#cert_license_id, #appl_type, #form_module")
+        .on("change", generateFilePath);
+
+});
+
 
 // ---------------------------------------------------------------
 
@@ -334,11 +424,7 @@ function updateStatus(equipId, status, checkbox) {
     });
 }
 
-
-
-
 // ---------update filepath status------------------------------
-
 
 $(document).on("change", ".filepath-status-toggle", function () {
     // alert('updateStatusfilepath');
@@ -346,7 +432,6 @@ $(document).on("change", ".filepath-status-toggle", function () {
     let fileId = checkbox.data("id");
     let status = checkbox.is(":checked") ? 1 : 0;
 
-    
     if (status === 0) {
         Swal.fire({
             title: "Are you sure?",
@@ -363,7 +448,6 @@ $(document).on("change", ".filepath-status-toggle", function () {
             }
         });
     } else {
-        
         updateStatusfilepath(fileId, status, checkbox);
     }
 });
@@ -411,9 +495,80 @@ function updateStatusfilepath(fileId, status, checkbox) {
     });
 }
 
-
 // --------------------------------------------------------------------------------------
 
+// ---------update formodule status------------------------------
+
+$(document).on("change", ".formodule-status-toggle", function () {
+    // alert('updateStatusfilepath');
+    let checkbox = $(this);
+    let fileId = checkbox.data("id");
+    let status = checkbox.is(":checked") ? 1 : 0;
+
+    if (status === 0) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to inactivate this Form Module?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Inactivate",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateStatusformmodule(fileId, status, checkbox);
+            } else {
+                checkbox.prop("checked", true);
+            }
+        });
+    } else {
+        updateStatusformmodule(fileId, status, checkbox);
+    }
+});
+
+function updateStatusformmodule(fileId, status, checkbox) {
+    // alert('updateStatusfilepath');
+    $.ajax({
+        url: BASE_URL + "/admin/formmodulestatus/updateStatus",
+        type: "POST",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr("content"),
+            id: fileId,
+            status: status,
+        },
+        success: function (response) {
+            Swal.fire({
+                icon: "success",
+                title: "Updated",
+                text: response.message,
+                timer: 1500,
+                showConfirmButton: false,
+            });
+
+            // 🔄 Update badge instantly
+            let badge = checkbox.closest("tr").find(".badge");
+
+            if (status === 1) {
+                badge
+                    .removeClass("outline-badge-danger")
+                    .addClass("outline-badge-success")
+                    .text("Active");
+            } else {
+                badge
+                    .removeClass("outline-badge-success")
+                    .addClass("outline-badge-danger")
+                    .text("Inactive");
+            }
+        },
+        error: function () {
+            Swal.fire("Error", "Unable to update status", "error");
+
+            // rollback toggle on error
+            checkbox.prop("checked", !status);
+        },
+    });
+}
+
+// --------------------------------------------------------------------------------------
 
 $(document).ready(function () {
     $(".licenseFilter").each(function () {

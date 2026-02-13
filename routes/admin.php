@@ -525,6 +525,11 @@ use App\Http\Controllers\MediaController;
             Route::post('/equipment/operations', [EquipmentController::class, 'operations'])->name('equipment.operations');
 
             // --------------------Filepath----------------------
+              
+            Route::get('/fileloc', [FilelocationController::class, 'index'])->name('fileloc');
+
+            Route::get('/formmodule', [FilelocationController::class, 'formmodule'])->name('formmodule');
+
             Route::post('/formmodule/storemodule', [FilelocationController::class, 'storemodule'])->name('formmodule.storemodule');
 
             Route::post('/formmodule/storepath', [FilelocationController::class, 'storepath'])->name('formmodule.storepath');
@@ -558,8 +563,7 @@ use App\Http\Controllers\MediaController;
 
 
 
-        //    -------------fileloc------------------------
-        Route::get('/fileloc', [FilelocationController::class, 'index'])->name('fileloc');
+      
 
 
         });

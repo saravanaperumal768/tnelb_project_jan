@@ -297,7 +297,7 @@
                     </a>
                 </li>
 
-
+<!-- 
                 <li class="menu {{ request()->routeIs('admin.fileloc') ? 'active' : '' }}">
                     <a href="{{ route('admin.fileloc') }}" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
@@ -310,6 +310,43 @@
                             <span>File Path Management</span>
                         </div>
                     </a>
+                </li> -->
+
+                @php
+                    $formmodule = ['admin.formmodule', 'admin.fileloc'];
+                @endphp
+                <li class="menu {{ in_array($currentRoute, $formmodule) ? 'active' : '' }}">
+                    <a href="#filepath" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs('admin.licences') ? 'true' : 'false' }}" class="dropdown-toggle">
+                        <div class="">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-clipboard">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            </svg>
+                            <span>File Path Management</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-chevron-right">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <ul class="collapse submenu list-unstyled {{ in_array($currentRoute, $formmodule) ? 'show' : '' }}" id="filepath" data-bs-parent="#accordionExample">
+
+                     
+                        <li class="{{ $currentRoute == 'admin.formmodule' ? 'active' : '' }}">
+                           <a href="{{route('admin.formmodule')}}">Form Modules</a>
+                       </li>
+                        <li class="{{ $currentRoute == 'admin.fileloc' ? 'active' : '' }}">
+                            <a href="{{ route('admin.fileloc') }}">
+                                File Paths
+                            </a>
+                        </li>
+
+                     
+                    </ul>
                 </li>
 
 

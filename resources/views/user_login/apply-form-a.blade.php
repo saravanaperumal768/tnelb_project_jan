@@ -345,12 +345,13 @@ exit; -->
 
                                 <input type="hidden" name="upload_form_name" value="A">
                                 <input type="hidden" name="upload_license_name" value="EA">
-                                <input type="hidden" name="module" value="Ownership Document">
+                                <input type="hidden" name="module" value="OWNERSHIP DOCUMENT">
+                                <input type="hidden" name="module_code" value="OD">
                                 <input type="hidden" name="ownership_type" value="pt">
                                 <input type="hidden" name="appl_type" value="N">
                                 <input type="hidden" name="document_category" value="partnership_deed">
                                 <input type="hidden" name="document_sub_category" value="OT">
-                                <input type="hidden" name="document_sub_category" value="{{$form_code->id}}">
+                                <input type="hidden" name="form_code" value="{{$form_code->id}}">
 
                                 <span class="file-limit">PDF only (Max 250 KB)</span>
                                 <span class="text-danger Doc_upload_error"></span>

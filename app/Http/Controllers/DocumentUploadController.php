@@ -242,7 +242,14 @@ class DocumentUploadController extends Controller
                     // ------------------------------------------
 
 
-                    $date   = now()->format('Y_m_d');
+                    $date   = now()->format('Ymd');
+                    $time = now()->timezone('Asia/Kolkata')->format('Hi');
+
+                    $form_code = $request->form_code;
+
+                    // dd($time);
+                    // exit;
+
                     $random = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
                     // ---------------------------------
                     // Filename Format
@@ -250,8 +257,11 @@ class DocumentUploadController extends Controller
                     // Array()
                     // yyyymmdd_time(11.30)login_id_L(license)_1_document_sub_category(PT)1 .pdf
                     // ---------------------------------
-                    $fileName = $date . '_' . $loginId . '_' . $random . '_' .
+                    $fileName = $date . '_' .$time .'_' . $loginId . '_' . 'L' . $form_code .'_' .
                         strtoupper($request->document_category) . '.pdf';
+
+                    dd($fileName);
+                    exit;
 
                     $file->move($folderPath, $fileName);
 
