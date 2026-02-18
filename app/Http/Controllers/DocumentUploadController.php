@@ -393,8 +393,9 @@ class DocumentUploadController extends Controller
         $form_name = $request->form_name;
         $license_name = $request->license_name;
         $request->validate([
-            'partnership_deed' => 'required|mimes:pdf|max:250', // 250 KB
+            'file' => 'required|mimes:pdf|max:250'
         ]);
+
 
 
 

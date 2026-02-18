@@ -348,6 +348,7 @@ exit; -->
 
 
                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                    <br>
                                     <span class="text-danger Doc_upload_error"></span>
 
 
@@ -357,9 +358,11 @@ exit; -->
                                     <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP DOCUMENT" data-document_category="ownership_doc" data-ownership_type="pt" data-document_sub_category="OD" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
                                         <i class="fa fa-upload"></i> Upload
                                     </button>
+                                    <br>
+                                     <span class="error text-danger" id="partnership_deed_error"></span>
                                 </div>
 
-                                <span class="error text-danger" id="partnership_deed_error"></span>
+                               
                             </div>
 
 
@@ -376,6 +379,7 @@ exit; -->
 
 
                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                    <br>
                                     <span class="text-danger Doc_upload_error"></span>
 
                                 </div>
@@ -384,10 +388,12 @@ exit; -->
                                     <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP DOCUMENT" data-document_category="ownership_doc" data-ownership_type="pt" data-document_sub_category="OD" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
                                         <i class="fa fa-upload"></i> Upload
                                     </button>
+                                    <br>
+                                     <span class="error text-danger" id="director_mom_error"></span>
                                 </div>
 
                                
-                                <span class="error text-danger" id="director_mom_error"></span>
+                               
                             </div>
 
                         </div>
@@ -660,6 +666,7 @@ exit; -->
 
 
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
                                                     <span class="error text-danger qual_proof_error"></span>
                                                 </div>
@@ -2380,8 +2387,6 @@ exit; -->
                                             <label for="comments">(iv). Proof <span style="color: red;">*</span></label>
                                         </div>
 
-
-
                                         <div class="col-12 col-md-12">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
@@ -2389,6 +2394,7 @@ exit; -->
                                                         name="bank_doc" id="bank_doc"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
@@ -2399,6 +2405,14 @@ exit; -->
                                                 </div>
 
                                             </div>
+
+                                             <div class="col-md-12 mt-3 col-12 {{ empty($banksolvency->bank_doc) ? 'd-none' : '' }} file-link">
+                                                            @if(!empty($banksolvency->bank_doc))
+                                                            <a href="{{ asset( $banksolvency->bank_doc) }}" target="_blank" class="text-info">
+                                                                <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+                                                            </a>
+                                                            @endif
+                                                </div>
 
 
                                             <span class="error text-danger" id="bank_doc_error"></span>
@@ -2454,6 +2468,7 @@ exit; -->
                                                         name="criminal_offence_doc" id="criminal_offence_doc"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
                                                 </div>
                                                 <div class="col-12 col-md-4">
@@ -2511,6 +2526,7 @@ exit; -->
                                                         name="consent_letter_enclose_doc" id="consent_letter_enclose_doc"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
@@ -2562,6 +2578,7 @@ exit; -->
                                                         name="cc_holders_enclosed_doc" id="cc_holders_enclosed_doc"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
@@ -2687,6 +2704,7 @@ exit; -->
                                                         name="specimen_signature" id="specimen_signature"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
@@ -2851,6 +2869,7 @@ exit; -->
                                                         name="separate_sheet" id="separate_sheet"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
@@ -2958,6 +2977,7 @@ exit; -->
                                                         name="address_proof" id="address_proof"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <br>
                                                     <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
@@ -3107,7 +3127,9 @@ exit; -->
                                                             id="instrument_test_report_{{ $index }}"
                                                             accept="application/pdf">
                                                         <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                        <br>
                                                         <span class="text-danger Doc_upload_error"></span>
+                                                        
                                                         <span class="error text-danger"
                                                             id="instrument_test_report_error_{{ $index }}"></span>
 
@@ -3145,6 +3167,7 @@ exit; -->
                                                             id="instrument_purchase_report_{{ $index }}"
                                                             accept="application/pdf">
                                                         <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                        <br>
                                                         <span class="text-danger Doc_upload_error"></span>
                                                         <span class="error text-danger"
                                                             id="instrument_purchase_report_error_{{ $index }}"></span>

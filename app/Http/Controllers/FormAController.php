@@ -23,6 +23,9 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\File;
+
+
 use Illuminate\Support\Str;
 
 
@@ -991,7 +994,22 @@ if ($request->hasFile('gst_doc')) {
 // dd($request->input('form_action'));
 // exit;
 
-            
+              $documentMap = [
+
+        // Ownership Document
+        'ownership_doc' => [
+            'table'  => 'tnelb_ea_applications',
+            'column' => 'ownership_doc',
+            'where'  => ['application_id' => $applicationId]
+        ],
+
+        // Bank Solvency Document
+        'bank_doc' => [
+            'table'  => 'tnelb_banksolvency_a',
+            'column' => 'bank_doc',
+            'where'  => ['application_id' => $applicationId]
+        ],
+    ];
 
             // Fetch temp uploaded docs for this application
             $tempDocs = DB::table('tnelb_temp_uploaded_documents')
@@ -1002,83 +1020,102 @@ if ($request->hasFile('gst_doc')) {
 
                 // ->where('is_final', '0')
                 ->orderBy('uploaded_at', 'DESC')
-                ->first();
-                // dd($tempDocs);
+                ->get();
+                // dd($tempDocs->pluck('document_category'));
                 // exit;
 
-                if($tempDocs){
-                     $updateColumn = null;
-
-                if ($tempDocs->document_category) {
-                    $updateColumn = 'ownership_doc';
-                }
-
-                // if ($doc->document_category === 'DIRECTOR_MOM') {
-                //     $updateColumn = 'director_mom_doc';
-                // }
 
 
-                $dbFilePath_all = DocPathController::getPath($request);
+               foreach ($tempDocs as $tempDoc) {
 
-                $dbFilePath = $dbFilePath_all->filepath_pro;
+        // Skip unknown document category
+        if (!isset($documentMap[$tempDoc->document_category])) {
+            continue;
+        }
 
-                // dd($dbFilePath_all->filepath_pro);
-                // exit;
+        $targetTable  = $documentMap[$tempDoc->document_category]['table'];
+        $updateColumn = $documentMap[$tempDoc->document_category]['column'];
+        $whereClause  = $documentMap[$tempDoc->document_category]['where'];
 
-                $dbFilePath_modulecode = $dbFilePath_all->module_code;
+        // -----------------------------------------
+        // 4️⃣ GET FINAL PRO PATH
+        // -----------------------------------------
 
-                   if ($updateColumn) {
+        $dbFilePath_all = DocPathController::getPath($request);
+        $dbFilePath     = $dbFilePath_all->filepath_pro;
 
-                        // ------------------------------------
-                        // 1 OLD FILE FULL PATH (TEMP)
-                        // ------------------------------------
-                        $tempFullPath = public_path($tempDocs->file_path . '/' . $tempDocs->file_name);
+        $tempFullPath = public_path(
+            $tempDoc->file_path . '/' . $tempDoc->file_name
+        );
 
-                        // ------------------------------------
-                        // 2 PRO FOLDER PATH
-                        // ------------------------------------
-                        $proFolderPath = public_path($dbFilePath);
+        $proFolderPath = public_path($dbFilePath);
 
-                        if (!\File::exists($proFolderPath)) {
-                            \File::makeDirectory($proFolderPath, 0755, true);
-                        }
+        if (!File::exists($proFolderPath)) {
+            File::makeDirectory($proFolderPath, 0755, true);
+        }
 
-                        // ------------------------------------
-                        // 3 NEW FILE PATH (PRO)
-                        // ------------------------------------
-                        $proFullPath = $proFolderPath . '/' . $tempDocs->file_name;
+        $proFullPath = $proFolderPath . '/' . $tempDoc->file_name;
 
-                        // ------------------------------------
-                        // 4 COPY FILE
-                        // ------------------------------------
-                        if (\File::exists($tempFullPath)) {
-                            \File::copy($tempFullPath, $proFullPath);
-                        }
+        // -----------------------------------------
+        // 5️⃣ COPY FILE
+        // -----------------------------------------
 
-                        // ------------------------------------
-                        // 5 UPDATE MAIN APPLICATION TABLE
-                        // ------------------------------------
-                        DB::table('tnelb_ea_applications')
-                            ->where('application_id', $applicationId)
-                            ->update([
-                                $updateColumn => $dbFilePath . '/' . $tempDocs->file_name,
-                                'updated_at'  => now()
-                            ]);
+        if (File::exists($tempFullPath)) {
+            File::copy($tempFullPath, $proFullPath);
+        } else {
+            continue; // skip if file missing
+        }
 
-                        // ------------------------------------
-                        // 6 MARK TEMP DOCUMENT AS FINAL
-                        // ------------------------------------
-                        DB::table('tnelb_temp_uploaded_documents')
-                            ->where('id', $tempDocs->id)
-                            ->update([
-                                'is_final'   => '1',
-                                'moved_as'   => $request->input('form_action'),
-                                'updated_at' => now()
-                            ]);
-                    }
+        $finalDbPath = $dbFilePath . '/' . $tempDoc->file_name;
 
-                }
 
+        // -----------------------------------------
+        // 6️⃣ INSERT OR UPDATE TARGET TABLE
+        // -----------------------------------------
+
+        $recordExists = DB::table($targetTable)
+            ->where($whereClause)
+            ->exists();
+
+        if ($recordExists) {
+
+            // Update existing row
+            DB::table($targetTable)
+                ->where($whereClause)
+                ->update([
+                    $updateColumn => $finalDbPath,
+                    'updated_at'  => now()
+                ]);
+
+        } else {
+
+            // Insert new row (important for bank_doc)
+            DB::table($targetTable)
+                ->insert(array_merge(
+                    $whereClause,
+                    [
+                        $updateColumn => $finalDbPath,
+                        'login_id'    => $request->login_id_store ?? null,
+                        'created_at'  => now(),
+                        'updated_at'  => now(),
+                        'status'      => '1'
+                    ]
+                ));
+        }
+
+
+        // -----------------------------------------
+        // 7️⃣ MARK TEMP DOC AS FINAL
+        // -----------------------------------------
+
+        DB::table('tnelb_temp_uploaded_documents')
+            ->where('id', $tempDoc->id)
+            ->update([
+                'is_final'   => '1',
+                'moved_as'   => $request->input('form_action'),
+                'updated_at' => now()
+            ]);
+    }
                 
 // var_dump($tempDocs);
 // exit;
