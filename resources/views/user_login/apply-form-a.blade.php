@@ -303,113 +303,107 @@ exit; -->
 
                     </div>
 
-                                    {{-- Detect draft --}}
-                <!-- <script>
+                    {{-- Detect draft --}}
+                    <!-- <script>
                     const IS_DRAFT = {{ isset($application) ? 'true' : 'false' }};
                     const SAVED_OWNERSHIP = "{{ $application->application_ownershiptype ?? '' }}";
                 </script> -->
 
-                <div class="row mt-3">
-                    <div class="offset-md-2 col-lg-3 mt-2 text-right">
-                        <h6 class="fw-bold">Type of Ownership</h6>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <select class="custom-select" name="application_ownershiptype" id="ownership_type_select">
-                            <option value="">---Select Ownership Type---</option>
-                            <option value="pr"  {{ isset($application) && $application->application_ownershiptype == 'pr' ? 'selected' : '' }}>Proprietorship</option>
-                            <option value="pt"  {{ isset($application) && $application->application_ownershiptype == 'pt' ? 'selected' : '' }}>Partnership</option>
-                            <option value="pvt" {{ isset($application) && $application->application_ownershiptype == 'pvt' ? 'selected' : '' }}>Private Limited (PVT LTD)</option>
-                            <option value="ltd" {{ isset($application) && $application->application_ownershiptype == 'ltd' ? 'selected' : '' }}>Limited (LTD)</option>
-
-
-                            
-                        </select>
-                        <span class="error text-danger" id="ownership_type_error"></span>
-                    </div>
-                </div>
-
-
-                    
-
-                    
-                      <div class="row mt-3" id="partnershipdeed" style="display:none;">
-                            <div class="col-lg-3 mt-2 text-right">
-                                <h6 class="fw-bold">Upload Partnership Deed <span class="text-danger">*</span></h6>
-                            </div>
-
-                            <div class="col-md-3">
-                                <input type="file" class="form-control"
-                                    name="partnership_deed"
-                                    accept="application/pdf">
-
-                                <input type="hidden" name="upload_form_name" value="A">
-                                <input type="hidden" name="upload_license_name" value="EA">
-                                <input type="hidden" name="module" value="OWNERSHIP DOCUMENT">
-                                <input type="hidden" name="module_code" value="OD">
-                                <input type="hidden" name="ownership_type" value="pt">
-                                <input type="hidden" name="appl_type" value="N">
-                                <input type="hidden" name="document_category" value="partnership_deed">
-                                <input type="hidden" name="document_sub_category" value="OT">
-                                <input type="hidden" name="form_code" value="{{$form_code->id}}">
-
-                                <span class="file-limit">PDF only (Max 250 KB)</span>
-                                <span class="text-danger Doc_upload_error"></span>
-                            </div>
-
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-info ownershipdoc_upload-btn">
-                                    <i class="fa fa-upload"></i> Upload
-                                </button>
-                            </div>
-
-                            {{-- FILE LINK (Draft) --}}
-                            <div class="col-md-4 col-12 {{ empty($application->ownership_doc) ? 'd-none' : '' }} file-link">
-                                @if(!empty($application->ownership_doc))
-                                 <a href="{{ asset( $application->ownership_doc) }}" target="_blank" class="text-info">
-                                        <i class="fa fa-file-pdf-o"></i> Present Uploaded File
-                                    </a>
-                                @endif
-                            </div>
+                    <div class="row mt-3">
+                        <div class="offset-md-2 col-lg-3 mt-2 text-right">
+                            <h6 class="fw-bold">Type of Ownership</h6>
                         </div>
 
+                        <div class="col-lg-3">
+                            <select class="custom-select" name="application_ownershiptype" id="ownership_type_select">
+                                <option value="">---Select Ownership Type---</option>
+                                <option value="pr" {{ isset($application) && $application->application_ownershiptype == 'pr' ? 'selected' : '' }}>Proprietorship</option>
+                                <option value="pt" {{ isset($application) && $application->application_ownershiptype == 'pt' ? 'selected' : '' }}>Partnership</option>
+                                <option value="pvt" {{ isset($application) && $application->application_ownershiptype == 'pvt' ? 'selected' : '' }}>Private Limited (PVT LTD)</option>
+                                <option value="ltd" {{ isset($application) && $application->application_ownershiptype == 'ltd' ? 'selected' : '' }}>Limited (LTD)</option>
 
 
-                        <div class="row mt-3" id="directormom" style="display:none;">
-                            <div class="col-lg-3 mt-2 text-right">
-                                <h6 class="fw-bold">Upload Director MOM <span class="text-danger">*</span></h6>
+
+                            </select>
+                            <span class="error text-danger" id="ownership_type_error"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6 offset-md-1 col-12">
+                            <div class="row  mt-3" id="partnershipdeed" style="display:none;">
+                                <div class="col-lg-3 mt-2 text-right">
+                                    <h6 class="fw-bold">Upload Partnership Deed <span class="text-danger">*</span></h6>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <input type="file" class="form-control"
+                                        name="partnership_deed"
+                                        accept="application/pdf">
+
+                                    <input type="hidden" name="module" value="OWNERSHIP DOCUMENT">
+
+
+
+                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                    <span class="text-danger Doc_upload_error"></span>
+
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP DOCUMENT" data-document_category="ownership_doc" data-ownership_type="pt" data-document_sub_category="OD" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
+                                        <i class="fa fa-upload"></i> Upload
+                                    </button>
+                                </div>
+
+                                <span class="error text-danger" id="partnership_deed_error"></span>
                             </div>
 
-                            <div class="col-md-3">
-                                <input type="file" class="form-control"
-                                    name="director_mom"
-                                    accept="application/pdf">
 
-                                <input type="hidden" name="upload_form_name" value="A">
-                                <input type="hidden" name="upload_license_name" value="EA">
-                                <input type="hidden" name="module" value="Ownership Document">
-                                <input type="hidden" name="ownership_type" value="dr">
-                                <input type="hidden" name="document_category" value="director_mom">
-                                <input type="hidden" name="document_sub_category" value="OT">
 
-                                <span class="file-limit">PDF only (Max 250 KB)</span>
-                                <span class="text-danger Doc_upload_error"></span>
+                            <div class="row mt-3" id="directormom" style="display:none;">
+                                <div class="col-lg-3 mt-2 text-right">
+                                    <h6 class="fw-bold">Upload Director MOM <span class="text-danger">*</span></h6>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <input type="file" class="form-control"
+                                        name="director_mom"
+                                        accept="application/pdf">
+
+
+                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                    <span class="text-danger Doc_upload_error"></span>
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP DOCUMENT" data-document_category="ownership_doc" data-ownership_type="pt" data-document_sub_category="OD" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
+                                        <i class="fa fa-upload"></i> Upload
+                                    </button>
+                                </div>
+
+                               
+                                <span class="error text-danger" id="director_mom_error"></span>
                             </div>
 
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-info ownershipdoc_upload-btn">
-                                    <i class="fa fa-upload"></i> Upload
-                                </button>
-                            </div>
+                        </div>
 
-                            <div class="col-md-4 col-12 {{ empty($application->ownership_doc) ? 'd-none' : '' }} file-link">
-                                @if(!empty($application->ownership_doc))
-                                   <a href="{{ asset( $application->ownership_doc) }}" target="_blank" class="text-info">
+                         <div class="col-md-4 mt-3 col-12 {{ empty($application->ownership_doc) ? 'd-none' : '' }} file-link">
+                                    @if(!empty($application->ownership_doc))
+                                    <a href="{{ asset( $application->ownership_doc) }}" target="_blank" class="text-info">
                                         <i class="fa fa-file-pdf-o"></i> Present Uploaded File
                                     </a>
-                                @endif
-                            </div>
+                                    @endif
                         </div>
+
+                    </div>
+
+
+                  
 
 
 
@@ -635,7 +629,7 @@ exit; -->
                                             <span class="error text-danger qualification_error"></span>
                                         </div>
 
-                                        
+
                                         <div class="col-12 col-md-5 qualTextWrapper" id="qualTextWrapper" style="display:none;">
                                             <div class="row">
                                                 <div class="col-12 col-md-5">
@@ -659,24 +653,19 @@ exit; -->
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
                                                     <!-- <input type="file" class="form-control" name="qual_proof[]"> -->
-                                                     <input type="file" class="form-control"
-                                                            name="qual_proof[]"
-                                                            accept="application/pdf">
+                                                    <input type="file" class="form-control"
+                                                        name="qual_proof[]"
+                                                        accept="application/pdf">
 
-                                                        <input type="hidden" name="upload_form_name" value="A">
-                                                        <input type="hidden" name="upload_license_name" value="EA">
-                                                        <input type="hidden" name="module" value="ownership_edu">
-                                                        <input type="hidden" name="ownership_type" value="pr">
-                                                        <input type="hidden" name="document_category" value="educ_qual_proof">
-                                                        <input type="hidden" name="document_sub_category" value="prop_edu">
 
-                                                        <span class="file-limit">PDF only (Max 250 KB)</span>
-                                                        <span class="text-danger Doc_upload_error"></span>
+
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
                                                     <span class="error text-danger qual_proof_error"></span>
                                                 </div>
 
                                                 <div class="col-12 col-md-4">
-                                                     <button type="button" class="btn btn-info ownershipdoc_upload-btn">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP EDUCATIONAL DOCUMENT" data-document_category="educ_qual_proof" data-ownership_type="pr" data-document_sub_category="OED" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
@@ -1087,11 +1076,11 @@ exit; -->
                                     </tbody>
                                 </table>
 
-                               
-                            </div>
-                                
 
-                                
+                            </div>
+
+
+
                             <!-- <div class="col-12 col-md-5  text-md-right">
                                 <h5>Number of Partners? (Min 2, Max 6)</h5>
                             </div>
@@ -1102,7 +1091,7 @@ exit; -->
 
 
                         </div>
-                        
+
 
 
                         <div class="border box-shadow-blue card p-3 mt-2" id="partnersfill-section" style="display:none;">
@@ -1147,94 +1136,94 @@ exit; -->
                                     </div>
 
                                     <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-12 col-md-12">
-                                            <label for="Name">(ii) Age and qualification along with
-                                                evidence <span style="color: red;">*</span></label>
-                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-md-12">
+                                                <label for="Name">(ii) Age and qualification along with
+                                                    evidence <span style="color: red;">*</span></label>
+                                            </div>
 
-                                    </div>
-
-
-
-                                    <div class="row">
-                                        <div class="col-12 col-md-3">
-                                            <label>Date Of Birth <span class="text-red">*</span></label>
-                                        </div>
-
-                                        <div class="col-12 col-md-4">
-                                            <input type="date" class="form-control dob" name="dob[]">
-                                            <span class="error text-danger dob_error"></span>
-                                        </div>
-
-                                        <div class="col-12 col-md-2">
-                                            <label>Age <span class="text-red">*</span></label>
-                                        </div>
-
-                                        <div class="col-12 col-md-3">
-                                            <input type="number" class="form-control age" name="age[]" readonly>
-                                            <span class="error text-danger age_error"></span>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row mt-2">
-                                        <div class="col-12 col-md-3 ">
-                                            <label>Qualification <span class="text-red">*</span></label>
-                                        </div>
-                                        <!-- <input type="text" class="form-control" id="qualification" name="qualification[]" placeholder="Qualification" value=""> -->
-                                        <div class="col-12 col-md-6">
-                                            <select class="form-control qualification" name="qualification[]">
-                                                <option value="">Select Qualification</option>
-                                                <option value="8 To 12">8 To 12</option>
-                                                <option value="Diploma">Diploma</option>
-                                                <option value="Degree">Degree</option>
-                                                <option value="Master Degree">Master Degree</option>
-                                            </select>
-
-                                            <!-- MUST BE HERE -->
-                                            <span class="error text-danger qualification_error"></span>
                                         </div>
 
 
 
+                                        <div class="row">
+                                            <div class="col-12 col-md-3">
+                                                <label>Date Of Birth <span class="text-red">*</span></label>
+                                            </div>
 
-                                    </div>
+                                            <div class="col-12 col-md-4">
+                                                <input type="date" class="form-control dob" name="dob[]">
+                                                <span class="error text-danger dob_error"></span>
+                                            </div>
 
-                                    <div class="row mt-2">
+                                            <div class="col-12 col-md-2">
+                                                <label>Age <span class="text-red">*</span></label>
+                                            </div>
 
-                                        <div class="col-12 col-md-3">
-                                            <label>Qualification Proof <span class="text-red">*</span></label>
+                                            <div class="col-12 col-md-3">
+                                                <input type="number" class="form-control age" name="age[]" readonly>
+                                                <span class="error text-danger age_error"></span>
+                                            </div>
                                         </div>
-                                        <div class="col-12 col-md-7">
-                                            <div class="row">
-                                                <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" id="qual_proof" name="qual_proof[]" value="">
-                                                </div>
 
-                                                <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button"> <i class="fa fa-upload"></i> Upload </button>
-                                                </div>
 
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-md-3 ">
+                                                <label>Qualification <span class="text-red">*</span></label>
+                                            </div>
+                                            <!-- <input type="text" class="form-control" id="qualification" name="qualification[]" placeholder="Qualification" value=""> -->
+                                            <div class="col-12 col-md-6">
+                                                <select class="form-control qualification" name="qualification[]">
+                                                    <option value="">Select Qualification</option>
+                                                    <option value="8 To 12">8 To 12</option>
+                                                    <option value="Diploma">Diploma</option>
+                                                    <option value="Degree">Degree</option>
+                                                    <option value="Master Degree">Master Degree</option>
+                                                </select>
+
+                                                <!-- MUST BE HERE -->
+                                                <span class="error text-danger qualification_error"></span>
                                             </div>
 
 
-                                            <!-- <span class="choose-btn btn btn-info" id="chooseBtn"><i class="fa fa-upload"></i> Upload Proof</span>
-                                            <input type="file" id="hiddenBtn" id="qual_proof" name="qual_proof[]" style="display:none;"> -->
 
-                                            <span class="error text-danger" id="qual_proof_error"></span>
+
                                         </div>
 
-                                        <!-- <div class="col-12 col-md-3">
+                                        <div class="row mt-2">
+
+                                            <div class="col-12 col-md-3">
+                                                <label>Qualification Proof <span class="text-red">*</span></label>
+                                            </div>
+                                            <div class="col-12 col-md-7">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-8">
+                                                        <input type="file" class="form-control" id="qual_proof" name="qual_proof[]" value="">
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <button class="btn btn-info" type="button"> <i class="fa fa-upload"></i> Upload </button>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <!-- <span class="choose-btn btn btn-info" id="chooseBtn"><i class="fa fa-upload"></i> Upload Proof</span>
+                                            <input type="file" id="hiddenBtn" id="qual_proof" name="qual_proof[]" style="display:none;"> -->
+
+                                                <span class="error text-danger" id="qual_proof_error"></span>
+                                            </div>
+
+                                            <!-- <div class="col-12 col-md-3">
                                             <button class="btn btn-info"> <i class="fa fa-upload"></i> Upload </button>
                                         </div> -->
 
+                                        </div>
+
+
+
+
                                     </div>
-
-
-
-
-                                </div>
 
                                 </div>
 
@@ -2391,13 +2380,22 @@ exit; -->
                                             <label for="comments">(iv). Proof <span style="color: red;">*</span></label>
                                         </div>
 
+
+
                                         <div class="col-12 col-md-12">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" name="bank_doc" id="bank_doc">
+                                                    <input type="file" class="form-control"
+                                                        name="bank_doc" id="bank_doc"
+                                                        accept="application/pdf">
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
+
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Upload</button>
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="BANK SOLVENCY DOCUMENT" data-document_category="bank_doc" data-document_sub_category="BSD" data-ownership_type="" data-form_code="{{$form_code->id}}">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -2451,10 +2449,17 @@ exit; -->
                                         <div class="col-12 col-md-3 file_upload">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" name="criminal_offence_doc" id="criminal_offence_doc">
+
+                                                    <input type="file" class="form-control"
+                                                        name="criminal_offence_doc" id="criminal_offence_doc"
+                                                        accept="application/pdf">
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Upload</button>
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="criminal_offence_doc" data-document_sub_category="OHD" data-ownership_type="cr" data-form_code="{{$form_code->id}}">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -2502,10 +2507,17 @@ exit; -->
                                         <div class="col-12 col-md-3 file_upload">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" name="consent_letter_enclose_doc" id="consent_letter_enclose_doc">
+                                                    <input type="file" class="form-control"
+                                                        name="consent_letter_enclose_doc" id="consent_letter_enclose_doc"
+                                                        accept="application/pdf">
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
+
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Upload</button>
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="consent_letter_enclose_doc" data-document_sub_category="OHD" data-ownership_type="consent" data-form_code="{{$form_code->id}}">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -2546,10 +2558,17 @@ exit; -->
                                         <div class="col-12 col-md-3 file_upload">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" name="cc_holders_enclosed_doc" id="cc_holders_enclosed_doc">
+                                                    <input type="file" class="form-control"
+                                                        name="cc_holders_enclosed_doc" id="cc_holders_enclosed_doc"
+                                                        accept="application/pdf">
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
+
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Upload</button>
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="cc_holders_enclosed_doc" data-document_sub_category="OHD" data-ownership_type="ccenclosed" data-form_code="{{$form_code->id}}">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -2570,12 +2589,12 @@ exit; -->
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <div class="row align-items-center">
-                                        <div class="col-12 col-md-8">
+                                        <div class="col-12 col-md-7">
                                             <label for="Name">10. (i)Whether purchase bill for all the
                                                 instruments are enclosed in Original <span style="color: red;">*</span>
                                             </label>
                                         </div>
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-12 col-md-2">
                                             @php
                                             $purchase_bill_enclose = strtolower(old('purchase_bill_enclose', $application->purchase_bill_enclose ?? 'no'));
                                             @endphp
@@ -2590,6 +2609,8 @@ exit; -->
                                             </div>
                                             <span class="error text-danger" id="purchase_bill_enclose_error"></span>
                                         </div>
+
+
 
 
 
@@ -2635,14 +2656,14 @@ exit; -->
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <div class="row align-items-center border-right-12">
-                                        <div class="col-12 col-md-8">
+                                        <div class="col-12 col-md-7">
                                             <label for="Name">11. (i) Whether specimen signature of
                                                 the Proprietor or of the authorised
                                                 signatory (in case of limited
                                                 company in triplicate is enclosed) <span style="color: red;">*</span>
                                             </label>
                                         </div>
-                                        <div class="col-12 col-md-4 ">
+                                        <div class="col-12 col-md-2 ">
                                             @php
                                             $specimen_signature_enclose = strtolower(old('specimen_signature_enclose', $application->specimen_signature_enclose ?? 'no'));
                                             @endphp
@@ -2658,6 +2679,29 @@ exit; -->
 
                                         </div>
                                         <span class="error text-danger" id="specimen_signature_enclose_error"></span>
+
+                                        <div class="col-12 col-md-3 file_upload">
+                                            <div class="row">
+                                                <div class="col-12 col-md-8">
+                                                    <input type="file" class="form-control"
+                                                        name="specimen_signature" id="specimen_signature"
+                                                        accept="application/pdf">
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
+
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="specimen_signature" data-document_sub_category="OHD" data-ownership_type="specimensign" data-form_code="{{$form_code->id}}">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
+                                                </div>
+
+                                            </div>
+
+
+                                            <span class="error text-danger" id="cc_holders_enclosed_doc_error"></span>
+                                        </div>
+
 
 
                                     </div>
@@ -2776,7 +2820,7 @@ exit; -->
 
                                 <div class="col-md-12">
                                     <div class="row align-items-center">
-                                        <div class="col-12 col-md-8">
+                                        <div class="col-12 col-md-7">
                                             <label for="Name">(iii) Whether the applicant enclosed
                                                 the specimen signature of the
                                                 above person/ persons in triplicate
@@ -2784,7 +2828,7 @@ exit; -->
 
                                             </label>
                                         </div>
-                                        <div class="col-12 col-md-4 ">
+                                        <div class="col-12 col-md-2 ">
                                             @php
                                             $separate_sheet = strtolower(old('separate_sheet', $application->separate_sheet ?? 'no'));
                                             @endphp
@@ -2798,6 +2842,28 @@ exit; -->
                                                 <label class="form-check-label" for="separate_sheet">No</label>
                                             </div>
                                             <span class="error text-danger" id="separate_sheet_error"></span>
+                                        </div>
+
+                                        <div class="col-12 col-md-3 file_upload">
+                                            <div class="row">
+                                                <div class="col-12 col-md-8">
+                                                    <input type="file" class="form-control"
+                                                        name="separate_sheet" id="separate_sheet"
+                                                        accept="application/pdf">
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
+
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="separate_sheet" data-document_sub_category="OHD" data-ownership_type="separatesheet" data-form_code="{{$form_code->id}}">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
+                                                </div>
+
+                                            </div>
+
+
+                                            <span class="error text-danger" id="cc_holders_enclosed_doc_error"></span>
                                         </div>
 
 
@@ -2884,54 +2950,24 @@ exit; -->
 
                                         </div>
                                         <div class="col-12 col-md-9">
-                                            @php
-                                            $decryptedGSTDoc = null;
-                                            $maskedGSTDoc = null;
 
-                                            if (!empty($document->gst_doc)) {
-                                            try {
-                                            $decryptedGSTDoc = Crypt::decryptString($document->gst_doc);
-                                            $maskedGSTDoc = str_repeat('X', strlen($decryptedGSTDoc) - 4) . substr($decryptedGSTDoc, -4);
-                                            } catch (\Exception $e) {
-                                            $maskedGSTDoc = 'Invalid or corrupted GST';
-                                            }
-                                            }
-                                            @endphp
 
-                                            <div id="gst-upload-wrapper">
-                                                @if (!empty($decryptedGSTDoc))
-                                                <div class="row mt-2" id="gst-existing-row">
-                                                    <div class="col-12 col-md-7">
-                                                        <a href="{{ asset($decryptedGSTDoc) }}" target="_blank">
-                                                            <i class="fa fa-file-pdf-o fa-lg text-danger"></i> View
-                                                        </a>
-                                                        <input type="hidden" name="gst_doc" id="gst_doc" value="{{ $decryptedGSTDoc }}">
-                                                    </div>
-                                                    <div class="col-12 col-md-5">
-                                                        <button type="button" class="btn btn-danger" id="remove-gst-doc">
-                                                            <i class="fa fa-trash-o"></i> Remove
-                                                        </button>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="col-12 col-md-8">
+                                                    <input type="file" class="form-control"
+                                                        name="address_proof" id="address_proof"
+                                                        accept="application/pdf">
+                                                    <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                    <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
+                                                <div class="col-12 col-md-4">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="ADDRESS PROOF DOCUMENT" data-document_category="Address_proof" data-document_sub_category="APD" data-ownership_type="" data-form_code="{{$form_code->id}}">
+                                                        <i class="fa fa-upload"></i> Upload
+                                                    </button>
+                                                </div>
 
-                                                <div class="row mt-2" id="gst-file-row" style="display: none;">
-                                                    <div class="col-12">
-                                                        <input autocomplete="off" class="form-control" id="gst_doc" name="gst_doc" type="file" accept="application/pdf">
-                                                        <span class="file-limit">File type: PDF (Max 250 KB)</span>
-                                                    </div>
-                                                </div>
-                                                @else
-                                                <div class="row mt-2" id="gst-file-row">
-                                                    <div class="col-12 col-md-6">
-                                                        <input autocomplete="off" class="form-control" id="gst_doc" name="gst_doc" type="file" accept="application/pdf">
-                                                        <span class="file-limit">File type: PDF (Max 250 KB)</span>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Upload</button>
-                                                    </div>
-                                                </div>
-                                                @endif
+
                                             </div>
 
                                             <span class="error text-danger" id="gst_doc_error"></span>
@@ -2994,6 +3030,10 @@ exit; -->
                                             <th>Equipment Type</th>
                                             <th style="width:15%">Serial Number</th>
                                             <th style="width:15%">Make Model</th>
+
+                                            <th>Test Report</th>
+                                            <th colspan='2'>Purchase Report </th>
+                                            <th style="width:8%">Date of Test </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -3058,6 +3098,83 @@ exit; -->
 
 
                                             </td>
+
+                                            <td width="20%">
+                                                <div class="row g-1 align-items-start">
+                                                    <div class="col-md-9">
+                                                        <input type="file" class="form-control"
+                                                            name="instrument_test_report[{{ $index }}]"
+                                                            id="instrument_test_report_{{ $index }}"
+                                                            accept="application/pdf">
+                                                        <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                        <span class="text-danger Doc_upload_error"></span>
+                                                        <span class="error text-danger"
+                                                            id="instrument_test_report_error_{{ $index }}"></span>
+
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <button type="button"
+                                                            class="btn btn-info upload-btn"
+                                                            data-index="{{ $index }}"
+                                                            data-login_id="{{ Auth::user()->login_id }}"
+                                                            data-module="EQUIPMENTS DOCUMENT"
+                                                            data-document_category="instrument_test_report"
+                                                            data-ownership_type="tr"
+                                                            data-document_sub_category="ED"
+                                                            data-form_code="{{$form_code->id}}"
+                                                            data-equip_code="{{ $equip->id }}">
+                                                            <i class="fa fa-upload"></i>
+                                                        </button>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </td>
+
+                                            <!-- --------------------------------------- -->
+                                            <td width="20%">
+
+                                                <div class="row g-1 align-items-start">
+                                                    <div class="col-md-9">
+
+                                                        <input type="file" class="form-control"
+                                                            name="instrument_purchase_report[{{ $index }}]"
+                                                            id="instrument_purchase_report_{{ $index }}"
+                                                            accept="application/pdf">
+                                                        <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                        <span class="text-danger Doc_upload_error"></span>
+                                                        <span class="error text-danger"
+                                                            id="instrument_purchase_report_error_{{ $index }}"></span>
+                                                    </div>
+                                                    <div class="col-md-3">
+
+                                                        <button type="button"
+                                                            class="btn btn-info upload-btn"
+                                                            data-index="{{ $index }}"
+                                                            data-login_id="{{ Auth::user()->login_id }}"
+                                                            data-module="EQUIPMENTS DOCUMENT"
+                                                            data-ownership_type="pr"
+                                                            data-document_category="instrument_purchase_report"
+                                                            data-document_sub_category="ED"
+                                                            data-form_code="{{$form_code->id}}"
+                                                            data-equip_code="{{ $equip->id }}">
+                                                            <i class="fa fa-upload"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td>
+
+                                                <input class="form-control" type="date" name="date_of_test[]">
+
+                                                <span class="error text-danger" id="date_of_test_error"></span>
+
+                                            </td>
+                                            <!-- -------------------------------------------- -->
                                         </tr>
 
                                         @endforeach
@@ -3067,100 +3184,8 @@ exit; -->
                             </div>
 
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="row align-items-center head_label">
-                                        <div class="col-12 col-md-12 title_bar">
-                                            <label> Upload Documents For Equipment / Instruments <span style="color: red;">*</span></label>
-
-                                        </div>
-
-                                    </div>
-                                </div>
 
 
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <div class="col-12 col-md-12">
-                                            <label for="comments">(i). Instrument Test Report <span style="color: red;">*</span></label>
-                                        </div>
-
-                                        <div class="col-12 col-md-12">
-                                            <div class="row">
-                                                <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" name="instrument_test_report" id="instrument_test_report">
-                                                </div>
-                                                <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info"><i class="fa fa-upload"></i>Upload</button>
-                                                </div>
-
-                                            </div>
-
-
-                                            <span class="error text-danger" id="instrument_test_report_error"></span>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <!-- ---------purchase report----------------------- -->
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <div class="col-12 col-md-12">
-                                            <label for="comments">(i). Instrument Purchase Report <span style="color: red;">*</span></label>
-                                        </div>
-
-                                        <div class="col-12 col-md-12">
-                                            <div class="row">
-                                                <div class="col-12 col-md-8">
-                                                    <input type="file" class="form-control" name="instrument_purchase_report" id="instrument_purchase_report">
-                                                </div>
-                                                <div class="col-12 col-md-4">
-                                                    <button class="btn btn-info"><i class="fa fa-upload"></i>Upload</button>
-                                                </div>
-
-                                            </div>
-
-
-                                            <span class="error text-danger" id="instrument_purchase_report_error"></span>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <!-- ---------Date of test----------------------- -->
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <div class="col-12 col-md-12">
-                                            <label for="comments">(i). Date of Test <span style="color: red;">*</span></label>
-                                        </div>
-
-                                        <div class="col-12 col-md-12">
-                                            <div class="row">
-                                                <div class="col-12 col-md-8">
-                                                    <input type="date" class="form-control" name="date_of_test" id="date_of_test">
-                                                </div>
-
-
-                                            </div>
-
-
-                                            <span class="error text-danger" id="date_of_test_error"></span>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-
-                            </div>
 
 
 
@@ -3299,7 +3324,11 @@ exit; -->
     </script>
 
     <script>
-        const hasApplication = {{isset($application) ? 'true' : 'false'}};
+        const hasApplication = {
+            {
+                isset($application) ? 'true' : 'false'
+            }
+        };
     </script>
 
     <script>
@@ -4535,7 +4564,7 @@ let proprietorCount = initialDraftCount || 0;
 
             }
 
-             if (qualification && qualification !== '8 To 12') {
+            if (qualification && qualification !== '8 To 12') {
                 // alert(qual_text);
 
                 if (!qual_text) {
@@ -4617,16 +4646,16 @@ let proprietorCount = initialDraftCount || 0;
 
                 $row.find("td").eq(3).text(address);
 
-             $row.find("td").eq(4)
+                $row.find("td").eq(4)
                     .attr({
                         "data-qualification": qualification,
                         "data-qual_text": qual_text,
                         "data-qual_proof": (hasNewFile || hasExistingFile) ? 1 : 0
                     })
                     .text(
-                        qualification === '8 To 12'
-                            ? qualification
-                            : `${qualification}, ${qual_text}`
+                        qualification === '8 To 12' ?
+                        qualification :
+                        `${qualification}, ${qual_text}`
                     );
 
                 // $row.find("td").eq(4).text(qualification);
@@ -4776,7 +4805,7 @@ let proprietorCount = initialDraftCount || 0;
             $section.find("input[name='proprietor_name[]']").val($row.find("td").eq(0).text());
             $section.find("input[name='fathers_name[]']").val($row.find("td").eq(1).text());
 
-          let tdDobAge = $row.find("td").eq(2);
+            let tdDobAge = $row.find("td").eq(2);
 
             $section.find("input[name='dob[]']").val(tdDobAge.data("dob"));
             $section.find("input[name='age[]']").val(tdDobAge.data("age"));
@@ -4791,7 +4820,7 @@ let proprietorCount = initialDraftCount || 0;
             // $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
             $section.find("textarea[name='proprietor_address[]']").val($row.find("td").eq(3).text());
 
-             let tdqualification = $row.find("td").eq(4);
+            let tdqualification = $row.find("td").eq(4);
 
             $section.find("input[name='qualification[]']").val(tdqualification.data("qualification"));
             $section.find("input[name='qual_text[]']").val(tdqualification.data("qual_text"));
@@ -4961,7 +4990,7 @@ let proprietorCount = initialDraftCount || 0;
         $("#add-partner").on("click", function() {
             let rowCount = $("#partner-section table tbody tr").length;
 
-          
+
             if (rowCount >= 6) {
 
                 Swal.fire({
@@ -5005,7 +5034,7 @@ let proprietorCount = initialDraftCount || 0;
             // Basic text inputs
             let name = $section.find("input[name='proprietor_name[]']").val().trim();
             let address = $section.find("textarea[name='proprietor_address[]']").val().trim();
-              let dob = $section.find("input[name='dob[]']").val().trim();
+            let dob = $section.find("input[name='dob[]']").val().trim();
             let age = $section.find("input[name='age[]']").val().trim();
             // let qualification = $section.find("input[name='qualification[]']").val().trim();
             let qualification = $section.find("select[name='qualification[]']").val();
@@ -5119,7 +5148,7 @@ let proprietorCount = initialDraftCount || 0;
                 isValid = false;
             }
 
-            
+
             if (qualification && qualification !== '8 To 12') {
                 // alert(qual_text);
 
@@ -5176,7 +5205,7 @@ let proprietorCount = initialDraftCount || 0;
                 let $row = $("#partner-section table tbody tr").eq(editIndex);
                 $row.find("td").eq(0).text(name);
                 $row.find("td").eq(1).text(fathersName);
-                  $row.find("td").eq(2)
+                $row.find("td").eq(2)
                     .attr({
                         "data-dob": dob,
                         "data-age": age
@@ -5325,7 +5354,7 @@ let proprietorCount = initialDraftCount || 0;
             $(this).closest("tr").remove();
             let rowCount = $("#partner-section table tbody tr").length;
 
- 
+
         });
 
         // Update partner row

@@ -174,6 +174,9 @@ class FilelocationController extends Controller
     // -------------------storefilepath----------------------------
     public function storepath(Request $request)
     {
+
+    // dd($request->all());
+    // exit;
         $validator = Validator::make($request->all(), [
             'cert_license_id' => 'required|integer',
             'form_module'         => 'required|string|min:2|max:50',
@@ -209,6 +212,7 @@ class FilelocationController extends Controller
             'updated_by'        => $this->userId,
             'status'            => 1,
             'ipaddress'       => $request->ip(),
+            'module_code' => $request->module_code,
         ]);
 
         // get licence name

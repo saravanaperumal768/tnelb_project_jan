@@ -7,30 +7,31 @@ use Illuminate\Support\Facades\DB;
 
 class DocPathController extends Controller
 {
-        public static function getPath(Request $request)
+    public static function getPath(Request $request)
     {
 
-   //dd($request->all());
-//    dd($request->module);
+        // dd($request->all());
+        //    dd($request->module);
 
-//    exit;
+        //    exit;
 
-    $filepath = DB::table('mst_filepath_cl_tbl')
-                ->where('appl_type', $request->appl_type)
-                ->where('form_module', $request->module)
-                ->where('status', '1')
+        $filepath = DB::table('mst_filepath_cl_tbl')
+            ->where('appl_type', $request->appl_type)
+            ->where('form_module', $request->module)
+            ->where('status', '1')
 
-                ->first();
+            ->first();
 
-    if(!$filepath)
-    {
-        $filepath = '0';
+            // dd($filepath);
+            // exit;
 
-    }
+        if (!$filepath) {
+            $filepath = '0';
+        }
 
-    // dd($filepath);
-    // exit;
-    return $filepath;
+        // dd($filepath);
+        // exit;
+        return $filepath;
         // $paths = [
         //     'A' => [
         //         'ownership_type_doc' => 'upload_documents/EA/New_applications/ownership_doc/',
@@ -49,5 +50,4 @@ class DocPathController extends Controller
         // return $paths[$request->form_name][$request->module]
         //     ?? 'upload_documents/EA/New_applications/others/';
     }
-
 }

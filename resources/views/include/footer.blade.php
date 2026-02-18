@@ -163,6 +163,7 @@
 <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon-arrow"></span></div>
 
 
+
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="{{ url('assets/js/jquery.js') }}"></script>
 <script src="{{ url('assets/js/scriptnew.js') }}"></script>
@@ -346,7 +347,7 @@ $(document).on("change", "#ownership_type_select", function () {
     // clear files + errors
     $("input[type='file']").val("");
     $(".ownershipdoc_upload_error").text("");
-    $(".file-link").html("").addClass("d-none");
+    // $(".file-link").html("").addClass("d-none");
 
     $("#partnershipdeed, #directormom").slideUp();
 

@@ -1,9 +1,12 @@
 
-$(document).on("click", ".ownershipdoc_upload-btn", function () {
+$(document).on("click", ".upload-btn", function () {
 
-    let row = $(this).closest(".row");
+    let btn = $(this);  // current button
+    let row = btn.closest(".row");
 
     let fileInput = row.find("input[type='file']")[0];
+
+    
     let errorBox  = row.find(".Doc_upload_error");
     let fileLink  = row.find(".file-link");
 
@@ -15,16 +18,21 @@ $(document).on("click", ".ownershipdoc_upload-btn", function () {
     }
 
     let formData = new FormData();
-    formData.append(fileInput.name, fileInput.files[0]); // works for qual_proof[]
+    formData.append(fileInput.name, fileInput.files[0]);
 
-    formData.append("form_name", row.find("input[name='upload_form_name']").val());
-    formData.append("license_name", row.find("input[name='upload_license_name']").val());
-    formData.append("module", row.find("input[name='module']").val());
-    formData.append("ownership_type", row.find("input[name='ownership_type']").val());
-    formData.append("document_category", row.find("input[name='document_category']").val());
-    formData.append("document_sub_category", row.find("input[name='document_sub_category']").val());
-    formData.append("appl_type", row.find("input[name='appl_type']").val());
-    formData.append("form_code", row.find("input[name='form_code']").val());
+    // ✅ Get values from button data attributes
+    formData.append("login_id", btn.data("login_id"));
+    formData.append("module", btn.data("module"));
+    formData.append("equip_code", btn.data("equip_code"));
+    formData.append("ownership_type", btn.data("ownership_type"));
+    formData.append("document_category", btn.data("document_category"));
+    formData.append("document_sub_category", btn.data("document_sub_category"));
+    formData.append("form_code", btn.data("form_code"));
+
+    // Static values
+    formData.append("appl_type", "N");
+    formData.append("form_name", "A");
+    formData.append("license_name", "EA");
 
     $.ajax({
         url: BASE_URL + "/uploadownershipdeed",
@@ -36,36 +44,66 @@ $(document).on("click", ".ownershipdoc_upload-btn", function () {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
 
-        success: function (res) {
+           success: function (res) {
 
-            errorBox.text("");
+                    if (res.status !== 'success') {
+                        errorBox.text("Upload failed");
+                        return;
+                    }
 
-            if (res.status !== 'success') {
-                errorBox.text("Upload failed");
-                return;
-            }
+                    let file = res.files[0];
 
-            let file = res.files[0]; // 👈 IMPORTANT
+                    //  If button is inside table (Equipments)
+                    if (btn.closest("td").length) {
 
-            if (!fileLink.length) {
-                row.append(`<div class="file-link mt-2"></div>`);
-                fileLink = row.find(".file-link");
-            }
+                        let cell = btn.closest("td");
+                        let errorBox = cell.find(".Doc_upload_error");
+                        errorBox.text("");
 
-            fileLink
-                .removeClass("d-none")
-                .html(`
-                    <div>
+                        // Remove old link
+                        cell.find(".file-link").remove();
+
+                        // Insert before button (clean layout)
+                         cell.append(`
+                    <div class="file-link mt-2">
                         <a href="${file.file_url}" target="_blank" class="text-success">
                             <i class="fa fa-file-pdf-o"></i> ${file.file_name}
                         </a>
                     </div>
                 `);
 
-            fileInput.value = ""; // reset
-        },
+
+                    } 
+                    //  Otherwise normal layout (Partnership / Director etc.)
+                    else {
+
+                        errorBox.text("");
+
+                        if (!fileLink.length) {
+                            row.append(`<div class="col-lg-4 file-link mt-2"></div>`);
+                            fileLink = row.find(".file-link");
+                        }
+
+                        fileLink
+                            .removeClass("d-none")
+                            .html(`
+                                <div>
+                                    <a href="${file.file_url}" target="_blank" class="text-success">
+                                        <i class="fa fa-file-pdf-o"></i> ${file.file_name}
+                                    </a>
+                                </div>
+                            `);
+                    }
+
+                    fileInput.value = "";
+                },
+
 
         error: function (xhr) {
+
+            let cell = btn.closest("td");
+            let errorBox  = cell.find(".Doc_upload_error");
+
             let msg = "Upload failed";
 
             if (xhr.responseJSON?.errors) {
@@ -76,8 +114,97 @@ $(document).on("click", ".ownershipdoc_upload-btn", function () {
 
             errorBox.text(msg);
         }
+
     });
 });
+
+
+// $(document).on("click", ".upload-btn", function () {
+
+//     let btn = $(this);  // current button
+//     let row = btn.closest(".row");
+
+//     let fileInput = row.find("input[type='file']")[0];
+
+    
+//     let errorBox  = row.find(".Doc_upload_error");
+//     let fileLink  = row.find(".file-link");
+
+//     errorBox.text("");
+
+//     if (!fileInput || !fileInput.files.length) {
+//         errorBox.text("Please select a PDF file");
+//         return;
+//     }
+
+//     let formData = new FormData();
+//     formData.append(fileInput.name, fileInput.files[0]);
+
+//     // ✅ Get values from button data attributes
+//     formData.append("login_id", btn.data("login_id"));
+//     formData.append("module", btn.data("module"));
+//     formData.append("ownership_type", btn.data("ownership_type"));
+//     formData.append("document_category", btn.data("document_category"));
+//     formData.append("document_sub_category", btn.data("document_sub_category"));
+//     formData.append("form_code", btn.data("form_code"));
+
+//     // Static values
+//     formData.append("appl_type", "N");
+//     formData.append("form_name", "A");
+//     formData.append("license_name", "EA");
+
+//     $.ajax({
+//         url: BASE_URL + "/uploadownershipdeed",
+//         type: "POST",
+//         data: formData,
+//         processData: false,
+//         contentType: false,
+//         headers: {
+//             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+//         },
+
+//         success: function (res) {
+//             errorBox.text("");
+
+//             if (res.status !== 'success') {
+//                 errorBox.text("Upload failed");
+//                 return;
+//             }
+
+//             let file = res.files[0];
+
+//             if (!fileLink.length) {
+//                 row.append(`<div class="file-link mt-2"></div>`);
+//                 fileLink = row.find(".file-link");
+//             }
+
+//             fileLink
+//                 .removeClass("d-none")
+//                 .html(`
+//                     <div>
+//                         <a href="${file.file_url}" target="_blank" class="text-success">
+//                             <i class="fa fa-file-pdf-o"></i> ${file.file_name}
+//                         </a>
+//                     </div>
+//                 `);
+
+//             fileInput.value = "";
+//         },
+
+//         error: function (xhr) {
+//             let msg = "Upload failed";
+
+//             if (xhr.responseJSON?.errors) {
+//                 msg = Object.values(xhr.responseJSON.errors)[0][0];
+//             } else if (xhr.responseJSON?.message) {
+//                 msg = xhr.responseJSON.message;
+//             }
+
+//             errorBox.text(msg);
+//         }
+//     });
+// });
+
 
 
 
@@ -102,6 +229,11 @@ $("#competency_form_a").on("submit", function (e) {
 
     let applicantName = $("#applicant_name").val().trim();
     let businessAddress = $("textarea[name='business_address']").val().trim();
+
+
+    formData.append("module", $("input[name='module']").val());
+    // formData.append("appl_type", $("input[name='appl_type']").val());
+    // formData.append("license_name", $("input[name='upload_license_name']").val());
 
     if (applicantName === "" | businessAddress === "") {
 
@@ -636,6 +768,80 @@ $("#ownership_type_select").on("change", function () {
         $("#ownership_type_error").text("");
     }
 });
+
+
+// --------------ownership doc error-----------------------
+
+// Clear previous errors first
+$("#partnership_deed_error").text("");
+$("#director_mom_error").text("");
+
+// Ownership based validation
+if (ownershipType === "pt") {
+
+    let partnershipFile = $("input[name='partnership_deed']").val();
+
+    if (!partnershipFile) {
+          $(".nav-item").each(function () {
+        if ($(this).text().trim() === "Basic Details") {
+            $(this).addClass("tab-error-bg");
+            $(this).trigger("click");
+        }
+    });
+
+    const ownershipNotice = document.querySelector('.text-red');
+    if (ownershipNotice) {
+        ownershipNotice.style.color = 'red';
+        ownershipNotice.style.fontWeight = 'bold';
+        ownershipNotice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  // Smooth scroll to the input field
+    document.getElementById("ownership_type_select")
+        .scrollIntoView({ behavior: "smooth", block: "center" });
+
+        $("#partnership_deed_error")
+            .text("Upload Partnership Deed");
+
+        document.getElementById("partnershipdeed")
+            .scrollIntoView({ behavior: "smooth", block: "center" });
+
+        isValid = false;
+        return;
+    }
+
+} else if (ownershipType === "pvt" || ownershipType === "ltd") {
+
+    let directorMomFile = $("input[name='director_mom']").val();
+
+    if (!directorMomFile) {
+          $(".nav-item").each(function () {
+        if ($(this).text().trim() === "Basic Details") {
+            $(this).addClass("tab-error-bg");
+            $(this).trigger("click");
+        }
+    });
+
+    const ownershipNotice = document.querySelector('.text-red');
+    if (ownershipNotice) {
+        ownershipNotice.style.color = 'red';
+        ownershipNotice.style.fontWeight = 'bold';
+        ownershipNotice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  // Smooth scroll to the input field
+    document.getElementById("ownership_type_select")
+        .scrollIntoView({ behavior: "smooth", block: "center" });
+
+        $("#director_mom_error")
+            .text("Upload Director MOM");
+
+        document.getElementById("directormom")
+            .scrollIntoView({ behavior: "smooth", block: "center" });
+
+        isValid = false;
+        return;
+    }
+}
+
 
    // ---------------------ownership type validation------------------------------
    if (proprietor.length === 0 && partners.length === 0 && directors.length === 0) {

@@ -22,5 +22,6 @@ class Tnelb_Temp_Tbl extends Model
         'uploaded_at',
         'is_final',
         'moved_as',
+        'original_pdfname'
     ];
 }

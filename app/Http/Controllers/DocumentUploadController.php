@@ -185,6 +185,11 @@ class DocumentUploadController extends Controller
 
             $dbFilePath = $dbFilePath_all->filepath_temp;
 
+            $dbFilePath_modulecode = $dbFilePath_all->module_code;
+
+            // dd($dbFilePath_modulecode);
+            // exit;
+
             // dd($dbFilePath);exit;
             $folderPath = public_path($dbFilePath);
 
@@ -197,18 +202,44 @@ class DocumentUploadController extends Controller
             // --------------------------------------------------
             // 6. LOOP FILES
             // --------------------------------------------------
+            $counter = 1;
             foreach ($files as $file) {
+
+             $originalName = $file->getClientOriginalName();
+
 
                 // ----------------------------------------------
                 // CHECK EXISTING RECORD
                 // ----------------------------------------------
-                $existing = DB::table('tnelb_temp_uploaded_documents')
+                // $existing = DB::table('tnelb_temp_uploaded_documents')
+                //     ->where('login_id', $loginId)
+                //     ->where('application_id', $applicationId)
+                //     ->where('module', $request->module)
+                //     ->where('form_name', $request->form_name)
+                //     ->where('document_category', $request->document_category)
+                //     ->first();
+
+                // dd($request->document_category);
+                // exit;
+                $existingQuery = DB::table('tnelb_temp_uploaded_documents')
                     ->where('login_id', $loginId)
                     ->where('application_id', $applicationId)
                     ->where('module', $request->module)
                     ->where('form_name', $request->form_name)
-                    ->where('document_category', $request->document_category)
-                    ->first();
+                    ->where('document_category', $request->document_category);
+
+                if ($request->document_sub_category === 'ED') {
+                    $existingQuery->where('document_sub_category', 'ED')
+                                ->where('file_name', 'like', '%' . $request->equip_code . '.pdf');
+                }
+
+                $existing = $existingQuery->first();
+
+
+                // dd($existing);
+                // exit;
+
+
 
                 if ($existing) {
 
@@ -231,6 +262,7 @@ class DocumentUploadController extends Controller
                         ->update([
                             'ownership_type'        => $request->ownership_type,
                             'document_sub_category' => $request->document_sub_category,
+                            'original_pdfname'      => $originalName,
                             'file_path'             => $dbFilePath,
                             'uploaded_at'           => now(),
                             'updated_at'            => now(),
@@ -247,9 +279,16 @@ class DocumentUploadController extends Controller
 
                     $form_code = $request->form_code;
 
-                    // dd($time);
+                    $equip_code = $request->equip_code;
+
+                    // dd($equip_code);
                     // exit;
 
+                    // dd($time);
+                    // exit;
+                     $moduleCode = strtoupper($dbFilePath_modulecode);
+
+                    
                     $random = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
                     // ---------------------------------
                     // Filename Format
@@ -257,11 +296,44 @@ class DocumentUploadController extends Controller
                     // Array()
                     // yyyymmdd_time(11.30)login_id_L(license)_1_document_sub_category(PT)1 .pdf
                     // ---------------------------------
-                    $fileName = $date . '_' .$time .'_' . $loginId . '_' . 'L' . $form_code .'_' .
-                        strtoupper($request->document_category) . '.pdf';
+                    // $fileName = $date . '_' .$time .'_' . $loginId . '_' . 'L' . $form_code .'_' .
+                    //     strtoupper($dbFilePath_modulecode) . '.pdf';
+//  dd($request->ownership_type);
+//                                         exit;
+                    if ($request->document_sub_category === 'OED') {
 
-                    dd($fileName);
-                    exit;
+                            $fileName = $date . '_' . $time . '_' . $loginId . '_' .
+                                        'L' . $form_code . '_' .
+                                        $moduleCode . $counter . '.pdf';
+
+                            $counter++;
+
+                        } elseif($request->document_sub_category === 'OHD') {
+
+                                       
+                           // yyyymmdd_time(11.30)login_id_L(license)1_ownership_type_document_sub_category(OT).pdf
+                            $fileName = $date . '_' . $time . '_' . $loginId . '_' .
+                                        'L' . $form_code . '_' . $request->ownership_type . '_'.
+                                        $moduleCode . '.pdf';
+
+                        }
+                        elseif($request->document_sub_category === 'ED') {
+
+                            $fileName = $date . '_' . $time . '_' . $loginId . '_' .
+                                        'L' . $form_code . '_' . $request->ownership_type . '_'.
+                                        $moduleCode . $equip_code . '.pdf';
+                        }                    
+                        
+                        else {
+
+                            
+                            $fileName = $date . '_' . $time . '_' . $loginId . '_' .
+                                        'L' . $form_code . '_' .
+                                        $moduleCode . '.pdf';
+                        }
+
+                    // dd($fileName);
+                    // exit;
 
                     $file->move($folderPath, $fileName);
 
@@ -274,8 +346,10 @@ class DocumentUploadController extends Controller
                         'ownership_type'        => $request->ownership_type,
                         'document_category'     => $request->document_category,
                         'document_sub_category' => $request->document_sub_category,
+                        'original_pdfname'      => $originalName,
                         'file_name'             => $fileName,
                         'file_path'             => $dbFilePath,
+                        
                         'uploaded_at'           => now(),
                         'is_final'              => '0',
                         'created_at'            => now(),

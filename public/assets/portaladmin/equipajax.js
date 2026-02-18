@@ -226,7 +226,7 @@ $(document).ready(function(){
             : "Renewal_applications";
 
         let tempPath = `uploads/temp/${licenceShort}/${applText}/${moduleCode}/`;
-        let proPath  = `uploads/pro/${licenceShort}/${applText}/${moduleCode}/`;
+        let proPath  = `uploads/prod/${licenceShort}/${applText}/${moduleCode}/`;
 
         $("#filepath_temp").val(tempPath);
         $("#filepath_pro").val(proPath);

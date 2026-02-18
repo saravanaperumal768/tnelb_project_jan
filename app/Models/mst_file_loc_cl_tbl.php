@@ -21,6 +21,7 @@ class mst_file_loc_cl_tbl extends Model
          'status',
         'created_by',
         'updated_by',
-        'ipaddress'
+        'ipaddress',
+        'module_code'
     ];
 }

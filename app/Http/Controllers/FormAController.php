@@ -1017,25 +1017,66 @@ if ($request->hasFile('gst_doc')) {
                 //     $updateColumn = 'director_mom_doc';
                 // }
 
-                    if ($updateColumn) {
 
-                        // 🔹 Update main application table
+                $dbFilePath_all = DocPathController::getPath($request);
+
+                $dbFilePath = $dbFilePath_all->filepath_pro;
+
+                // dd($dbFilePath_all->filepath_pro);
+                // exit;
+
+                $dbFilePath_modulecode = $dbFilePath_all->module_code;
+
+                   if ($updateColumn) {
+
+                        // ------------------------------------
+                        // 1 OLD FILE FULL PATH (TEMP)
+                        // ------------------------------------
+                        $tempFullPath = public_path($tempDocs->file_path . '/' . $tempDocs->file_name);
+
+                        // ------------------------------------
+                        // 2 PRO FOLDER PATH
+                        // ------------------------------------
+                        $proFolderPath = public_path($dbFilePath);
+
+                        if (!\File::exists($proFolderPath)) {
+                            \File::makeDirectory($proFolderPath, 0755, true);
+                        }
+
+                        // ------------------------------------
+                        // 3 NEW FILE PATH (PRO)
+                        // ------------------------------------
+                        $proFullPath = $proFolderPath . '/' . $tempDocs->file_name;
+
+                        // ------------------------------------
+                        // 4 COPY FILE
+                        // ------------------------------------
+                        if (\File::exists($tempFullPath)) {
+                            \File::copy($tempFullPath, $proFullPath);
+                        }
+
+                        // ------------------------------------
+                        // 5 UPDATE MAIN APPLICATION TABLE
+                        // ------------------------------------
                         DB::table('tnelb_ea_applications')
                             ->where('application_id', $applicationId)
                             ->update([
-                                $updateColumn => $tempDocs->file_path.$tempDocs->file_name,
-                                'updated_at'  => DB::raw('NOW()')
+                                $updateColumn => $dbFilePath . '/' . $tempDocs->file_name,
+                                'updated_at'  => now()
                             ]);
 
-                        // 🔹 Mark temp document as final
+                        // ------------------------------------
+                        // 6 MARK TEMP DOCUMENT AS FINAL
+                        // ------------------------------------
                         DB::table('tnelb_temp_uploaded_documents')
                             ->where('id', $tempDocs->id)
                             ->update([
                                 'is_final'   => '1',
-                                'moved_as' => $request->input('form_action'),
-                                'updated_at'=> DB::raw('NOW()')
+                                'moved_as'   => $request->input('form_action'),
+                                'updated_at' => now()
                             ]);
                     }
+
                 }
 
                 
