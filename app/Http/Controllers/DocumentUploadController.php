@@ -126,6 +126,9 @@ class DocumentUploadController extends Controller
 
     public function uploadownershipdeed(Request $request)
     {
+
+    // dd($request->all());
+    // exit;
         try {
 
             // --------------------------------------------------
@@ -233,6 +236,11 @@ class DocumentUploadController extends Controller
                                 ->where('file_name', 'like', '%' . $request->equip_code . '.pdf');
                 }
 
+                 if ($request->document_sub_category === 'OHD') {
+                    $existingQuery->where('ownership_type', $request->ownership_type);
+                                
+                }
+
                 $existing = $existingQuery->first();
 
 
@@ -316,6 +324,9 @@ class DocumentUploadController extends Controller
                                         'L' . $form_code . '_' . $request->ownership_type . '_'.
                                         $moduleCode . '.pdf';
 
+                            // dd($fileName);
+                            // exit;
+
                         }
                         elseif($request->document_sub_category === 'ED') {
 
@@ -350,6 +361,7 @@ class DocumentUploadController extends Controller
                         'file_name'             => $fileName,
                         'file_path'             => $dbFilePath,
                         
+                        'equip_code'             => $request->equip_code ?? null,
                         'uploaded_at'           => now(),
                         'is_final'              => '0',
                         'created_at'            => now(),

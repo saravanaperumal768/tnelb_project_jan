@@ -12,7 +12,7 @@ class Equipmentforma_tbl extends Model
     protected $table = 'equipmentforma_tbls'; 
 
     protected $fillable = [
-          'form_name',
+    'form_name',
     'login_id',
     'application_id',
     'equip_id',

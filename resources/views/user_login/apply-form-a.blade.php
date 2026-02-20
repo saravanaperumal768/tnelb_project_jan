@@ -2387,7 +2387,7 @@ exit; -->
                                             <label for="comments">(iv). Proof <span style="color: red;">*</span></label>
                                         </div>
 
-                                        <div class="col-12 col-md-12">
+                                        <div class="col-12 col-md-12" id="bank_doc_section">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
                                                     <input type="file" class="form-control"
@@ -2460,19 +2460,20 @@ exit; -->
                                             <span class="error text-danger" id="criminal_offence_error"></span>
                                         </div>
 
-                                        <div class="col-12 col-md-3 file_upload">
+                                        <div class="col-12 col-md-3 mt-3 file_upload criminaloffence_file" style="{{ $criminal_offence == 'yes' ? '' : 'display:none;' }}">
+
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
 
                                                     <input type="file" class="form-control"
-                                                        name="criminal_offence_doc" id="criminal_offence_doc"
+                                                        name="other_doc" 
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
                                                     <br>
                                                     <span class="text-danger Doc_upload_error"></span>
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="criminal_offence_doc" data-document_sub_category="OHD" data-ownership_type="cr" data-form_code="{{$form_code->id}}">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="other_doc" data-document_sub_category="OHD" data-ownership_type="criminaloffence" data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
@@ -2519,11 +2520,11 @@ exit; -->
                                             <span class="error text-danger" id="consent_letter_enclose_error"></span>
                                         </div>
 
-                                        <div class="col-12 col-md-3 file_upload">
+                                        <div class="col-12 col-md-3 file_upload consent_letter_enclosefile" style="{{ $consent_letter_enclose == 'yes' ? '' : 'display:none;' }}">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
                                                     <input type="file" class="form-control"
-                                                        name="consent_letter_enclose_doc" id="consent_letter_enclose_doc"
+                                                        name="other_doc" id="consent_letter_enclose_doc"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
                                                     <br>
@@ -2531,7 +2532,7 @@ exit; -->
 
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="consent_letter_enclose_doc" data-document_sub_category="OHD" data-ownership_type="consent" data-form_code="{{$form_code->id}}">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="other_doc" data-document_sub_category="OHD" data-ownership_type="consentletter" data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
@@ -2571,11 +2572,11 @@ exit; -->
                                             <span class="error text-danger" id="cc_holders_enclosed_error"></span>
                                         </div>
 
-                                        <div class="col-12 col-md-3 file_upload">
+                                        <div class="col-12 col-md-3 file_upload cc_holders_enclosedfile" style="{{ $cc_holders_enclosed == 'yes' ? '' : 'display:none;' }}">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
                                                     <input type="file" class="form-control"
-                                                        name="cc_holders_enclosed_doc" id="cc_holders_enclosed_doc"
+                                                        name="other_doc" id="cc_holders_enclosed_doc"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
                                                     <br>
@@ -2583,7 +2584,7 @@ exit; -->
 
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="cc_holders_enclosed_doc" data-document_sub_category="OHD" data-ownership_type="ccenclosed" data-form_code="{{$form_code->id}}">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="other_doc" data-document_sub_category="OHD" data-ownership_type="ccholders" data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
@@ -2636,7 +2637,7 @@ exit; -->
 
                                 <div class="col-md-12 mt-3">
                                     <div class="row align-items-center">
-                                        <div class="col-12 col-md-8">
+                                        <div class="col-12 col-md-7">
                                             <label for="Name">(ii) Whether the test reports for
                                                 instruments and deeds for possess
                                                 of the instruments are enclosed in
@@ -2644,7 +2645,7 @@ exit; -->
 
                                             </label>
                                         </div>
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-12 col-md-2">
                                             @php
                                             $test_reports_enclose = strtolower(old('test_reports_enclose', $application->test_reports_enclose ?? 'no'));
                                             @endphp
@@ -2697,11 +2698,11 @@ exit; -->
                                         </div>
                                         <span class="error text-danger" id="specimen_signature_enclose_error"></span>
 
-                                        <div class="col-12 col-md-3 file_upload">
+                                        <div class="col-12 col-md-3 file_upload specimen_signature_enclosefile" style="{{ $specimen_signature_enclose == 'yes' ? '' : 'display:none;' }}">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
                                                     <input type="file" class="form-control"
-                                                        name="specimen_signature" id="specimen_signature"
+                                                        name="other_doc" id="specimen_signature"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
                                                     <br>
@@ -2709,7 +2710,7 @@ exit; -->
 
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="specimen_signature" data-document_sub_category="OHD" data-ownership_type="specimensign" data-form_code="{{$form_code->id}}">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="other_doc" data-document_sub_category="OHD" data-ownership_type="specimensignature" data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
@@ -2717,7 +2718,7 @@ exit; -->
                                             </div>
 
 
-                                            <span class="error text-danger" id="cc_holders_enclosed_doc_error"></span>
+                                            <span class="error text-danger" id="specimen_signature_error"></span>
                                         </div>
 
 
@@ -2862,11 +2863,11 @@ exit; -->
                                             <span class="error text-danger" id="separate_sheet_error"></span>
                                         </div>
 
-                                        <div class="col-12 col-md-3 file_upload">
+                                        <div class="col-12 col-md-3 file_upload separate_sheetfile" style="{{ $separate_sheet == 'yes' ? '' : 'display:none;' }}">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
                                                     <input type="file" class="form-control"
-                                                        name="separate_sheet" id="separate_sheet"
+                                                        name="other_doc" id="separate_sheet_doc"
                                                         accept="application/pdf">
                                                     <span class="file-limit">PDF only (Max 250 KB)</span>
                                                     <br>
@@ -2874,7 +2875,7 @@ exit; -->
 
                                                 </div>
                                                 <div class="col-12 col-md-4">
-                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="separate_sheet" data-document_sub_category="OHD" data-ownership_type="separatesheet" data-form_code="{{$form_code->id}}">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OTHER DOCUMENT" data-document_category="other_doc" data-document_sub_category="OHD" data-ownership_type="separatesheet" data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
@@ -2882,7 +2883,7 @@ exit; -->
                                             </div>
 
 
-                                            <span class="error text-danger" id="cc_holders_enclosed_doc_error"></span>
+                                            <span class="error text-danger" id="separate_sheet_doc_error"></span>
                                         </div>
 
 
@@ -3052,7 +3053,7 @@ exit; -->
                                             <th style="width:15%">Make Model</th>
 
                                             <th>Test Report</th>
-                                            <th colspan='2'>Purchase Report </th>
+                                            <th >Purchase Report </th>
                                             <th style="width:8%">Date of Test </th>
                                         </tr>
                                     </thead>

@@ -1168,6 +1168,38 @@ $("#competency_form_a").on("submit", function (e) {
         isValid = false;
     }
 
+    let hasUploadedFile =
+    $("#bank_doc_section .file-link a").length > 0;
+
+    if (!hasUploadedFile) {
+
+        alert('empty');
+
+        $("#bank_doc_error")
+            .text("Bank Solvency Document must be uploaded.");
+
+        $(".nav-item").each(function () {
+            if ($(this).text().trim() === "Staff & Bank Details") {
+                $(this).addClass("tab-error-bg");
+                $(this).trigger("click");
+            }
+        });
+
+        document
+            .getElementById("bank_doc_input")
+            .scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+            return;
+        isValid = false;
+    }
+
+
+
+
+
     // if (bankAmount === "") {
     //     $("#bank_amount_error").text("Amount is required.");
     //     isValid = false;
