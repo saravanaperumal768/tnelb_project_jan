@@ -272,6 +272,7 @@ class DocumentUploadController extends Controller
                             'document_sub_category' => $request->document_sub_category,
                             'original_pdfname'      => $originalName,
                             'file_path'             => $dbFilePath,
+                            
                             'uploaded_at'           => now(),
                             'updated_at'            => now(),
                         ]);
@@ -314,7 +315,9 @@ class DocumentUploadController extends Controller
                                         'L' . $form_code . '_' .
                                         $moduleCode . $counter . '.pdf';
 
-                            $counter++;
+                           
+
+                            // dd('here');exit;
 
                         } elseif($request->document_sub_category === 'OHD') {
 
@@ -345,6 +348,7 @@ class DocumentUploadController extends Controller
 
                     // dd($fileName);
                     // exit;
+                    $equip_code = is_numeric($request->equip_code) ? $request->equip_code : null;
 
                     $file->move($folderPath, $fileName);
 
@@ -360,8 +364,9 @@ class DocumentUploadController extends Controller
                         'original_pdfname'      => $originalName,
                         'file_name'             => $fileName,
                         'file_path'             => $dbFilePath,
+                        'ownership_count'       => $counter,
                         
-                        'equip_code'             => $request->equip_code ?? null,
+                        'equip_code'             => $equip_code,
                         'uploaded_at'           => now(),
                         'is_final'              => '0',
                         'created_at'            => now(),
@@ -374,6 +379,7 @@ class DocumentUploadController extends Controller
                     'file_url'  => asset($dbFilePath .'/'. $fileName),
                 ];
             }
+             $counter++;
 
             // --------------------------------------------------
             // 7. RESPONSE
@@ -390,9 +396,11 @@ class DocumentUploadController extends Controller
             ], 422);
         } catch (\Exception $e) {
 
-            return response()->json([
+           return response()->json([
                 'status' => 'error',
-                'msg'    => 'Upload failed. Please try again.',
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
             ], 500);
         }
     }

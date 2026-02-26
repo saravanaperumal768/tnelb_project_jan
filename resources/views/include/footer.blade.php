@@ -271,21 +271,32 @@
         row.find(".age").val(age);
     });
 
+// ---CL forms qual-----------
+    $(document).on("change", ".qualification", function () {
 
-    $(document).on("change", ".qualification", function() {
+        let $section = $(this).closest(".border");
 
-        let $section = $(this).closest(".row");
         let qualification = $(this).val();
 
         let $wrapper = $section.find(".qualTextWrapper");
-        let $input = $section.find("input[name='qual_text[]']");
+        let $input   = $wrapper.find("input[name='qual_text[]']");
 
-        if (qualification && qualification !== '8 To 12') {
-            $wrapper.show();
+        if (qualification && qualification !== '8 TO 12') {
+
+            if (!$wrapper.is(":visible")) {
+                $wrapper.stop(true, true).slideDown(250);
+                setTimeout(() => $input.focus(), 260);
+            }
+
         } else {
-            $wrapper.hide();
-            $input.val(""); // clear value
-            $input.next(".qual_text_error").text(""); // clear error
+
+            if ($wrapper.is(":visible")) {
+                $wrapper.stop(true, true).slideUp(200, function () {
+                    $input.val("");
+                    $wrapper.find(".qual_text_error").text("");
+                });
+            }
+
         }
     });
 

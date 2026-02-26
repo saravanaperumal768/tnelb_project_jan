@@ -9,7 +9,10 @@ use App\Models\mst_workflow;
 use App\Models\MstLicence;
 use App\Models\Payment;
 use App\Models\ProprietorformA;
+use App\Models\Tnelb_Addressproof_cl;
+use App\Models\Tnelb_Attachments_cl;
 use App\Models\Tnelb_banksolvency_a;
+use App\Models\Tnelb_Equimentsuser_cl;
 use App\Models\TnelbApplicantStaffDetail;
 // use Illuminate\Contracts\Validation\Rule;
 use App\Models\TnelbApplicantPhoto;
@@ -185,6 +188,17 @@ class EA_RenewalController extends BaseController
 
             $equipmentlist = Equipment_storetmp_A::where('application_id', $application_id)->first();
 
+
+            $attachment_doc = Tnelb_Attachments_cl::where('application_id', $application_id)->get();
+
+            $Address_proof = Tnelb_Addressproof_cl::where('application_id', $application_id)->first();
+
+            $equipmentDetails = Tnelb_Equimentsuser_cl::where('application_id', $application_id)
+            ->get()
+            ->keyBy('equipment_id');
+
+
+
              $equiplist = Mst_equipment_tbl::where('equip_licence_name', 8)
             ->where('status', 1)
             ->orderBy('id')
@@ -204,7 +218,7 @@ class EA_RenewalController extends BaseController
             // var_dump()
         }
 
-        return view('user_login.apply-form-a', compact('application', 'proprietors', 'draftCount', 'staffs', 'document', 'banksolvency' , 'equipmentlist', 'equiplist', 'form_code'));
+        return view('user_login.apply-form-a', compact('application', 'proprietors', 'draftCount', 'staffs', 'document', 'banksolvency' , 'equipmentlist', 'equiplist', 'form_code', 'attachment_doc', 'Address_proof', 'equipmentDetails'));
     }
 
 

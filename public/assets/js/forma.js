@@ -79,19 +79,26 @@ $(document).on("click", ".upload-btn", function () {
             }
 
             // ✅ QUALIFICATION PROOF (OED)
-            else if (subCategory === "OED") {
+             else if (subCategory === "OED") {
+
+                let $section = btn.closest("#proprietor-sectionfresh");
+
                 let container = btn
                     .closest(".col-md-7")
                     .parent()
                     .find(".file-link");
 
-                container.removeClass("d-none").append(`
-                        <div>
-                            <a href="${file.file_url}" target="_blank" class="text-success">
-                                <i class="fa fa-file-pdf-o"></i> ${file.file_name}
-                            </a>
-                        </div>
-                    `);
+                container.removeClass("d-none").html(`
+                    <a href="${file.file_url}" target="_blank" class="text-success">
+                        <i class="fa fa-file-pdf-o"></i> ${file.file_name}
+                    </a>
+                `);
+
+                // 🔥 STORE uploaded file in form state
+                $section.attr("data-existing-file", file.file_url);
+
+                // 🔥 STORE globally (for save logic)
+                window.uploadedFilePath = file.file_url;
             }
 
             // ✅ OWNERSHIP (Partnership / Director)
@@ -322,15 +329,30 @@ $("#competency_form_a").on("submit", function (e) {
         let id = $tr.data("id") || null;
         // alert(id);
         // exit;
-        //  alert($tds.eq(9).data("ownership")) ;
-        //         exit;
+        let qualification_text = $tds.eq(4).data("qual_text") || "";
+
+        // alert($tds.eq(2).data("data-age"));
+// alert(qualification_text);
+//                 exit;
         proprietor.push({
             id: id,
             proprietor_name: $tds.eq(0).text().trim(),
             fathers_name: $tds.eq(1).text().trim(),
-            age: $tds.eq(2).text().trim(),
+            // age: $tds.eq(2).text().trim(),
+            // age: $tds.eq(2).data("age"),
+            // dob: $tds.eq(2).data("dob"),
+
+             dob: $tds.eq(2).attr("data-dob"),
+            age: $tds.eq(2).attr("data-age"),
+            
             proprietor_address: $tds.eq(3).text().trim(),
-            qualification: $tds.eq(4).text().trim(),
+            // qualification: $tds.eq(4).text().trim(),
+
+             qualification: $tds.eq(4).attr("data-qualification"),
+            qualification_text: $tds.eq(4).attr("data-qual_text"),
+            // qualification: $tds.eq(4).attr("data-qualification"),
+            // qualification_text: $tds.eq(4).attr("data-qual_text") || "",
+            
             present_business: $tds.eq(5).text().trim(),
             competency: $tds.eq(6).data("competency") || "",
             competency_certno: $tds.eq(6).data("certno") || "",
@@ -367,8 +389,11 @@ $("#competency_form_a").on("submit", function (e) {
         formData.append(`fathers_name[${index}]`, p.fathers_name);
         formData.append(`ownership_type[${index}]`, p.ownership_type);
         formData.append(`age[${index}]`, p.age);
+        formData.append(`dob[${index}]`, p.dob);
         formData.append(`proprietor_address[${index}]`, p.proprietor_address);
         formData.append(`qualification[${index}]`, p.qualification);
+        formData.append(`qual_text[${index}]`, p.qualification_text);
+        
         formData.append(`present_business[${index}]`, p.present_business);
         formData.append(`competency[${index}]`, p.competency);
         formData.append(`competency_certno[${index}]`, p.competency_certno);

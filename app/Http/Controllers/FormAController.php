@@ -589,7 +589,10 @@ class FormAController extends BaseController
 
             // dd($request->all());
             // exit;
+            $count = 1;
             foreach ($request->proprietor_name as $index => $name) {
+
+            // dd($count);exit;
                 if (empty(trim($name))) continue;
 
                 $competencyHolding = data_get($request->competency, $index);
@@ -611,8 +614,10 @@ class FormAController extends BaseController
                     'proprietor_name' => strtoupper($name ?? ''),
                     'ownership_type' => $request->ownership_type[$index],
                     'proprietor_address' => strtoupper(data_get($request->proprietor_address, $index, '')),
+                    'dob' => $request->dob[$index],
                     'age' => data_get($request->age, $index),
                     'qualification' => strtoupper(data_get($request->qualification, $index, '')),
+                    'qualification_text' => strtoupper(data_get($request->qual_text, $index, '')),
                     'fathers_name' => strtoupper(data_get($request->fathers_name, $index, '')),
                     'present_business' => strtoupper(data_get($request->present_business, $index, '')),
                     'competency_certificate_holding' => $competencyHolding,
@@ -651,6 +656,8 @@ class FormAController extends BaseController
 
                     'proprietor_contractor_verify' => $previous_experience === 'yes' ? data_get($request->expverify, $index) : null,
                     'proprietor_flag' => 1,
+
+                    'ownership_count'=>$count,
                 ];
 
 
@@ -662,11 +669,136 @@ class FormAController extends BaseController
                     $newProprietorIds[] = $new->id;
                 }
             }
+            $count++;
 
             // Deactivate removed rows
             ProprietorformA::where('application_id', $applicationId)
                 ->whereNotIn('id', $newProprietorIds)
                 ->update(['proprietor_flag' => 0]);
+
+                // table move edu_file----------
+
+                 // $recordexists = DB::table('proprietordetailsform_A')
+                //             ->where('application_id', $applicationId)
+                //             ->get();
+                // if ($recordexists) {
+                    
+                //              DB::table('$proprietordetailsform_A')
+                //             ->where('application_id', $applicationId)
+                //             ->update([
+                //                 'educ_qual_proof' => $finalDbPath,
+                //                 'updated_at'  => now()
+                //             ]);
+                //         }
+
+
+                $tempDocs = DB::table('tnelb_temp_uploaded_documents')
+                ->where('login_id', $request->login_id_store)
+                ->where('form_name', $request->form_name)
+                ->where('license_name', $request->license_name)
+                ->where('document_category', 'educ_qual_proof')
+             
+                ->get();
+
+            // dd($tempDocs);
+            // exit;
+
+
+            // dd($tempDocs->pluck('document_category'));
+            // exit;
+
+
+
+            foreach ($tempDocs as $tempDoc) {
+
+                 // -----------------------------------------
+                // 4️⃣ GET FINAL PRO PATH
+                // -----------------------------------------
+                $dynamicRequest = clone $request;
+                $dynamicRequest->merge([
+                    'module' => $tempDoc->module
+                ]);
+                $dbFilePath_all = DocPathController::getPath($dynamicRequest);
+                $dbFilePath     = $dbFilePath_all->filepath_pro;
+
+                $tempFullPath = public_path(
+                    $tempDoc->file_path . '/' . $tempDoc->file_name
+                );
+
+                $proFolderPath = public_path($dbFilePath);
+
+                if (!File::exists($proFolderPath)) {
+                    File::makeDirectory($proFolderPath, 0755, true);
+                }
+
+                $proFullPath = $proFolderPath . '/' . $tempDoc->file_name;
+
+                // -----------------------------------------
+                // 5️⃣ COPY FILE
+                // -----------------------------------------
+
+                if (File::exists($tempFullPath)) {
+                    File::copy($tempFullPath, $proFullPath);
+                } else {
+                    continue; // skip if file missing
+                }
+
+                $finalDbPath = $dbFilePath . '/' . $tempDoc->file_name;
+
+                // dd($finalDbPath);exit;
+
+                // dd($tempDoc->ownership_count);exit;
+
+
+
+                $recordExists = DB::table('proprietordetailsform_A')
+                    ->where('application_id', $applicationId)
+                    ->where('ownership_count', $tempDoc->ownership_count)
+                    ->exists();
+
+
+              
+
+                    if ($recordExists) {
+
+                        DB::table('proprietordetailsform_A')
+                           ->where('application_id', $applicationId)
+                            ->update([
+                                'educational_proof' => $finalDbPath,
+                                'updated_at'  => now()
+                            ]);
+                    } 
+                    
+                    // else {
+
+                    //     DB::table($targetTable)
+                    //         ->insert(array_merge(
+                    //             $whereClause,
+                    //             [
+                    //                 $updateColumn => $finalDbPath,
+                    //                 'login_id'    => $request->login_id_store ?? null,
+                    //                 'created_at'  => now(),
+                    //                 'updated_at'  => now(),
+                    //                 'status'      => '1'
+                    //             ]
+                    //         ));
+                    // }
+                
+
+
+
+                // -----------------------------------------
+                // 7️⃣ MARK TEMP DOC AS FINAL
+                // -----------------------------------------
+
+                DB::table('tnelb_temp_uploaded_documents')
+                    ->where('id', $tempDoc->id)
+                    ->update([
+                        'is_final'   => '1',
+                        'moved_as'   => $request->input('form_action'),
+                        'updated_at' => now()
+                    ]);
+            }
         }
 
         // Partners
@@ -764,6 +896,8 @@ class FormAController extends BaseController
             // dd($request->director_name);
             // exit;
             foreach ($request->director_name as $index => $name) {
+
+            
                 if (empty(trim($name))) continue;
 
                 $directorId = $request->director_id[$index] ?? null;
@@ -844,6 +978,42 @@ class FormAController extends BaseController
                 ->whereNotIn('id', $newdirectorIds)
                 ->where('ownership_type', 'partner') // optional if you differentiate ownership
                 ->update(['proprietor_flag' => 0]);
+                
+                // -------------qual_cert_update-----------------
+
+                //  'educ_qual_proof' => [
+                //     'table'  => 'proprietordetailsform_A',
+                //     'column' => 'educational_proof',
+                //     'where'  => ['application_id' => $applicationId]
+                // ],
+
+                // $recordexists = DB::table('proprietordetailsform_A')
+                //             ->where('application_id', $applicationId)
+                //             ->get();
+                // if ($recordexists) {
+                    
+                //              DB::table('$proprietordetailsform_A')
+                //             ->where('application_id', $applicationId)
+                //             ->update([
+                //                 'educ_qual_proof' => $finalDbPath,
+                //                 'updated_at'  => now()
+                //             ]);
+                //         }
+
+
+                //   $recordExists = DB::table('proprietordetailsform_A')
+                //         ->where($whereClause)
+                //         ->exists();
+
+                //     if ($recordExists) {
+
+                //         DB::table($targetTable)
+                //             ->where($whereClause)
+                //             ->update([
+                //                 $updateColumn => $finalDbPath,
+                //                 'updated_at'  => now()
+                //             ]);
+                //     }
         }
 
 
@@ -1016,6 +1186,20 @@ class FormAController extends BaseController
                     'column' => 'file_doc',
                     'where'  => ['application_id' => $applicationId]
                 ],
+
+                //Address proof
+
+                'Address_proof' => [
+                    'table'  => 'tnelb_addressproof_cl',
+                    'column' => 'file_doc',
+                    'where'  => ['application_id' => $applicationId]
+                ],
+
+                 'educ_qual_proof' => [
+                    'table'  => 'proprietordetailsform_A',
+                    'column' => 'educational_proof',
+                    'where'  => ['application_id' => $applicationId]
+                ],
             ];
 
             // Fetch temp uploaded docs for this application
@@ -1026,8 +1210,13 @@ class FormAController extends BaseController
                 // ->where('license_name', $request->license_name)
 
                 // ->where('is_final', '0')
-                ->orderBy('uploaded_at', 'DESC')
+                // ->orderBy('uploaded_at', 'DESC')
                 ->get();
+
+            // dd($tempDocs);
+            // exit;
+
+
             // dd($tempDocs->pluck('document_category'));
             // exit;
 
@@ -1047,8 +1236,11 @@ class FormAController extends BaseController
                 // -----------------------------------------
                 // 4️⃣ GET FINAL PRO PATH
                 // -----------------------------------------
-
-                $dbFilePath_all = DocPathController::getPath($request);
+                $dynamicRequest = clone $request;
+                $dynamicRequest->merge([
+                    'module' => $tempDoc->module
+                ]);
+                $dbFilePath_all = DocPathController::getPath($dynamicRequest);
                 $dbFilePath     = $dbFilePath_all->filepath_pro;
 
                 $tempFullPath = public_path(
@@ -1084,11 +1276,14 @@ class FormAController extends BaseController
                     ->where($whereClause)
                     ->exists();
 
+                // dd($recordExists);exit;
+
                 // -----------------------------------------
                 // 6️⃣ INSERT OR UPDATE TARGET TABLE
                 // -----------------------------------------
 
                 if ($tempDoc->document_category === 'other_doc') {
+
 
                     // ALWAYS INSERT (multiple attachments allowed)
 
@@ -1104,6 +1299,32 @@ class FormAController extends BaseController
                             'created_at'       => now(),
                             'updated_at'       => now(),
                         ]);
+                } elseif ($tempDoc->document_category === 'Address_proof') {
+
+                    $recordExists = DB::table($targetTable)
+                        ->where($whereClause)
+                        ->exists();
+
+                    if ($recordExists) {
+
+                        DB::table($targetTable)
+                            ->where($whereClause)
+                            ->update([
+                                $updateColumn => $finalDbPath,
+                                'updated_at'  => now()
+                            ]);
+                    } else {
+                        DB::table($targetTable)
+                            ->insert([
+                                'application_id' => $applicationId,
+                                'login_id'       => $request->login_id_store ?? null,
+                                'form_name'      => $request->form_name,
+                                'license_name'   => $request->license_name,
+                                $updateColumn    => $finalDbPath,
+                                'created_at'     => now(),
+                                'updated_at'     => now(),
+                            ]);
+                    }
                 } else {
 
                     // Normal logic (single file fields like ownership_doc, bank_doc)
@@ -1175,14 +1396,14 @@ class FormAController extends BaseController
 
                 $allEquipmentDocs = DB::table('tnelb_temp_uploaded_documents')
                     ->where('login_id', $request->login_id_store)
-                    ->where('module', 'EQUIPMENTS DOCUMENT' )
+                    ->where('module', 'EQUIPMENTS DOCUMENT')
                     ->where('document_sub_category', 'ED')
                     // ->where('is_final', '1')
                     ->get()
-                    ->groupBy('equip_code');  
+                    ->groupBy('equip_code');
 
-                    // dd($allEquipmentDocs);
-                    // exit;
+                // dd($allEquipmentDocs);
+                // exit;
 
                 // -----------------------------------------
                 // 3️⃣ OPTIONAL: DELETE OLD EQUIPMENT RECORDS
@@ -1197,7 +1418,7 @@ class FormAController extends BaseController
                 // -----------------------------------------
 
                 foreach ($request->equipments as $index => $equipment) {
-// dd('1111111');exit;
+                    // dd('1111111');exit;
                     // Skip empty row
                     if (
                         empty($equipment['equip_id']) &&
@@ -1230,7 +1451,7 @@ class FormAController extends BaseController
 
                     foreach ($equipmentDocs as $doc) {
 
-                    // dd('111'); exit;
+                        // dd('111'); exit;
 
                         $tempFullPath = public_path($doc->file_path . '/' . $doc->file_name);
                         $proFullPath  = $proFolderPath . '/' . $doc->file_name;
@@ -1238,7 +1459,7 @@ class FormAController extends BaseController
                         if (File::exists($tempFullPath)) {
                             File::copy($tempFullPath, $proFullPath);
                         }
-                        
+
 
                         $finalDbPath = $dbFilePath_all->filepath_pro . '/' . $doc->file_name;
 
@@ -1262,7 +1483,7 @@ class FormAController extends BaseController
                     // -----------------------------------------
                     // INSERT INTO PERMANENT TABLE
                     // -----------------------------------------
-// dd($serialNo);exit;
+                    // dd($serialNo);exit;
                     DB::table('tnelb_equimentsuser_cl')->insert([
 
                         'login_id'            => $request->login_id_store ?? null,
@@ -1276,7 +1497,7 @@ class FormAController extends BaseController
                         'testreport_file'     => $testReportPath,
                         'purchasereport_file' => $purchaseReportPath,
                         'dateoftest'          => $dateOfTest,
-                         'ipaddress'      => $request->ip(),
+                        'ipaddress'      => $request->ip(),
                         'created_at'          => now(),
                         'updated_at'          => now(),
 
