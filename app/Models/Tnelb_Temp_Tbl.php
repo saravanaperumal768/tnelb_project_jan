@@ -23,6 +23,7 @@ class Tnelb_Temp_Tbl extends Model
         'is_final',
         'moved_as',
         'original_pdfname',
-        'equip_code'
+        'equip_code',
+        'row_index'
     ];
 }

@@ -38,6 +38,7 @@ class ProprietorformA extends Model
         'ownership_type',
         'ownership_count',
         'dob',
-        'qualification_text'
+        'qualification_text',
+        'row_index'
     ];
 }

@@ -310,7 +310,7 @@ exit; -->
                 </script> -->
 
                     <div class="row mt-3">
-                        <div class="offset-md-2 col-lg-3 mt-2 text-right">
+                        <div class=" col-lg-3 mt-2 text-right">
                             <h6 class="fw-bold">Type of Ownership</h6>
                         </div>
 
@@ -334,7 +334,7 @@ exit; -->
 
                         <div class="col-md-6 offset-md-1 col-12">
                             <div class="row  mt-3" id="partnershipdeed" style="display:none;">
-                                <div class="col-lg-3 mt-2 text-right">
+                                <div class="col-lg-4 mt-2 text-right">
                                     <h6 class="fw-bold">Upload Partnership Deed <span class="text-danger">*</span></h6>
                                 </div>
 
@@ -354,7 +354,7 @@ exit; -->
 
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP DOCUMENT" data-document_category="ownership_doc" data-ownership_type="pt" data-document_sub_category="OD" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
                                         <i class="fa fa-upload"></i> Upload
                                     </button>
@@ -368,7 +368,7 @@ exit; -->
 
 
                             <div class="row mt-3" id="directormom" style="display:none;">
-                                <div class="col-lg-3 mt-2 text-right">
+                                <div class="col-lg-4 mt-2 text-right">
                                     <h6 class="fw-bold">Upload Director MOM <span class="text-danger">*</span></h6>
                                 </div>
 
@@ -384,7 +384,7 @@ exit; -->
 
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP DOCUMENT" data-document_category="ownership_doc" data-ownership_type="dr" data-document_sub_category="OD" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
                                         <i class="fa fa-upload"></i> Upload
                                     </button>
@@ -520,6 +520,9 @@ exit; -->
                                             <td style="display: none;">
                                                 <input type="hidden" name="ownership_type[]" value="{{ $p->ownership_type }}">
                                             </td>
+                                              <td style="display: none;">
+                                                <input type="hidden" name="row_index[]" value="{{ $p->row_index }}">
+                                            </td>
 
 
                                             <td>
@@ -630,8 +633,8 @@ exit; -->
                                             <select class="form-control qualification" name="qualification[]">
                                                 <option value="">Select Qualification</option>
                                                 <option value="8 TO 12">8 TO 12</option>
-                                                <option value="Degree">Degree</option>
-                                                <option value="Master Degree">Master Degree</option>
+                                                <option value="DEGREE">DEGREE</option>
+                                                <option value="MASTER DEGREE">MASTER DEGREE</option>
                                             </select>
                                             <span class="error text-danger qualification_error"></span>
                                         </div>
@@ -673,9 +676,13 @@ exit; -->
                                                 </div>
 
                                                 <div class="col-12 col-md-4">
-                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP EDUCATIONAL DOCUMENT" data-document_category="educ_qual_proof" data-ownership_type="pr" data-document_sub_category="OED"  data-form_code="{{$form_code->id}}">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP EDUCATIONAL DOCUMENT" data-document_category="educ_qual_proof" data-ownership_type="pr" 
+                                                    data-row-index=""
+                                                    data-document_sub_category="OED"  data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
+
+                                                    
                                                 </div>
 
                                                 <!-- <span class="text-danger Doc_upload_error"></span> -->
@@ -1003,7 +1010,7 @@ exit; -->
                                 <table class="table table-bordered head_label_partner">
                                     <thead>
                                         <tr>
-                                            <th>Name </th>
+                                             <th>Name </th>
                                             <th>Father/s
                                                 Husband/s
                                                 Name</th>
@@ -1025,7 +1032,7 @@ exit; -->
                                                 certificate </th>
 
                                             <th colspan="2" style="width: 100px;">
-                                                <button type="button" class="btn btn-primary" id="add-partner">
+                                                <button type="button" class="btn btn-primary add-partner" id="add-partner">
                                                     <i class="fa fa-plus"></i> Add
                                                 </button>
                                             </th>
@@ -1038,7 +1045,7 @@ exit; -->
                                         <tr data-id="{{ $p->id }}">
                                             <td>{{ $p->proprietor_name }}</td>
                                             <td>{{ $p->fathers_name }}</td>
-                                            <td  data-dob="{{ $p->dob }}" data-age="{{ $p->age }}">{{ \Carbon\Carbon::parse($p->dob)->format('d-m-Y') }},{{ $p->age }}</td>
+                                           <td  data-dob="{{ $p->dob }}" data-age="{{ $p->age }}">{{ \Carbon\Carbon::parse($p->dob)->format('d-m-Y') }},{{ $p->age }}</td>
                                             <td>{{ $p->proprietor_address }}</td>
                                             <td  data-qualification="{{ $p->qualification }}" data-qual_text="{{ $p->qualification_text }}"  data-educational_proof="{{ asset($p->educational_proof) }}" >{{ $p->qualification }}, {{ $p->qualification_text }} 
                                                 <a href="{{ asset($p->educational_proof) }}" target="_blank"><i class="fa fa-file-pdf-o" style="color: red;"></i></a></td>
@@ -1063,6 +1070,9 @@ exit; -->
                                             </td>
                                             <td style="display: none;">
                                                 <input type="hidden" name="ownership_type[]" value="{{ $p->ownership_type }}">
+                                            </td>
+                                            <td style="display: none;">
+                                                <input type="hidden" name="row_index[]" value="{{ $p->row_index }}">
                                             </td>
 
 
@@ -1103,7 +1113,7 @@ exit; -->
 
 
 
-                        <div class="border box-shadow-blue card p-3 mt-2" id="partnersfill-section" style="display:none;">
+                        <div class="partner-row border box-shadow-blue card p-3 mt-2" id="partnersfill-section" style="display:none;">
 
                             <h5>Partner Details</h5>
                             <div class="p-3">
@@ -1111,6 +1121,7 @@ exit; -->
 
 
                                     <div class="col-md-6">
+                                         <input type="hidden" name="ownership_type[]" value="pt">
                                         <div class="row align-items-center">
                                             <div class="col-12 col-md-12">
                                                 <label for="Name">(i) Full name and house address of partners <span style="color: red;">*</span><br><span class="text-label" style="color: #023466;">(If it is partnership concern, partnership deed should be enclosed)</span></label>
@@ -1185,8 +1196,8 @@ exit; -->
                                             <select class="form-control qualification" name="qualification[]">
                                                 <option value="">Select Qualification</option>
                                                 <option value="8 TO 12">8 TO 12</option>
-                                                <option value="Degree">Degree</option>
-                                                <option value="Master Degree">Master Degree</option>
+                                                <option value="DEGREE">DEGREE</option>
+                                                <option value="MASTER DEGREE">MASTER DEGREE</option>
                                             </select>
                                             <span class="error text-danger qualification_error"></span>
                                         </div>
@@ -1228,7 +1239,9 @@ exit; -->
                                                 </div>
 
                                                 <div class="col-12 col-md-4">
-                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP EDUCATIONAL DOCUMENT" data-document_category="educ_qual_proof" data-document_sub_category="OED" data-ownership_type="pt" data-form_code="{{$form_code->id}}">
+                                                    <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="OWNERSHIP EDUCATIONAL DOCUMENT" data-document_category="educ_qual_proof" data-ownership_type="pt"  
+                                                    data-row-index=""
+                                                    data-document_sub_category="OED"  data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
                                                 </div>
@@ -1549,15 +1562,15 @@ exit; -->
 
                             <div class="table-responsive">
                                 <table class="table table-bordered head_label_director">
-                                    <thead>
+                                     <thead>
                                         <tr>
-                                            <th>Name </th>
+                                             <th>Name </th>
                                             <th>Father/s
                                                 Husband/s
                                                 Name</th>
-                                            <th>Age</th>
+                                            <th>D.O.B and Age</th>
                                             <th>Address </th>
-                                            <th>Qualifications</th>
+                                            <th>Qualifications and Proof </th>
 
 
                                             <th>Present business of
@@ -1586,9 +1599,12 @@ exit; -->
                                         <tr data-id="{{ $p->id }}">
                                             <td>{{ $p->proprietor_name }}</td>
                                             <td>{{ $p->fathers_name }}</td>
-                                            <td>{{ $p->age }}</td>
+
+                                            <td  data-dob="{{ $p->dob }}" data-age="{{ $p->age }}">{{ \Carbon\Carbon::parse($p->dob)->format('d-m-Y') }},{{ $p->age }}</td>
                                             <td>{{ $p->proprietor_address }}</td>
-                                            <td>{{ $p->qualification }}</td>
+                                            <td  data-qualification="{{ $p->qualification }}" data-qual_text="{{ $p->qualification_text }}"  data-educational_proof="{{ asset($p->educational_proof) }}" >{{ $p->qualification }}, {{ $p->qualification_text }} 
+                                                <a href="{{ asset($p->educational_proof) }}" target="_blank"><i class="fa fa-file-pdf-o" style="color: red;"></i></a></td>
+
                                             <td>{{ $p->present_business }}</td>
                                             <td data-competency="{{ $p->competency_certificate_holding }}" data-certno="{{ $p->competency_certificate_number }}" data-validity="{{ $p->competency_certificate_validity }}">
                                                 @if($p->competency_certificate_holding == 'yes')
@@ -1610,6 +1626,9 @@ exit; -->
                                             </td>
                                             <td style="display: none;">
                                                 <input type="hidden" name="ownership_type[]" value="{{ $p->ownership_type }}">
+                                            </td>
+                                              <td style="display: none;">
+                                                <input type="hidden" name="row_index[]" value="{{ $p->row_index }}">
                                             </td>
 
 
@@ -1648,6 +1667,7 @@ exit; -->
 
                                     <div class="col-md-6">
                                         <div class="row align-items-center">
+                                            <input type="hidden" name="ownership_type[]" value="dr">
                                             <div class="col-12 col-md-12">
                                                 <label for="Name">(i) Full name and house address of Directors <span style="color: red;">*</span><br><span class="text-label" style="color: #023466;">(If it is partnership concern, partnership deed should be enclosed)</span></label>
                                             </div>
@@ -1667,29 +1687,126 @@ exit; -->
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <div class="row align-items-center">
+                                   <div class="col-md-6">
+                                        <div class="row">
                                             <div class="col-12 col-md-12">
-                                                <label for="Name">(ii) Director's Age and qualification along with
+                                                <label for="Name">(ii) Age and qualification along with
                                                     evidence <span style="color: red;">*</span></label>
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <label>Director's Age <span class="text-red">*</span></label>
-                                                <input type="number" class="form-control" id="age" name="age[]" maxlength="2" min="15" max="70" placeholder="Director's Age" value="">
-                                                <span class="error text-danger" id="age_error"></span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label> Director's Qualification <span class="text-red">*</span></label>
-                                                <input type="text" class="form-control" id="qualification" name="qualification[]" placeholder="Director's Qualification" value="">
-                                                <!-- <input type="text"
-                                        class="form-control" id="validity" name="validity"
-                                        placeholder="Validity"
-                                        onfocus="(this.type='date')"
-                                        onblur="(this.type='text')"> -->
-                                                <span class="error text-danger" id="qualification_error"></span>
 
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-12 col-md-3">
+                                                <label>Date Of Birth <span class="text-red">*</span></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-4">
+                                                <input type="date" class="form-control dob" name="dob[]">
+                                                <span class="error text-danger dob_error"></span>
+                                            </div>
+
+                                            <div class="col-12 col-md-2">
+                                                <label>Age <span class="text-red">*</span></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-3">
+                                                <input type="number" class="form-control age" name="age[]" readonly>
+                                                <span class="error text-danger age_error"></span>
                                             </div>
                                         </div>
+
+
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-md-3 ">
+                                                <label>Qualification <span class="text-red">*</span></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-4">
+                                                <select class="form-control qualification" name="qualification[]">
+                                                    <option value="">Select Qualification</option>
+                                                    <option value="8 TO 12">8 TO 12</option>
+                                                    <option value="DEGREE">DEGREE</option>
+                                                    <option value="MASTER DEGREE">MASTER DEGREE</option>
+                                                </select>
+                                                <span class="error text-danger qualification_error"></span>
+                                            </div>
+
+
+                                            <div class="col-12 col-md-5 qualTextWrapper" id="qualTextWrapper"
+                                                style="display:none;">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-5">
+                                                        <label>Enter Qualification <span
+                                                                class="text-red">*</span></label>
+                                                    </div>
+                                                    <div class="col-12 col-md-7">
+                                                        <input type="text" class="form-control" id="qual_text"
+                                                            name="qual_text[]">
+                                                        <span class="error text-danger qual_text_error"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mt-2">
+
+                                            <div class="col-12 col-md-3">
+                                                <label>Qualification Proof <span class="text-red">*</span></label>
+                                            </div>
+                                            <div class="col-12 col-md-7">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-8">
+                                                        <!-- <input type="file" class="form-control" name="qual_proof[]"> -->
+                                                        <input type="file" class="form-control" name="qual_proof[]"
+                                                            accept="application/pdf">
+
+
+
+                                                        <span class="file-limit">PDF only (Max 250 KB)</span>
+                                                        <br>
+                                                        <span class="text-danger Doc_upload_error"></span>
+                                                        <span class="error text-danger qual_proof_error"></span>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <button type="button" class="btn btn-info upload-btn"
+                                                            data-login_id="{{ Auth::user()->login_id }}"
+                                                            data-module="OWNERSHIP EDUCATIONAL DOCUMENT"
+                                                            data-document_category="educ_qual_proof"
+                                                            data-ownership_type="dr" data-row-index=""
+                                                            data-document_sub_category="OED"
+                                                            data-form_code="{{$form_code->id}}">
+                                                            <i class="fa fa-upload"></i> Upload
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- <span class="text-danger Doc_upload_error"></span> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 col-12  file-link">
+                                                <!-- @if(!empty($application->educational_proof))
+                                                <a href="{{ asset($application->educational_proof) }}" target="_blank" class="text-info">
+                                                    <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+                                                </a>
+                                            @endif -->
+                                            </div>
+
+
+
+                                            <!-- <div class="col-12 col-md-3">
+                                            <button class="btn btn-info"> <i class="fa fa-upload"></i> Upload </button>
+                                        </div> -->
+
+                                        </div>
+
+
+
+
                                     </div>
 
                                 </div>
@@ -2168,6 +2285,8 @@ exit; -->
                                             <td>
                                                 @if ($i === 0)
                                                 <input type="text" class="form-control" name="staff_category[]" value="QC" readonly>
+                                                @elseif ($i === 1 || $i === 2)
+                                                <input type="text" class="form-control" name="staff_category[]" value="B" readonly>
                                                 @else
                                                 <select class="form-control" name="staff_category[]">
                                                     <option disabled {{ old('staff_category.' . $i) ? '' : 'selected' }}>Select Category</option>
@@ -2240,6 +2359,8 @@ exit; -->
                                             <td>
                                                 @if ($i === 0)
                                                 <input type="text" class="form-control" name="staff_category[]" value="QC" readonly>
+                                                @elseif ($i === 1 || $i === 2)
+                                                <input type="text" class="form-control" name="staff_category[]" value="B" readonly>
                                                 @else
                                                 <select class="form-control" name="staff_category[]">
                                                     <option disabled {{ old('staff_category.' . $i, $staff->staff_category ?? '') == '' ? 'selected' : '' }}>Select Category</option>
@@ -2316,7 +2437,7 @@ exit; -->
                                     @endif
 
                                 </table>
-                                <p class="text-red">Note : Minimum 4 Staff Details are Mandatory - One QC Detail and Two B are Mandatory</p>
+                                <p class="text-red note_txt">Note : Minimum 20 Staffs are allowed and Mandatory (1 QC & 2 B) </p>
                                 <!-- <div class="row">
                                     <div class="col-12 col-md-12">
                                       
@@ -2380,6 +2501,8 @@ exit; -->
 
                                             <span class="error text-danger" id="bank_validity_error"></span>
                                         </div>
+
+                                         
 
                                     </div>
                                 </div>
@@ -2446,10 +2569,11 @@ exit; -->
 
                                     </div>
                                 </div>
-
+                                
+                             <p class="text-red note_txt">Note : Minimum 3 years of Validity Period is Mandatory </p>
                             </div>
 
-                            <hr class="mt-3">
+                            <hr class="">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row align-items-center head_label">
@@ -2930,8 +3054,10 @@ exit; -->
                                                     @endif
                                                 </tbody>
                                             </table>
+                                              <p class="text-red note_txt">Note : Minimum 5 entries </p>
                                         </div>
                                     </div>
+                                  
                                 </div>
 
                                 <div class="col-md-12">
@@ -3041,31 +3167,55 @@ exit; -->
                             </div>
 
                             <div class="row mt-2">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-3">
                                     <div class="row align-items-center">
                                         <div class="col-12 col-md-5 ">
-                                            <label for="Name">(i) GST/ Rental Aggrement/Others No: <span style="color: red;">*</span>
+                                            <label for="Name">(i) Type of Address Proof <span style="color: red;">*</span>
                                             </label>
 
 
                                         </div>
                                         <div class="col-12 col-md-7">
-                                            @php
-                                            $decryptedGST = null;
-                                            $maskgst = null;
+                                        
 
-                                            if (!empty($application->gst_number)) {
-                                            try {
-                                            $decryptedGST = Crypt::decryptString($application->gst_number);
+                                            <select class="custom-select" name="type_doc" id="type_doc">
+                                                <option value="">---Select Type---</option>
+                                                 <option value="GST"
+                                                    {{ optional($Address_proof)->type_doc == 'GST' ? 'selected' : '' }}>
+                                                    GST
+                                                </option>
 
-                                            } catch (\Exception $e) {
+                                                <option value="Rental Agreement"
+                                                    {{ optional($Address_proof)->type_doc == 'Rental Agreement' ? 'selected' : '' }}>
+                                                    Rental Agreement
+                                                </option>
 
-                                            }
-                                            }
-                                            @endphp
+                                                <option value="Others"
+                                                    {{ optional($Address_proof)->type_doc == 'Others' ? 'selected' : '' }}>
+                                                    Others
+                                                </option>
 
-                                            <input type="text" class="form-control text-box" name="gst_number" maxlength="15" id="gst_number" value="{{ $decryptedGST ?? '' }}">
-                                            <span class="error text-danger" id="gst_number_error"></span>
+                                            </select>
+                                            <span class="error text-danger" id="type_error"></span>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            <!-- -------------------------------------------- -->
+                                <div class="col-12 col-md-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-12 col-md-5 ">
+                                            <label for="Name">(ii) GST/ Rental Aggrement/Others No: <span style="color: red;">*</span>
+                                            </label>
+
+
+                                        </div>
+                                        <div class="col-12 col-md-7">
+                         
+                                            <input type="text" class="form-control text-box" name="addressproofno" maxlength="15" id="addressproofno"  value="{{ $Address_proof->addressproofno ?? '' }}">
+                                            <span class="error text-danger" id="addressproofno_error"></span>
                                         </div>
 
 
@@ -3074,10 +3224,10 @@ exit; -->
 
 
 
-                                <div class="col-12 col-md-6 ">
-                                    <div class="row align-items-center">
+                                <div class="col-12 col-md-5 ">
+                                    <div class="row ">
                                         <div class="col-12 col-md-3 ">
-                                            <label for="Name">(ii) Upload Document
+                                            <label for="Name">(iii) Upload Document
                                             </label>
 
 
@@ -3086,7 +3236,7 @@ exit; -->
 
 
                                             <div class="row">
-                                                <div class="col-12 col-md-8">
+                                                <div class="col-12 col-md-7">
                                                     <input type="file" class="form-control"
                                                         name="address_proof" id="address_proof"
                                                         accept="application/pdf">
@@ -3095,7 +3245,7 @@ exit; -->
                                                     <span class="text-danger Doc_upload_error"></span>
 
                                                 </div>
-                                                <div class="col-12 col-md-4">
+                                                <div class="col-12 col-md-5">
                                                     <button type="button" class="btn btn-info upload-btn" data-login_id="{{ Auth::user()->login_id }}" data-module="ADDRESS PROOF DOCUMENT" data-document_category="Address_proof" data-document_sub_category="APD" data-ownership_type="" data-form_code="{{$form_code->id}}">
                                                         <i class="fa fa-upload"></i> Upload
                                                     </button>
@@ -3167,8 +3317,8 @@ exit; -->
                                 <table class="table table-bordered align-middle">
                                     <thead>
                                         <tr>
-                                            <th style="width:5%">S.No</th>
-                                            <th>Equipment Name</th>
+                                            <th style="width:2%">S.No</th>
+                                            <th style="width:12%">Equipment Name</th>
                                             <th>Equipment Type</th>
                                             <th style="width:15%">Serial Number</th>
                                             <th style="width:15%">Make Model</th>
@@ -3201,7 +3351,7 @@ exit; -->
                                             name="equipments[{{ $index }}][licence_id]"
                                             value="{{ $equip->equip_licence_name }}">
 
-                                        <tr>
+                                        <tr class="equipment-row">
                                             <td>{{ $index + 1 }}</td>
 
                                             <td>{{ $equip->equip_name }}</td>
@@ -3230,16 +3380,14 @@ exit; -->
                                             <td>
 
                                                 <input class="form-control" type="text" name="serial_no[]" value="{{ $existing->serial_no ?? '' }}">
-
-
+                                                <span class="error text-danger serial_error"></span>
 
                                             </td>
 
                                             <td>
 
                                                 <input class="form-control" type="text" name="model[]"  value="{{ $existing->model_no ?? '' }}">
-
-
+                                                <span class="error text-danger model_error"></span>
 
                                             </td>
 
@@ -3256,16 +3404,18 @@ exit; -->
 
                                                          @if(!empty($existing->testreport_file))
                                                             <div class="mt-1">
-                                                                <a href="{{ asset($existing->testreport_file) }}"
+                                                              <a href="{{ asset($existing->testreport_file) }}"
                                                                 target="_blank"
-                                                                class="text-info">
-                                                                    <i class="fa fa-file-pdf-o"></i> Present File
-                                                                </a>
+                                                                class="text-info present-test-file uploaded-file">
+                                                                View Existing
+                                                            </a>
                                                             </div>
                                                         @endif
                                                         
                                                         <span class="error text-danger"
                                                             id="instrument_test_report_error_{{ $index }}"></span>
+
+                                                            <span class="error text-danger instrument_test_report_error"></span>
 
                                                     </div>
 
@@ -3305,13 +3455,14 @@ exit; -->
                                                         <span class="text-danger Doc_upload_error"></span>
                                                         <span class="error text-danger"
                                                             id="instrument_purchase_report_error_{{ $index }}"></span>
+                                                            <span class="error text-danger instrument_purchase_report_error"></span>
 
                                                              @if(!empty($existing->purchasereport_file))
                                                                 <div class="mt-1">
-                                                                    <a href="{{ asset($existing->purchasereport_file) }}"
+                                                                  <a href="{{ asset($existing->purchasereport_file) }}"
                                                                     target="_blank"
-                                                                    class="text-info">
-                                                                        <i class="fa fa-file-pdf-o"></i> Present File
+                                                                    class="text-info present-purchase-file uploaded-file">
+                                                                    View Existing
                                                                     </a>
                                                                 </div>
                                                             @endif
@@ -3338,7 +3489,7 @@ exit; -->
 
                                                 <input class="form-control" type="date" name="date_of_test[]"  value="{{ $existing->dateoftest ?? '' }}">
 
-                                                <span class="error text-danger" id="date_of_test_error"></span>
+                                                <span class="error text-danger date_error"></span>
 
                                             </td>
                                             <!-- -------------------------------------------- -->
@@ -3491,11 +3642,7 @@ exit; -->
     </script>
 
     <script>
-        const hasApplication = {
-            {
-                isset($application) ? 'true' : 'false'
-            }
-        };
+        const hasApplication = {{isset($application) ? 'true' : 'false'}};
     </script>
 
     <script>
@@ -4591,6 +4738,7 @@ let proprietorCount = initialDraftCount || 0;
 
         // Show form on Add Proprietor button click
         $("#add-proprietor").on("click", function() {
+            
             let rowCount = $("#proprietor-section table tbody tr").length;
             if (rowCount > 0) {
                 Swal.fire({
@@ -4608,7 +4756,17 @@ let proprietorCount = initialDraftCount || 0;
             resetproprietor(false);
             $("#proprietor-sectionfresh").slideDown();
             $("#save_proprietor").text("Save");
+             let $section = $("#proprietor-section");
+
+              $section.find(".upload-btn")
+            // .attr("data-row_index", rowCount)
+            // .data("row_index", rowCount);
+
+            .attr("data-row-index", rowCount)
+            .data("rowIndex", rowCount);
         });
+
+        
 
         // Save or Update Proprietor
         $("#save_proprietor").on("click", function() {
@@ -5036,9 +5194,13 @@ let proprietorCount = initialDraftCount || 0;
             // console.log("Ownership Value:", ownershipValue); 
             // alert(ownershipValue);
             // exit;
+            let row_indexValue = $row.find("td").eq(10).find("input[name='row_index[]']").val();
 
 
             let $section = $("#proprietor-sectionfresh");
+
+            
+            $section.find(".upload-btn").attr("data-row-index", row_indexValue);
             // let ownership_type = $section.find("input[name='ownership_type[]']").val().trim();
             // $section.find("input[name='ownership_type[]']").val($row.find("td").eq(9).text());    
             // Fill form with row data
@@ -5317,12 +5479,23 @@ let proprietorCount = initialDraftCount || 0;
             resetPartnerForm();
              let $section = $("#partnersfill-section");
 
-            $section.find("input, select").val("");
+
+             
+            // $section.find("input, select").val("");
             $section.find(".qualification").val("").trigger("change");
             $section.find(".file-link").html("");
             $("#partnersfill-section").slideDown();
+            // $("#partner-section table tbody").append(newRow);
+             $section.find(".upload-btn")
+            // .attr("data-row_index", rowCount)
+            // .data("row_index", rowCount);
+
+            .attr("data-row-index", rowCount)
+            .data("rowIndex", rowCount);
+            // updatePartnerRowIndex(rowCount);
         });
 
+       
 
         // $("#add-partner").on("click", function() {
         //     resetPartnerForm();
@@ -5418,7 +5591,7 @@ let proprietorCount = initialDraftCount || 0;
             $section.find(".error").text(""); // clear old errors
             let isValid = true;
 
-             function setError(element, message) {
+            function setError(element, message) {
                 element.closest('.col-12, .col-md-6, .col-md-5, .col-md-4, .col-md-3')
                     .find('.error')
                     .text(message);
@@ -5473,71 +5646,49 @@ let proprietorCount = initialDraftCount || 0;
                 }
             }
 
-            // let fileInput = $section.find("input[name='qual_proof[]']")[0];
-
-            // // check if an existing uploaded file link is present
-            // let hasExistingFile =
-            //     $section.find(".file-link a").length > 0;
-
-            // // check if new file selected
-            // let hasNewFile =
-            //     fileInput && fileInput.files && fileInput.files.length > 0;
-
-            // // VALIDATION
-            // if (!hasNewFile && !hasExistingFile) {
-            //     setError(
-            //         $section.find("input[name='qual_proof[]']"),
-            //         "Qualification proof is required"
-            //     );
-            //     isValid = false;
-            // }
-
-              /* ---------------- FILE HANDLING ---------------- */
           
+              /* ---------------- FILE HANDLING ---------------- */
+            
+                    let isEditMode = $section.attr("data-edit-id") ? true : false;
 
-            let fileInput = $section.find("input[name='qual_proof[]']")[0];
-            let fileLinkAnchor = $section.find(".file-link a");
+                    // Existing file from edit
+                    let existingFileUrl = $section.attr("data-existing-file") || "";
 
-            let existingFileUrl = fileLinkAnchor.length > 0
-                ? fileLinkAnchor.attr("href")
-                : "";
+                    // Present file from table edit
+                    let presentFile = $section.attr("data-present-file") || "";
 
-            let hasExistingFile = existingFileUrl !== "";
-            let hasNewFile = fileInput && fileInput.files && fileInput.files.length > 0;
+                    // alert(presentFile);
 
-            /* ---------- VALIDATION ---------- */
+                    // New uploaded file
+                    let fileInput = $section.find("input[name='qual_proof[]']")[0];
+                    let hasNewFile = fileInput && fileInput.files && fileInput.files.length > 0;
 
-            // ❗ Only validate if:
-            // ADD mode OR Edit mode WITHOUT existing file
-            if (!isEditMode && !hasNewFile && !hasExistingFile) {
-                setError(
-                    $section.find("input[name='qual_proof[]']"),
-                    "Please upload Qualification proof"
-                );
-                isValid = false;
-            }
+                    // Flags
+                    let hasExistingFile = existingFileUrl !== "";
+                    let hasPresentFile  = presentFile !== "";
 
-            // ❗ Edit mode → skip validation if already uploaded
-            if (isEditMode && !hasExistingFile && !hasNewFile) {
-                setError(
-                    $section.find("input[name='qual_proof[]']"),
-                    "Please upload Qualification proof"
-                );
-                isValid = false;
-            }
+                    // ❗ VALIDATION → only if ALL missing
+                    if (!hasExistingFile && !hasPresentFile) {
+                        setError(
+                            $section.find("input[name='qual_proof[]']"),
+                            "Please upload Qualification proof"
+                        );
+                        isValid = false;
+                    }
 
-            /* ---------- FINAL FILE ---------- */
+                    // FINAL FILE
+                   let uploadedFilePath = window.uploadedFilePath || "";
+                    let finalFileUrl = "";
 
-            let uploadedFilePath = window.uploadedFilePath || "";
-
-            let finalFileUrl = "";
-
-            if (hasNewFile && uploadedFilePath) {
-                finalFileUrl = uploadedFilePath;
-            }
-            else if (hasExistingFile) {
-                finalFileUrl = existingFileUrl;
-            }
+                    if (hasNewFile && uploadedFilePath) {
+                        finalFileUrl = uploadedFilePath; // new upload
+                    }
+                    else if (hasExistingFile) {
+                        finalFileUrl = existingFileUrl; // edit file
+                    }
+                    else if (hasPresentFile) {
+                        finalFileUrl = presentFile; // table file
+                    }
 
             /* ---------------- VALIDATION ---------------- */
 
@@ -5569,17 +5720,18 @@ let proprietorCount = initialDraftCount || 0;
                 return;
             }
             /* ----------- show PDF icon ----------- */
-            function renderPdfIcon(url) {
+                function renderPdfIcon(url) {
                     if (!url) return "";
                     return `<a href="${url}" target="_blank">
                                 <i class="fa fa-file-pdf-o text-danger"></i>
                             </a>`;
-            }
+                }
+
 
             // ✅ Update existing row
             if (editIndex !== null) {
 
-                alert('not null');
+                // alert('not null');
 
                 let $row = $("#partner-section table tbody tr").eq(editIndex);
                 $row.find("td").eq(0).text(name);
@@ -5593,18 +5745,18 @@ let proprietorCount = initialDraftCount || 0;
 
                 $row.find("td").eq(3).text(address);
                 $row.find("td").eq(4)
-                            .attr({
-                                "data-qualification": qualification,
-                                "data-qual_text": qual_text,
-                                "data-qual_proof": finalFileUrl
-                            })
-                            .html(
-                                (qualification === '8 TO 12'
-                                    ? qualification
-                                    : `${qualification}, ${qual_text}`)
-                                + " "
-                                + renderPdfIcon(finalFileUrl)
-                            );
+                    .attr({
+                        "data-qualification": qualification,
+                        "data-qual_text": qual_text,
+                        "data-qual_proof": finalFileUrl
+                    })
+                    .html(
+                        (qualification === '8 TO 12'
+                            ? qualification
+                            : `${qualification}, ${qual_text}`)
+                        + " "
+                        + renderPdfIcon(finalFileUrl)
+                    );
                 $row.find("td").eq(5).text(presentBusiness);
                 let ccValidityYMD = formatDateToYMD(ccValidity); // for data-attributes
                 let ccValidityFormatted = formatDateToDDMMYYYY(ccValidity);
@@ -5674,13 +5826,13 @@ let proprietorCount = initialDraftCount || 0;
                             data-qualification="${qualification}" 
                             data-qual_text="${qual_text}" 
                             data-qual_proof="${finalFileUrl}">
-                            
+                                
                             ${qualification === '8 TO 12' 
                                 ? qualification 
                                 : `${qualification}, ${qual_text}`}
 
                             ${renderPdfIcon(finalFileUrl)}
-                        </td>
+                            </td>
                         <td>${presentBusiness}</td>
                           <td 
                             data-competency="${competency}" 
@@ -5724,11 +5876,13 @@ let proprietorCount = initialDraftCount || 0;
             // Clear all radio buttons
             $section.find("input[type='radio']").prop("checked", false);
 
+            $section.find(".file-link").html("");
+            $section.removeAttr("data-existing-file");
+
+            $section.removeAttr("data-edit-id");
+
             // Hide all conditional fields
             $(".competency-fields-partner, .employment-fields-partner, .experience-fields-partner").hide();
-
-
-         
 
             // Reset Save button text
             $("#save_partner").text("Save");
@@ -5768,14 +5922,20 @@ let proprietorCount = initialDraftCount || 0;
         $(document).on("click", ".update-partner-row", function() {
             // alert('111');
             let $row = $(this).closest("tr");
+            let $tds = $row.find("td");
+            let id = $row.data("id");
             editIndex = $row.index();
             let ownershipValue = $row.find("td").eq(9).find("input[name='ownership_type[]']").val();
+
+            let row_indexValue = $row.find("td").eq(10).find("input[name='row_index[]']").val();
             // console.log("Ownership Value:", ownershipValue); 
             // alert(ownershipValue);
             // exit;
 
 
             let $section = $("#partnersfill-section");
+
+            $section.find(".upload-btn").attr("data-row-index", row_indexValue);
             // let ownership_type = $section.find("input[name='ownership_type[]']").val().trim();
             // $section.find("input[name='ownership_type[]']").val($row.find("td").eq(9).text());    
             // Fill form with row data
@@ -5794,11 +5954,11 @@ let proprietorCount = initialDraftCount || 0;
             //  $section.find("select[name='qualification[]']").val();
 
             // qual_proof
-            let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
+            // let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
             // $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
             $section.find("textarea[name='proprietor_address[]']").val($row.find("td").eq(3).text());
 
-            let tdqualification = $row.find("td").eq(4);
+             let tdqualification = $row.find("td").eq(4);
 
             let qualificationValue = tdqualification.attr("data-qualification");
             let qualTextValue = tdqualification.attr("data-qual_text");
@@ -5827,21 +5987,49 @@ let proprietorCount = initialDraftCount || 0;
             if (qualificationValue && qualificationValue !== '8 TO 12') {
                 $wrapper.show();
             }
+        // let $tr = $(this).closest("tr");
+           
 
-            // ----------educationalProofUrl
-            let educationalProofUrl = tdqualification.attr("data-educational_proof");
+            /////update
+             // Qualification
+           let $qualTd = $tds.eq(4);
 
-            let $fileLinkDiv = $section.find(".file-link");
+            let qualification = $qualTd.attr("data-qualification");
+            let qual_text     = $qualTd.attr("data-qual_text");
+            let qual_proof    = $qualTd.attr("data-qual_proof");
 
-            if (educationalProofUrl && educationalProofUrl !== "") {
-                $fileLinkDiv.removeClass("d-none").html(`
-                    <a href="${educationalProofUrl}" target="_blank" class="text-info">
-                        <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+            // Set qualification
+            $section.find(".qualification").val(qualification).trigger("change");
+            $section.find("input[name='qual_text[]']").val(qual_text);
+
+            // 🔥 STORE FILE URL INSIDE FORM
+            $section.attr("data-existing-file", qual_proof || "");
+
+            // 🔥 SHOW FILE IN FORM
+            if (qual_proof) {
+                $section.find(".file-link").html(`
+                    <a href="${qual_proof}" target="_blank" class="text-success">
+                        <i class="fa fa-file-pdf-o"></i> View Uploaded File
                     </a>
                 `);
             } else {
-                $fileLinkDiv.addClass("d-none").html("");
+                $section.find(".file-link").html("");
             }
+
+            // Get present file from TABLE (important)
+            let presentFile = $qualTd.attr("data-educational_proof");
+
+            $section.attr("data-present-file", presentFile || "");
+            // Show present file below input box (only for table edit)
+            if (presentFile) {
+                $section.find(".file-link").html(`
+                    <a href="${presentFile}" target="_blank" class="text-success">
+                        <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+                    </a>
+                `);
+            }
+            // Mark edit mode
+            $section.attr("data-edit-id", id);
 
 
             $section.find("textarea[name='proprietor_address[]']").val($row.find("td").eq(3).text());
@@ -5970,6 +6158,21 @@ let proprietorCount = initialDraftCount || 0;
             }
             resetDirectorForm();
             $("#directorfill-section").slideDown();
+            
+            let $section = $("#directorfill-section");
+
+            // $section.find("input, select").val("");
+            $section.find(".qualification").val("").trigger("change");
+            $section.find(".file-link").html("");
+            // $("#directorfill-section").slideDown();
+            // $("#partner-section table tbody").append(newRow);
+             $section.find(".upload-btn")
+            // .attr("data-row_index", rowCount)
+            // .data("row_index", rowCount);
+
+            .attr("data-row-index", rowCount)
+            .data("rowIndex", rowCount);
+              
         });
 
 
@@ -5983,8 +6186,19 @@ let proprietorCount = initialDraftCount || 0;
             // Basic text inputs
             let name = $section.find("input[name='proprietor_name[]']").val().trim();
             let address = $section.find("textarea[name='proprietor_address[]']").val().trim();
+
+            let dob = $section.find("input[name='dob[]']").val().trim();
             let age = $section.find("input[name='age[]']").val().trim();
-            let qualification = $section.find("input[name='qualification[]']").val().trim();
+            // let qualification = $section.find("input[name='qualification[]']").val().trim();
+            let qualification = $section.find("select[name='qualification[]']").val();
+
+            // let qual_text = $section.find("select[name='qual_text[]']").val();
+            let qual_text = $.trim($section.find("input[name='qual_text[]']").val());
+
+            // qual_proof
+            let qual_proof = $section.find("input[name='qual_proof[]']").val().trim();
+
+
             let fathersName = $section.find("input[name='fathers_name[]']").val().trim();
             let presentBusiness = $section.find("input[name='present_business[]']").val().trim();
 
@@ -6038,9 +6252,143 @@ let proprietorCount = initialDraftCount || 0;
             let ccValidityFormatted = formatDateToDDMMYYYY(ccValidity);
             let expValidityFormatted = formatDateToDDMMYYYY(expValidity);
             // ✅ Validation
-            if (!name || !address || !age || !qualification || !fathersName || !presentBusiness) {
-                alert("Please fill all director required fields!");
+            $section.find(".error").text(""); // clear old errors
+            let isValid = true;
+
+            function setError(element, message) {
+                element.closest('.col-12, .col-md-6, .col-md-5, .col-md-4, .col-md-3')
+                    .find('.error')
+                    .text(message);
+                isValid = false;
+            }
+            // NAME
+            if (!name) {
+                setError($section.find("input[name='proprietor_name[]']"),
+                    // let name = $section.find("input[name='proprietor_name[]']").val().trim();
+                    "Proprietor name is required");
+            }
+
+            // ADDRESS
+            if (!address) {
+                setError($section.find("textarea[name='proprietor_address[]']"),
+                    "Address is required");
+            }
+
+            // DOB
+            if (!dob) {
+                setError($section.find("input[name='dob[]']"),
+                    "Date of birth is required");
+            }
+
+            // AGE
+            if (!age) {
+                setError($section.find("input[name='age[]']"),
+                    "Age is required");
+            } else if (parseInt(age) < 25) {
+                setError($section.find("input[name='age[]']"),
+                    "Minimum age should be 25");
+            }
+
+
+
+            if (!qualification) {
+                setError($section.find("select[name='qualification[]']"),
+                    "Qualification is required");
+
+
+            }
+
+            if (qualification && qualification !== '8 TO 12') {
+                // alert(qual_text);
+
+                if (!qual_text) {
+                    setError(
+                        $section.find("input[name='qual_text[]']"),
+                        "Enter Qualification is required"
+                    );
+                    isValid = false;
+                }
+            }
+
+
+            /* ---------------- FILE HANDLING ---------------- */
+
+            let isEditMode = $section.attr("data-edit-id") ? true : false;
+
+            // Existing file from edit
+            let existingFileUrl = $section.attr("data-existing-file") || "";
+
+            // Present file from table edit
+            let presentFile = $section.attr("data-present-file") || "";
+
+            // alert(presentFile);
+
+            // New uploaded file
+            let fileInput = $section.find("input[name='qual_proof[]']")[0];
+            let hasNewFile = fileInput && fileInput.files && fileInput.files.length > 0;
+
+            // Flags
+            let hasExistingFile = existingFileUrl !== "";
+            let hasPresentFile = presentFile !== "";
+
+            // ❗ VALIDATION → only if ALL missing
+            if (!hasExistingFile && !hasPresentFile) {
+                setError(
+                    $section.find("input[name='qual_proof[]']"),
+                    "Please upload Qualification proof"
+                );
+                isValid = false;
+            }
+
+            // FINAL FILE
+            let uploadedFilePath = window.uploadedFilePath || "";
+            let finalFileUrl = "";
+
+            if (hasNewFile && uploadedFilePath) {
+                finalFileUrl = uploadedFilePath; // new upload
+            }
+            else if (hasExistingFile) {
+                finalFileUrl = existingFileUrl; // edit file
+            }
+            else if (hasPresentFile) {
+                finalFileUrl = presentFile; // table file
+            }
+
+            /* ---------------- VALIDATION ---------------- */
+
+
+            // FATHER NAME
+            if (!fathersName) {
+                setError($section.find("input[name='fathers_name[]']"),
+                    "Father/Husband's name is required");
+            }
+
+            // BUSINESS
+            if (!presentBusiness) {
+                setError($section.find("input[name='present_business[]']"),
+                    "Present business is required");
+            }
+
+
+            // STOP if invalid
+            if (!isValid) {
+
+                Swal.fire({
+                    icon: 'warning',
+                    width: 450,
+                    title: 'Missing Fields',
+                    text: 'Fill all required fields.',
+                    confirmButtonText: 'OK'
+                });
+
                 return;
+            }
+            /* ----------- show PDF icon ----------- */
+            function renderPdfIcon(url) {
+                if (!url) return "";
+                return `<a href="${url}" target="_blank">
+                                <i class="fa fa-file-pdf-o text-danger"></i>
+                            </a>`;
             }
 
             // ✅ Update existing row
@@ -6051,9 +6399,30 @@ let proprietorCount = initialDraftCount || 0;
                 let $row = $("#director-section table tbody tr").eq(directoreditIndex);
                 $row.find("td").eq(0).text(name);
                 $row.find("td").eq(1).text(fathersName);
-                $row.find("td").eq(2).text(age);
+                
+                $row.find("td").eq(2)
+                    .attr({
+                        "data-dob": dob,
+                        "data-age": age
+                    })
+                    .text(`${dob}, ${age}`);
+
                 $row.find("td").eq(3).text(address);
-                $row.find("td").eq(4).text(qualification);
+                $row.find("td").eq(4)
+                    .attr({
+                        "data-qualification": qualification,
+                        "data-qual_text": qual_text,
+                        "data-qual_proof": finalFileUrl
+                    })
+                    .html(
+                        (qualification === '8 TO 12'
+                            ? qualification
+                            : `${qualification}, ${qual_text}`)
+                        + " "
+                        + renderPdfIcon(finalFileUrl)
+                    );
+
+                
                 $row.find("td").eq(5).text(presentBusiness);
                 let ccValidityYMD = formatDateToYMD(ccValidity); // for data-attributes
                 let ccValidityFormatted = formatDateToDDMMYYYY(ccValidity);
@@ -6114,9 +6483,24 @@ let proprietorCount = initialDraftCount || 0;
                     <tr>
                         <td>${name}</td>
                         <td>${fathersName}</td>
-                        <td>${age}</td>
+
+                        <td data-dob="${dob}" data-age="${age}">
+                            ${dob}, ${age}
+                        </td>
+
                         <td>${address}</td>
-                        <td>${qualification}</td>
+                        <td 
+                            data-qualification="${qualification}" 
+                            data-qual_text="${qual_text}" 
+                            data-qual_proof="${finalFileUrl}">
+                                
+                            ${qualification === '8 TO 12'
+                        ? qualification
+                        : `${qualification}, ${qual_text}`}
+
+                            ${renderPdfIcon(finalFileUrl)}
+                            </td>
+
                         <td>${presentBusiness}</td>
                           <td 
                             data-competency="${competency}" 
@@ -6154,10 +6538,16 @@ let proprietorCount = initialDraftCount || 0;
             let $section = $("#directorfill-section");
 
             // Clear all text/number/textarea inputs
-            $section.find("input[type='text'], input[type='number'], textarea").val("");
+            $section.find("input[type='text'], input[type='number'], input[type='date'], textarea").val("");
 
             // Clear all radio buttons
             $section.find("input[type='radio']").prop("checked", false);
+
+            
+            $section.find(".file-link").html("");
+            $section.removeAttr("data-existing-file");
+
+            $section.removeAttr("data-edit-id");
 
             // Hide all conditional fields
             $(".competency-fields-director, .employment-fields-director, .experience-fields-director").hide();
@@ -6195,23 +6585,114 @@ let proprietorCount = initialDraftCount || 0;
 
         // Update partner row
         $(document).on("click", ".update-director-row", function() {
+            // let $row = $(this).closest("tr");
+
             let $row = $(this).closest("tr");
+            let $tds = $row.find("td");
+            let id = $row.data("id");
+
             directoreditIndex = $row.index();
             let ownershipValue = $row.find("td").eq(9).find("input[name='ownership_type[]']").val();
             // console.log("Ownership Value:", ownershipValue); 
             // alert(ownershipValue);
             // exit;
-
+            let row_indexValue = $row.find("td").eq(10).find("input[name='row_index[]']").val();
+            // console.log("Ownership Value:", ownershipValue); 
+            // alert(ownershipValue);
+            // exit;
 
             let $section = $("#directorfill-section");
+            
+            $section.find(".upload-btn").attr("data-row-index", row_indexValue);
             // let ownership_type = $section.find("input[name='ownership_type[]']").val().trim();
             // $section.find("input[name='ownership_type[]']").val($row.find("td").eq(9).text());    
             // Fill form with row data
             $section.find("input[name='proprietor_name[]']").val($row.find("td").eq(0).text());
             $section.find("input[name='fathers_name[]']").val($row.find("td").eq(1).text());
-            $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
+
+
+            // $section.find("input[name='age[]']").val($row.find("td").eq(2).text());
+             let tdDobAge = $row.find("td").eq(2);
+
+            $section.find("input[name='dob[]']").val(tdDobAge.data("dob"));
+            $section.find("input[name='age[]']").val(tdDobAge.data("age"));
+
             $section.find("textarea[name='proprietor_address[]']").val($row.find("td").eq(3).text());
-            $section.find("input[name='qualification[]']").val($row.find("td").eq(4).text());
+
+            let tdqualification = $row.find("td").eq(4);
+
+            let qualificationValue = tdqualification.attr("data-qualification");
+            let qualTextValue = tdqualification.attr("data-qual_text");
+
+            let $qualificationSelect = $section.find("select[name='qualification[]']");
+            let $qualTextInput = $section.find("input[name='qual_text[]']");
+            let $wrapper = $section.find(".qualTextWrapper");
+
+            // Set select value
+            $qualificationSelect.val(qualificationValue).trigger("change");
+
+            $qualificationSelect.val(qualificationValue);
+
+            // If not selected, try matching manually
+            if ($qualificationSelect.val() === null) {
+                $qualificationSelect.find("option").each(function () {
+                    if ($(this).val().trim().toLowerCase() === qualificationValue.toLowerCase()) {
+                        $(this).prop("selected", true);
+                    }
+                });
+            }
+            // Set text value
+            $qualTextInput.val(qualTextValue);
+
+            // If qualification is not 8 TO 12 AND text exists → show wrapper
+            if (qualificationValue && qualificationValue !== '8 TO 12') {
+                $wrapper.show();
+            }
+            // let $tr = $(this).closest("tr");
+
+
+            /////update
+            // Qualification
+            let $qualTd = $tds.eq(4);
+
+            let qualification = $qualTd.attr("data-qualification");
+            let qual_text = $qualTd.attr("data-qual_text");
+            let qual_proof = $qualTd.attr("data-qual_proof");
+
+            // Set qualification
+            $section.find(".qualification").val(qualification).trigger("change");
+            $section.find("input[name='qual_text[]']").val(qual_text);
+
+            // 🔥 STORE FILE URL INSIDE FORM
+            $section.attr("data-existing-file", qual_proof || "");
+
+            // 🔥 SHOW FILE IN FORM
+            if (qual_proof) {
+                $section.find(".file-link").html(`
+                    <a href="${qual_proof}" target="_blank" class="text-success">
+                        <i class="fa fa-file-pdf-o"></i> View Uploaded File
+                    </a>
+                `);
+            } else {
+                $section.find(".file-link").html("");
+            }
+
+            // Get present file from TABLE (important)
+            let presentFile = $qualTd.attr("data-educational_proof");
+
+            $section.attr("data-present-file", presentFile || "");
+            // Show present file below input box (only for table edit)
+            if (presentFile) {
+                $section.find(".file-link").html(`
+                    <a href="${presentFile}" target="_blank" class="text-success">
+                        <i class="fa fa-file-pdf-o"></i> Present Uploaded File
+                    </a>
+                `);
+            }
+            // Mark edit mode
+            $section.attr("data-edit-id", id);
+
+            // $section.find("input[name='qualification[]']").val($row.find("td").eq(4).text());
             $section.find("input[name='present_business[]']").val($row.find("td").eq(5).text());
             $section.find("input[name='ownership_type[]']").val(ownershipValue);
 

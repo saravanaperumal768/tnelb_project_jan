@@ -131,6 +131,9 @@ class DocumentUploadController extends Controller
     // exit;
         try {
 
+
+        
+
             // --------------------------------------------------
             // 1. CHECK FILE EXISTENCE
             // --------------------------------------------------
@@ -231,6 +234,12 @@ class DocumentUploadController extends Controller
                     ->where('form_name', $request->form_name)
                     ->where('document_category', $request->document_category);
 
+                 if ($request->document_sub_category === 'OED') {
+                    $existingQuery->where('document_sub_category', 'OED')
+                                ->where('ownership_type', $request->ownership_type)
+                                ->where('row_index', $request->row_index);
+                }
+
                 if ($request->document_sub_category === 'ED') {
                     $existingQuery->where('document_sub_category', 'ED')
                                 ->where('file_name', 'like', '%' . $request->equip_code . '.pdf');
@@ -311,13 +320,18 @@ class DocumentUploadController extends Controller
 //                                         exit;
                     if ($request->document_sub_category === 'OED') {
 
-                            $fileName = $date . '_' . $time . '_' . $loginId . '_' .
-                                        'L' . $form_code . '_' .
-                                        $moduleCode . $counter . '.pdf';
+                            // $fileName = $date . '_' . $time . '_' . $loginId . '_' .
+                            //             'L' . $form_code . '_' .$request->ownership_type.
+                            //             $moduleCode . $counter . '.pdf';
+
+                             $fileName = $date . '_' . $time . '_' . $loginId . '_' .
+                                'L' . $form_code . '_' .
+                                strtoupper($request->ownership_type).
+                                $moduleCode.$request->row_index . '.pdf';
 
                            
 
-                            // dd('here');exit;
+                            // dd($fileName);exit;
 
                         } elseif($request->document_sub_category === 'OHD') {
 
@@ -352,6 +366,8 @@ class DocumentUploadController extends Controller
 
                     $file->move($folderPath, $fileName);
 
+                    
+
                     DB::table('tnelb_temp_uploaded_documents')->insert([
                         'login_id'              => $loginId,
                         'application_id'        => $applicationId,
@@ -365,6 +381,8 @@ class DocumentUploadController extends Controller
                         'file_name'             => $fileName,
                         'file_path'             => $dbFilePath,
                         'ownership_count'       => $counter,
+
+                       'row_index' =>            is_numeric($request->row_index) ? (int)$request->row_index : null,
                         
                         'equip_code'             => $equip_code,
                         'uploaded_at'           => now(),
@@ -374,12 +392,14 @@ class DocumentUploadController extends Controller
                     ]);
                 }
 
+                $counter++;
+
                 $uploadedFiles[] = [
                     'file_name' => $fileName,
                     'file_url'  => asset($dbFilePath .'/'. $fileName),
                 ];
             }
-             $counter++;
+             
 
             // --------------------------------------------------
             // 7. RESPONSE

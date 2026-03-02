@@ -2,6 +2,8 @@ $(document).on("click", ".upload-btn", function () {
     let btn = $(this); // current button
     let row = btn.closest(".row");
 
+    // $(this).attr('data-row-index', index);
+
     let fileInput = btn.closest(".row, td").find("input[type='file']")[0];
     let errorBox = btn.closest(".row, td").find(".Doc_upload_error");
 
@@ -34,6 +36,9 @@ $(document).on("click", ".upload-btn", function () {
     formData.append("document_sub_category", btn.data("document_sub_category"));
     formData.append("form_code", btn.data("form_code"));
 
+     formData.append("row_index", btn.attr("data-row-index"));
+        // alert(btn.attr("data-row-index"));
+
     // Static values
     formData.append("appl_type", "N");
     formData.append("form_name", "A");
@@ -60,6 +65,7 @@ $(document).on("click", ".upload-btn", function () {
 
             // EQUIPMENT (TD based)
             if (btn.closest("td").length) {
+                 
                 let cell = btn.closest("td");
 
                 // Remove existing link inside this cell
@@ -69,8 +75,8 @@ $(document).on("click", ".upload-btn", function () {
                 let inputColumn = cell.find(".row");
 
                 // Append link below input box
-                inputColumn.append(`
-                    <div class="file-link mt-2">
+              inputColumn.append(`
+                    <div class="file-link mt-2 uploaded-file">
                         <a href="${file.file_url}" target="_blank" class="text-success">
                             <i class="fa fa-file-pdf-o"></i> ${file.file_name}
                         </a>
@@ -81,7 +87,7 @@ $(document).on("click", ".upload-btn", function () {
             // ✅ QUALIFICATION PROOF (OED)
              else if (subCategory === "OED") {
 
-                let $section = btn.closest("#proprietor-sectionfresh");
+                 let $section = btn.closest("#proprietor-sectionfresh, #partnersfill-section, #directorfill-section");
 
                 let container = btn
                     .closest(".col-md-7")
@@ -115,6 +121,8 @@ $(document).on("click", ".upload-btn", function () {
                         </a>
                     `);
             } else {
+
+               
                 errorBox.text("");
 
                 if (!fileLink.length) {
@@ -431,9 +439,15 @@ $("#competency_form_a").on("submit", function (e) {
             id: id,
             proprietor_name: $tds.eq(0).text().trim(),
             fathers_name: $tds.eq(1).text().trim(),
-            age: $tds.eq(2).text().trim(),
+             dob: $tds.eq(2).attr("data-dob"),
+            age: $tds.eq(2).attr("data-age"),
+            
             proprietor_address: $tds.eq(3).text().trim(),
-            qualification: $tds.eq(4).text().trim(),
+            // qualification: $tds.eq(4).text().trim(),
+
+            qualification: $tds.eq(4).attr("data-qualification"),
+            qualification_text: $tds.eq(4).attr("data-qual_text"),
+
             present_business: $tds.eq(5).text().trim(),
             competency: $tds.eq(6).data("competency") || "",
             competency_certno: $tds.eq(6).data("certno") || "",
@@ -468,12 +482,21 @@ $("#competency_form_a").on("submit", function (e) {
         formData.append(`partner_name[${index}]`, p.proprietor_name);
         formData.append(`partner_fathers_name[${index}]`, p.fathers_name);
         formData.append(`partner_ownership_type[${index}]`, p.ownership_type);
+        // formData.append(`partner_age[${index}]`, p.age);
+
+//   formData.append(`ownership_type[${index}]`, p.ownership_type);
         formData.append(`partner_age[${index}]`, p.age);
-        formData.append(
-            `partner_proprietor_address[${index}]`,
-            p.proprietor_address,
-        );
+        formData.append(`partner_dob[${index}]`, p.dob);
+        formData.append(`partner_proprietor_address[${index}]`, p.proprietor_address);
         formData.append(`partner_qualification[${index}]`, p.qualification);
+        formData.append(`partner_qual_text[${index}]`, p.qualification_text);
+
+
+        // formData.append(
+        //     `partner_proprietor_address[${index}]`,
+        //     p.proprietor_address,
+        // );
+        // formData.append(`partner_qualification[${index}]`, p.qualification);
         formData.append(
             `partner_present_business[${index}]`,
             p.present_business,
@@ -524,9 +547,16 @@ $("#competency_form_a").on("submit", function (e) {
             id: id,
             proprietor_name: $tds.eq(0).text().trim(),
             fathers_name: $tds.eq(1).text().trim(),
-            age: $tds.eq(2).text().trim(),
+
+            dob: $tds.eq(2).attr("data-dob"),
+            age: $tds.eq(2).attr("data-age"),
+            
             proprietor_address: $tds.eq(3).text().trim(),
-            qualification: $tds.eq(4).text().trim(),
+            // qualification: $tds.eq(4).text().trim(),
+
+            qualification: $tds.eq(4).attr("data-qualification"),
+            qualification_text: $tds.eq(4).attr("data-qual_text"),
+            
             present_business: $tds.eq(5).text().trim(),
             competency: $tds.eq(6).data("competency") || "",
             competency_certno: $tds.eq(6).data("certno") || "",
@@ -561,12 +591,13 @@ $("#competency_form_a").on("submit", function (e) {
         formData.append(`director_name[${index}]`, p.proprietor_name);
         formData.append(`director_fathers_name[${index}]`, p.fathers_name);
         formData.append(`director_ownership_type[${index}]`, p.ownership_type);
-        formData.append(`director_age[${index}]`, p.age);
-        formData.append(
-            `director_proprietor_address[${index}]`,
-            p.proprietor_address,
-        );
+
+         formData.append(`director_age[${index}]`, p.age);
+        formData.append(`director_dob[${index}]`, p.dob);
+        formData.append(`director_proprietor_address[${index}]`, p.proprietor_address);
         formData.append(`director_qualification[${index}]`, p.qualification);
+        formData.append(`director_qual_text[${index}]`, p.qualification_text);
+
         formData.append(
             `director_present_business[${index}]`,
             p.present_business,
@@ -1349,7 +1380,7 @@ $("#competency_form_a").on("submit", function (e) {
     // ------------------ Collect Inputs ------------------
     // let aadhaar = $("#aadhaar").val().replace(/\s+/g, "");
     // let pancard = $("#pancard").val().trim().toUpperCase();
-    let gst_number = $("#gst_number").val().trim().toUpperCase();
+    // let gst_number = $("#gst_number").val().trim().toUpperCase();
 
     // ------------------ Clear Previous Errors ------------------
     // $("#aadhaar_error, #pancard_error, #gst_number_error, #aadhaar_doc_error, #pancard_doc_error, #gst_doc_error").text("");
@@ -1374,15 +1405,15 @@ $("#competency_form_a").on("submit", function (e) {
     // }
 
     // ------------------ GST Validation ------------------
-    if (gst_number === "") {
-        $("#gst_number_error").text("GST Number is required.");
-        isValid = false;
-    } else if (!/^[A-Z0-9]{15}$/.test(gst_number)) {
-        $("#gst_number_error").text(
-            "Enter 15-character alphanumeric GST Number.",
-        );
-        isValid = false;
-    }
+    // if (gst_number === "") {
+    //     $("#gst_number_error").text("GST Number is required.");
+    //     isValid = false;
+    // } else if (!/^[A-Z0-9]{15}$/.test(gst_number)) {
+    //     $("#gst_number_error").text(
+    //         "Enter 15-character alphanumeric GST Number.",
+    //     );
+    //     isValid = false;
+    // }
 
     // ------------------ Document Validation ------------------
     const allowedTypes = ["application/pdf"];
@@ -1854,7 +1885,7 @@ $("#competency_form_a").on("submit", function (e) {
             let certCheck = checkCertificateValidity(
                 ccNumVal,
                 ccValidVal,
-                ccValid,
+                ccNum,
                 staffCount - 1, // pass 0-based index
             );
 
@@ -2034,7 +2065,13 @@ $("#competency_form_a").on("submit", function (e) {
                             "Minimum 1 year validity is required for QC Category certificate.",
                         );
                     resultStatus.valid = false;
-                } else if (res.status === "error") {
+                } else if (res.status === "invalid_wcert") {
+                    ccNumInput
+                        .siblings(".error")
+                        .text("Certificate must exist in Wireman Certificate register.");
+                    resultStatus.valid = false;
+                }
+                 else if (res.status === "error") {
                     // ✅ IMPORTANT
                     ccNumInput
                         .closest("td")
@@ -2116,114 +2153,6 @@ $("#competency_form_a").on("submit", function (e) {
         return false;
     }
 
-    // If all 4 valid — allow adding new row
-    // addNewStaffRow();
-
-    // $(".staff-fields").each(function (index) {
-    //     const name = $(this).find('input[name="staff_name[]"]');
-    //     const qual = $(this).find('select[name="staff_qualification[]"]');
-    //     const ccNum = $(this).find('input[name="cc_number[]"]');
-    //     const ccValid = $(this).find('input[name="cc_validity[]"]');
-    //     const category = $(this).find('select[name="staff_category[]"]');
-
-    //     const nameVal = name.val().trim();
-
-    //     // Auto uppercase license on input
-    //     ccNum.on("input", function () {
-    //         this.value = this.value.toUpperCase();
-    //     });
-
-    //     // Real-time error clearing
-    //     name.on("keyup", function () {
-    //         if ($(this).val().trim() !== "") {
-    //             name.siblings(".error").text("");
-    //         }
-    //     });
-
-    //     qual.on("change", function () {
-    //         if ($(this).val() !== "") {
-    //             qual.siblings(".error").text("");
-    //         }
-    //     });
-
-    //     ccNum.on("keyup input", function () {
-    //         if ($(this).val().trim() !== "") {
-    //             ccNum.siblings(".error").text("");
-    //         }
-    //     });
-
-    //     ccValid.on("keyup change", function () {
-    //         if ($(this).val().trim() !== "") {
-    //             ccValid.siblings(".error").text("");
-    //         }
-    //     });
-
-    //     category.on("change", function () {
-    //         if ($(this).val() !== "") {
-    //             category.siblings(".error").text("");
-    //         }
-    //     });
-
-    //     // Validation logic
-    //     if (nameVal === "") {
-    //         name.siblings(".error").text("Name is required.");
-    //         qual.siblings(".error").text("Qualification is required.");
-    //         ccNum.siblings(".error").text("CC Number is required.");
-    //         ccValid.siblings(".error").text("CC Validity is required.");
-    //         category.siblings(".error").text("Category is required.");
-    //         staffValid = false;
-    //     } else {
-    //         staffCount++;
-
-    //         if (!qual.val()) {
-    //             qual.siblings(".error").text("Qualification is required.");
-    //             staffValid = false;
-    //         }
-
-    //         const ccVal = ccNum.val().trim().toUpperCase();
-    //         if (ccVal === "") {
-    //             ccNum.siblings(".error").text("CC Number is required.");
-    //             staffValid = false;
-    //         } else {
-    //             // check duplicates
-    //             if (licenseNumbers.includes(ccVal)) {
-    //                 duplicateFound = true;
-    //                 staffValid = false;
-    //                 ccNum.siblings(".error").text("Duplicate CC Number not allowed.");
-    //             } else {
-    //                 licenseNumbers.push(ccVal);
-    //             }
-
-    //             // prefix validation
-    //             const prefix = ccVal.charAt(0);
-    //             if (index === 0 && !["C", "L"].includes(prefix)) {
-    //                 ccNum
-    //                     .siblings(".error")
-    //                     .text("First staff's license must start with 'C' or 'L'.");
-    //                 staffValid = false;
-    //             } else if (index > 0 && !["C", "B", "H", "L"].includes(prefix)) {
-    //                 ccNum
-    //                     .siblings(".error")
-    //                     .text("License must start with 'C', 'B', 'H', or 'L'.");
-    //                 staffValid = false;
-    //             } else if (!duplicateFound) {
-    //                 ccNum.siblings(".error").text(""); // clear error if valid and not duplicate
-    //             }
-    //         }
-
-    //         if (ccValid.val().trim() === "") {
-    //             ccValid.siblings(".error").text("CC Validity is required.");
-    //             staffValid = false;
-    //         }
-
-    //         if (!category.val()) {
-    //             category.siblings(".error").text("Category is required.");
-    //             staffValid = false;
-    //         }
-    //     }
-    // });
-
-    // if duplicate found → show SweetAlert
     if (duplicateFound) {
         Swal.fire({
             icon: "error",
@@ -2233,53 +2162,100 @@ $("#competency_form_a").on("submit", function (e) {
         });
         isValid = false;
     }
-    // console.log({
-    //     applicantName,
-    //     businessAddress,
-    //     aadhaar,
-    //     pancard,
-    //     gst_number
-    // });
-    // console.group("🔍 Form Validation Summary");
 
-    // console.log("➡ Applicant Name:", applicantName);
-    // console.log("➡ Business Address:", businessAddress);
-    // console.log("➡ Aadhaar:", aadhaar);
-    // console.log("➡ PAN:", pancard);
-    // console.log("➡ GST:", gst_number);
-    // console.log("➡ Authorised Signatory:", authorisedSelected);
-    // if (authorisedSelected === "yes") {
-    //     console.log("    ↪ Authorised Name:", $("#authorised_name").val().trim());
-    //     console.log("    ↪ Authorised Designation:", $("#authorised_designation").val().trim());
-    // }
-    // console.log("➡ Previous License:", previousSelected);
-    // if (previousSelected === "yes") {
-    //     console.log("    ↪ Previous App Number:", $("#previous_application_number").val().trim());
-    // }
 
-    // console.log("➡ Bank Address:", bankAddress);
-    // console.log("➡ Bank Validity:", bankValidity);
-    // console.log("➡ Bank Amount:", bankAmount);
+    // --------------------equipment data--------------------
+            let equipmentValid = true;
 
-    // console.log("➡ Criminal Offence:", criminalOffence);
-    // console.log("➡ Consent Letter Enclosed:", consent_letter_enclose);
-    // console.log("➡ CC Holders Enclosed:", cc_holders_enclosed);
-    // console.log("➡ Purchase Bill Enclosed:", purchase_bill_enclose);
-    // console.log("➡ Test Reports Enclosed:", test_reports_enclose);
-    // console.log("➡ Specimen Signature Enclosed:", specimen_signature_enclose);
-    // console.log("➡ Separate Sheet:", separate_sheet);
+            $(".equipment-row").each(function () {
 
-    // console.log("➡ Declaration 1 Checked:", declaration1Checked);
-    // console.log("➡ Declaration 2 Checked:", declaration2Checked);
+                let row = $(this);
 
-    // console.log("➡ Proprietor Validation Status:", proprietorValid);
-    // console.log("➡ Staff Validation Status:", staffValid);
-    // console.log("➡ Total Staff Count:", staffCount);
-    // console.log("➡ Form Action Type:", actionType);
-    // console.log("✅ Overall Form Valid:", isValid);
+                let serial = row.find('input[name="serial_no[]"]');
+                let model = row.find('input[name="model[]"]');
+                let date = row.find('input[name="date_of_test[]"]');
 
-    // console.groupEnd();
-    // alert(isValid);
+                let testFile = row.find('input[name^="instrument_test_report"]')[0];
+                let purchaseFile = row.find('input[name^="instrument_purchase_report"]')[0];
+
+                let presentTest = row.find('.present-test-file').length;
+                let presentPurchase = row.find('.present-purchase-file').length;
+
+                // SERIAL
+                if (serial.val().trim() === "") {
+                    row.find(".serial_error").text("Serial Number required");
+                    equipmentValid = false;
+                } else {
+                    row.find(".serial_error").text("");
+                }
+
+                // MODEL
+                if (model.val().trim() === "") {
+                    row.find(".model_error").text("Model required");
+                    equipmentValid = false;
+                } else {
+                    row.find(".model_error").text("");
+                }
+
+                // DATE
+                if (date.val().trim() === "") {
+                    row.find(".date_error").text("Date of Test required");
+                    equipmentValid = false;
+                } else {
+                    row.find(".date_error").text("");
+                }
+
+               // Check if link exists below input
+                let uploadedTestLink = row.find('.instrument_test_report_error')
+                                        .closest("td")
+                                        .find('.uploaded-file').length;
+
+                let uploadedPurchaseLink = row.find('.instrument_purchase_report_error')
+                                            .closest("td")
+                                            .find('.uploaded-file').length;
+
+
+                // TEST REPORT
+                if (!testFile.files.length && uploadedTestLink === 0) {
+                    row.find(".instrument_test_report_error").text("Upload Test Report");
+                    equipmentValid = false;
+                } else {
+                    row.find(".instrument_test_report_error").text("");
+                }
+
+                // PURCHASE REPORT
+                if (!purchaseFile.files.length && uploadedPurchaseLink === 0) {
+                    row.find(".instrument_purchase_report_error").text("Upload Purchase Report");
+                    equipmentValid = false;
+                } else {
+                    row.find(".instrument_purchase_report_error").text("");
+                }
+
+            });
+
+            if (!equipmentValid) {
+
+                Swal.fire({
+                    icon: "warning",
+                    width: 450,
+                    title: "Incomplete Equipment Details",
+                    text: "All equipment fields and documents are mandatory.",
+                    confirmButtonText: "OK",
+                });
+
+                // Auto open Equipment tab
+                $(".nav-item").each(function () {
+                    if ($(this).text().trim() === "Equipment / Instruments List") {
+                        $(this).addClass("tab-error-bg");
+                        $(this).trigger("click");
+                    }
+                });
+
+                return false;
+            }
+
+    // -------------------------------------
+  
     if (isValid) {
         // alert('111');
         checkvaliditydatesformA(formData);

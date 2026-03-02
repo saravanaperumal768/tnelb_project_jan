@@ -2543,3 +2543,10 @@ margin-bottom: 0px;
 .file_upload .btn-info{
   font-size: 13px;
 }
+.file-limit {
+  font-size: 14px;
+}
+
+.note_txt{
+  margin-bottom: 5px;
+}

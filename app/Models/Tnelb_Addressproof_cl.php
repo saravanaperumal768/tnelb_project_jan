@@ -16,6 +16,7 @@ class Tnelb_Addressproof_cl extends Model
         'form_name',
         'license_name',
         'addressproofno',
-        'file_doc'
+        'file_doc',
+        'type_doc'
         ];
 }
